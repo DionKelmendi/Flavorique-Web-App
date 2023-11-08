@@ -1,0 +1,3 @@
+﻿<Project>
+  <Import Project="..\build\Flavorique Web App.props" />
+</Project>
