@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "VJ2KiVz14hILgO/laALIWWr9casvKuxtOYsIdo7EGJF1eMSGGR6b474HxD9OJUGOo09Mwp1d5XtftcJR7a4pgg==",
+  "dgSpecHash": "A8sB+FB4Hxhy9OIOq4yQstOwDWQ2X61C5MAkicFzUihdbyQzDb5Z/Cfd5YGvfU1V0pq1QkzQKHV8jPfTDSlp4Q==",
   "success": true,
-  "projectFilePath": "C:\\Users\\dionk\\Desktop\\Flavorique Web App\\Flavorique Web App\\Flavorique Web App.csproj",
+  "projectFilePath": "C:\\Users\\dionk\\Desktop\\Flavorique-Web-App\\Flavorique Web App\\Flavorique Web App.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\dionk\\.nuget\\packages\\humanizer.core\\2.8.26\\humanizer.core.2.8.26.nupkg.sha512",
     "C:\\Users\\dionk\\.nuget\\packages\\microsoft.aspnetcore.cryptography.internal\\6.0.22\\microsoft.aspnetcore.cryptography.internal.6.0.22.nupkg.sha512",

@@ -3227,11 +3227,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\dionk\\Desktop\\Flavorique Web App\\Flavorique Web App\\Flavorique Web App.csproj",
+      "projectUniqueName": "C:\\Users\\dionk\\Desktop\\Flavorique-Web-App\\Flavorique Web App\\Flavorique Web App.csproj",
       "projectName": "Flavorique Web App",
-      "projectPath": "C:\\Users\\dionk\\Desktop\\Flavorique Web App\\Flavorique Web App\\Flavorique Web App.csproj",
+      "projectPath": "C:\\Users\\dionk\\Desktop\\Flavorique-Web-App\\Flavorique Web App\\Flavorique Web App.csproj",
       "packagesPath": "C:\\Users\\dionk\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\dionk\\Desktop\\Flavorique Web App\\Flavorique Web App\\obj\\",
+      "outputPath": "C:\\Users\\dionk\\Desktop\\Flavorique-Web-App\\Flavorique Web App\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
