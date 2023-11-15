@@ -475,4 +475,361 @@ $RECYCLE.BIN/
 
 # Windows shortcuts
 *.lnk
+.vs/Flavorique Web App/v17/.futdcache.v2
+.vs/Flavorique Web App/v17/.suo
+.vs/ProjectEvaluation/flavorique web app.metadata.v7.bin
+.vs/ProjectEvaluation/flavorique web app.projects.v7.bin
+*.dll
+Flavorique Web App/bin/Debug/net6.0/Flavorique Web App.deps.json
+*.dll
+Flavorique Web App/bin/Debug/net6.0/System.Windows.Extensions.dll
+Flavorique Web App/bin/Debug/net6.0/System.Security.Permissions.dll
+Flavorique Web App/bin/Debug/net6.0/System.Security.Cryptography.ProtectedData.dll
+Flavorique Web App/bin/Debug/net6.0/System.Drawing.Common.dll
+Flavorique Web App/bin/Debug/net6.0/System.Configuration.ConfigurationManager.dll
+Flavorique Web App/bin/Debug/net6.0/runtimes/win/lib/netstandard2.0/System.Security.Cryptography.ProtectedData.dll
+Flavorique Web App/bin/Debug/net6.0/runtimes/win/lib/netcoreapp3.0/System.Windows.Extensions.dll
+Flavorique Web App/bin/Debug/net6.0/runtimes/win/lib/netcoreapp3.0/System.Drawing.Common.dll
+Flavorique Web App/bin/Debug/net6.0/runtimes/win/lib/netcoreapp3.0/Microsoft.Win32.SystemEvents.dll
+Flavorique Web App/bin/Debug/net6.0/runtimes/unix/lib/netcoreapp3.0/System.Drawing.Common.dll
+Flavorique Web App/bin/Debug/net6.0/refs/Microsoft.Extensions.Identity.Stores.dll
+Flavorique Web App/bin/Debug/net6.0/refs/Microsoft.Extensions.Identity.Core.dll
+Flavorique Web App/bin/Debug/net6.0/refs/Microsoft.AspNetCore.Cryptography.KeyDerivation.dll
+Flavorique Web App/bin/Debug/net6.0/refs/Microsoft.AspNetCore.Cryptography.Internal.dll
+*.cache
+Flavorique Web App/obj/Debug/net6.0/Flavorique Web App.assets.cache
+Flavorique Web App/obj/Debug/net6.0/Flavorique Web App.csproj.AssemblyReference.cache
+Flavorique Web App/obj/Debug/net6.0/Flavorique Web App.csproj.CoreCompileInputs.cache
+Flavorique Web App/obj/Debug/net6.0/Flavorique Web App.GeneratedMSBuildEditorConfig.editorconfig
+*.cache
+*.pdb
+Flavorique Web App/obj/Debug/net6.0/staticwebassets.pack.json
+Flavorique Web App/obj/Debug/net6.0/staticwebassets/msbuild.Flavorique Web App.Microsoft.AspNetCore.StaticWebAssets.props
+Flavorique Web App/obj/Flavorique Web App.csproj.nuget.dgspec.json
+Flavorique Web App/obj/Flavorique Web App.csproj.nuget.g.props
+Flavorique Web App/obj/project.assets.json
+Flavorique Web App/obj/project.nuget.cache
+Flavorique Web App/obj/Debug/net6.0/Flavorique Web App.AssemblyInfo.cs
+.vs/ProjectEvaluation/flavorique web app.projects.v7.bin
+.vs/ProjectEvaluation/flavorique web app.metadata.v7.bin
+.vs/Flavorique Web App/v17/.suo
+.vs/Flavorique Web App/v17/.futdcache.v2
+.vs/Flavorique Web App/DesignTimeBuild/.dtbcache.v2
+Flavorique Web App/bin/Debug/net6.0/System.Windows.Extensions.dll
+Flavorique Web App/bin/Debug/net6.0/System.Security.Permissions.dll
+Flavorique Web App/bin/Debug/net6.0/System.Security.Cryptography.ProtectedData.dll
+Flavorique Web App/bin/Debug/net6.0/System.Drawing.Common.dll
+Flavorique Web App/bin/Debug/net6.0/System.Configuration.ConfigurationManager.dll
+Flavorique Web App/bin/Debug/net6.0/refs/WindowsBase.dll
+Flavorique Web App/bin/Debug/net6.0/refs/System.Xml.XPath.XDocument.dll
+Flavorique Web App/bin/Debug/net6.0/refs/System.Xml.XPath.dll
+Flavorique Web App/bin/Debug/net6.0/refs/System.Xml.XmlSerializer.dll
+Flavorique Web App/bin/Debug/net6.0/refs/System.Xml.XmlDocument.dll
+Flavorique Web App/bin/Debug/net6.0/refs/System.Xml.XDocument.dll
+Flavorique Web App/bin/Debug/net6.0/refs/System.Xml.Serialization.dll
+Flavorique Web App/bin/Debug/net6.0/refs/System.Xml.ReaderWriter.dll
+Flavorique Web App/bin/Debug/net6.0/refs/System.Xml.Linq.dll
+Flavorique Web App/bin/Debug/net6.0/refs/System.Xml.dll
+Flavorique Web App/bin/Debug/net6.0/refs/System.Windows.dll
+Flavorique Web App/bin/Debug/net6.0/refs/System.Web.HttpUtility.dll
+Flavorique Web App/bin/Debug/net6.0/refs/System.Web.dll
+Flavorique Web App/bin/Debug/net6.0/refs/System.ValueTuple.dll
+Flavorique Web App/bin/Debug/net6.0/refs/System.Transactions.Local.dll
+Flavorique Web App/bin/Debug/net6.0/refs/System.Transactions.dll
+Flavorique Web App/bin/Debug/net6.0/refs/System.Threading.Timer.dll
+Flavorique Web App/bin/Debug/net6.0/refs/System.Threading.ThreadPool.dll
+Flavorique Web App/bin/Debug/net6.0/refs/System.Threading.Thread.dll
+Flavorique Web App/bin/Debug/net6.0/refs/System.Threading.Tasks.Parallel.dll
+Flavorique Web App/bin/Debug/net6.0/refs/System.Threading.Tasks.Extensions.dll
+Flavorique Web App/bin/Debug/net6.0/refs/System.Threading.Tasks.dll
+Flavorique Web App/bin/Debug/net6.0/refs/System.Threading.Tasks.Dataflow.dll
+Flavorique Web App/bin/Debug/net6.0/refs/System.Threading.Overlapped.dll
+Flavorique Web App/bin/Debug/net6.0/refs/System.Threading.dll
+Flavorique Web App/bin/Debug/net6.0/refs/System.Threading.Channels.dll
+Flavorique Web App/bin/Debug/net6.0/refs/System.Text.RegularExpressions.dll
+Flavorique Web App/bin/Debug/net6.0/refs/System.Text.Json.dll
+Flavorique Web App/bin/Debug/net6.0/refs/System.Text.Encodings.Web.dll
+Flavorique Web App/bin/Debug/net6.0/refs/System.Text.Encoding.Extensions.dll
+Flavorique Web App/bin/Debug/net6.0/refs/System.Text.Encoding.dll
+Flavorique Web App/bin/Debug/net6.0/refs/System.Text.Encoding.CodePages.dll
+Flavorique Web App/bin/Debug/net6.0/refs/System.ServiceProcess.dll
+Flavorique Web App/bin/Debug/net6.0/refs/System.ServiceModel.Web.dll
+Flavorique Web App/bin/Debug/net6.0/refs/System.Security.SecureString.dll
+Flavorique Web App/bin/Debug/net6.0/refs/System.Security.Principal.Windows.dll
+Flavorique Web App/bin/Debug/net6.0/refs/System.Security.Principal.dll
+Flavorique Web App/bin/Debug/net6.0/refs/System.Security.dll
+Flavorique Web App/bin/Debug/net6.0/refs/System.Security.Cryptography.Xml.dll
+Flavorique Web App/bin/Debug/net6.0/refs/System.Security.Cryptography.X509Certificates.dll
+Flavorique Web App/bin/Debug/net6.0/refs/System.Security.Cryptography.Primitives.dll
+Flavorique Web App/bin/Debug/net6.0/refs/System.Security.Cryptography.OpenSsl.dll
+Flavorique Web App/bin/Debug/net6.0/refs/System.Security.Cryptography.Encoding.dll
+Flavorique Web App/bin/Debug/net6.0/refs/System.Security.Cryptography.Csp.dll
+Flavorique Web App/bin/Debug/net6.0/refs/System.Security.Cryptography.Cng.dll
+Flavorique Web App/bin/Debug/net6.0/refs/System.Security.Cryptography.Algorithms.dll
+Flavorique Web App/bin/Debug/net6.0/refs/System.Security.Claims.dll
+Flavorique Web App/bin/Debug/net6.0/refs/System.Security.AccessControl.dll
+Flavorique Web App/bin/Debug/net6.0/refs/System.Runtime.Serialization.Xml.dll
+Flavorique Web App/bin/Debug/net6.0/refs/System.Runtime.Serialization.Primitives.dll
+Flavorique Web App/bin/Debug/net6.0/refs/System.Runtime.Serialization.Json.dll
+Flavorique Web App/bin/Debug/net6.0/refs/System.Runtime.Serialization.Formatters.dll
+Flavorique Web App/bin/Debug/net6.0/refs/System.Runtime.Serialization.dll
+Flavorique Web App/bin/Debug/net6.0/refs/System.Runtime.Numerics.dll
+Flavorique Web App/bin/Debug/net6.0/refs/System.Runtime.Loader.dll
+Flavorique Web App/bin/Debug/net6.0/refs/System.Runtime.Intrinsics.dll
+Flavorique Web App/bin/Debug/net6.0/refs/System.Runtime.InteropServices.RuntimeInformation.dll
+Flavorique Web App/bin/Debug/net6.0/refs/System.Runtime.InteropServices.dll
+Flavorique Web App/bin/Debug/net6.0/refs/System.Runtime.Handles.dll
+Flavorique Web App/bin/Debug/net6.0/refs/System.Runtime.Extensions.dll
+Flavorique Web App/bin/Debug/net6.0/refs/System.Runtime.dll
+Flavorique Web App/bin/Debug/net6.0/refs/System.Runtime.CompilerServices.VisualC.dll
+Flavorique Web App/bin/Debug/net6.0/refs/System.Runtime.CompilerServices.Unsafe.dll
+Flavorique Web App/bin/Debug/net6.0/refs/System.Resources.Writer.dll
+Flavorique Web App/bin/Debug/net6.0/refs/System.Resources.ResourceManager.dll
+Flavorique Web App/bin/Debug/net6.0/refs/System.Resources.Reader.dll
+Flavorique Web App/bin/Debug/net6.0/refs/System.Reflection.TypeExtensions.dll
+Flavorique Web App/bin/Debug/net6.0/refs/System.Reflection.Primitives.dll
+Flavorique Web App/bin/Debug/net6.0/refs/System.Reflection.Metadata.dll
+Flavorique Web App/bin/Debug/net6.0/refs/System.Reflection.Extensions.dll
+Flavorique Web App/bin/Debug/net6.0/refs/System.Reflection.Emit.Lightweight.dll
+Flavorique Web App/bin/Debug/net6.0/refs/System.Reflection.Emit.ILGeneration.dll
+Flavorique Web App/bin/Debug/net6.0/refs/System.Reflection.Emit.dll
+Flavorique Web App/bin/Debug/net6.0/refs/System.Reflection.dll
+Flavorique Web App/bin/Debug/net6.0/refs/System.Reflection.DispatchProxy.dll
+Flavorique Web App/bin/Debug/net6.0/refs/System.ObjectModel.dll
+Flavorique Web App/bin/Debug/net6.0/refs/System.Numerics.Vectors.dll
+Flavorique Web App/bin/Debug/net6.0/refs/System.Numerics.dll
+Flavorique Web App/bin/Debug/net6.0/refs/System.Net.WebSockets.dll
+Flavorique Web App/bin/Debug/net6.0/refs/System.Net.WebSockets.Client.dll
+Flavorique Web App/bin/Debug/net6.0/refs/System.Net.WebProxy.dll
+Flavorique Web App/bin/Debug/net6.0/refs/System.Net.WebHeaderCollection.dll
+Flavorique Web App/bin/Debug/net6.0/refs/System.Net.WebClient.dll
+Flavorique Web App/bin/Debug/net6.0/refs/System.Net.Sockets.dll
+Flavorique Web App/bin/Debug/net6.0/refs/System.Net.ServicePoint.dll
+Flavorique Web App/bin/Debug/net6.0/refs/System.Net.Security.dll
+Flavorique Web App/bin/Debug/net6.0/refs/System.Net.Requests.dll
+Flavorique Web App/bin/Debug/net6.0/refs/System.Net.Primitives.dll
+Flavorique Web App/bin/Debug/net6.0/refs/System.Net.Ping.dll
+Flavorique Web App/bin/Debug/net6.0/refs/System.Net.NetworkInformation.dll
+Flavorique Web App/bin/Debug/net6.0/refs/System.Net.NameResolution.dll
+Flavorique Web App/bin/Debug/net6.0/refs/System.Net.Mail.dll
+Flavorique Web App/bin/Debug/net6.0/refs/System.Net.HttpListener.dll
+Flavorique Web App/bin/Debug/net6.0/refs/System.Net.Http.Json.dll
+Flavorique Web App/bin/Debug/net6.0/refs/System.Net.Http.dll
+Flavorique Web App/bin/Debug/net6.0/refs/System.Net.dll
+Flavorique Web App/bin/Debug/net6.0/refs/System.Memory.dll
+Flavorique Web App/bin/Debug/net6.0/refs/System.Linq.Queryable.dll
+Flavorique Web App/bin/Debug/net6.0/refs/System.Linq.Parallel.dll
+Flavorique Web App/bin/Debug/net6.0/refs/System.Linq.Expressions.dll
+Flavorique Web App/bin/Debug/net6.0/refs/System.Linq.dll
+Flavorique Web App/bin/Debug/net6.0/refs/System.IO.UnmanagedMemoryStream.dll
+Flavorique Web App/bin/Debug/net6.0/refs/System.IO.Pipes.dll
+Flavorique Web App/bin/Debug/net6.0/refs/System.IO.Pipes.AccessControl.dll
+Flavorique Web App/bin/Debug/net6.0/refs/System.IO.Pipelines.dll
+Flavorique Web App/bin/Debug/net6.0/refs/System.IO.MemoryMappedFiles.dll
+Flavorique Web App/bin/Debug/net6.0/refs/System.IO.IsolatedStorage.dll
+Flavorique Web App/bin/Debug/net6.0/refs/System.IO.FileSystem.Watcher.dll
+Flavorique Web App/bin/Debug/net6.0/refs/System.IO.FileSystem.Primitives.dll
+Flavorique Web App/bin/Debug/net6.0/refs/System.IO.FileSystem.DriveInfo.dll
+Flavorique Web App/bin/Debug/net6.0/refs/System.IO.FileSystem.dll
+Flavorique Web App/bin/Debug/net6.0/refs/System.IO.FileSystem.AccessControl.dll
+Flavorique Web App/bin/Debug/net6.0/refs/System.IO.dll
+Flavorique Web App/bin/Debug/net6.0/refs/System.IO.Compression.ZipFile.dll
+Flavorique Web App/bin/Debug/net6.0/refs/System.IO.Compression.FileSystem.dll
+Flavorique Web App/bin/Debug/net6.0/refs/System.IO.Compression.dll
+Flavorique Web App/bin/Debug/net6.0/refs/System.IO.Compression.Brotli.dll
+Flavorique Web App/bin/Debug/net6.0/refs/System.Globalization.Extensions.dll
+Flavorique Web App/bin/Debug/net6.0/refs/System.Globalization.dll
+Flavorique Web App/bin/Debug/net6.0/refs/System.Globalization.Calendars.dll
+Flavorique Web App/bin/Debug/net6.0/refs/System.Formats.Asn1.dll
+Flavorique Web App/bin/Debug/net6.0/refs/System.Dynamic.Runtime.dll
+Flavorique Web App/bin/Debug/net6.0/refs/System.Drawing.Primitives.dll
+Flavorique Web App/bin/Debug/net6.0/refs/System.Drawing.dll
+Flavorique Web App/bin/Debug/net6.0/refs/System.dll
+Flavorique Web App/bin/Debug/net6.0/refs/System.Diagnostics.Tracing.dll
+Flavorique Web App/bin/Debug/net6.0/refs/System.Diagnostics.TraceSource.dll
+Flavorique Web App/bin/Debug/net6.0/refs/System.Diagnostics.Tools.dll
+Flavorique Web App/bin/Debug/net6.0/refs/System.Diagnostics.TextWriterTraceListener.dll
+Flavorique Web App/bin/Debug/net6.0/refs/System.Diagnostics.StackTrace.dll
+Flavorique Web App/bin/Debug/net6.0/refs/System.Diagnostics.Process.dll
+Flavorique Web App/bin/Debug/net6.0/refs/System.Diagnostics.FileVersionInfo.dll
+Flavorique Web App/bin/Debug/net6.0/refs/System.Diagnostics.EventLog.dll
+Flavorique Web App/bin/Debug/net6.0/refs/System.Diagnostics.DiagnosticSource.dll
+Flavorique Web App/bin/Debug/net6.0/refs/System.Diagnostics.Debug.dll
+Flavorique Web App/bin/Debug/net6.0/refs/System.Diagnostics.Contracts.dll
+Flavorique Web App/bin/Debug/net6.0/refs/System.Data.dll
+Flavorique Web App/bin/Debug/net6.0/refs/System.Data.DataSetExtensions.dll
+Flavorique Web App/bin/Debug/net6.0/refs/System.Data.Common.dll
+Flavorique Web App/bin/Debug/net6.0/refs/System.Core.dll
+Flavorique Web App/bin/Debug/net6.0/refs/System.Console.dll
+Flavorique Web App/bin/Debug/net6.0/refs/System.Configuration.dll
+Flavorique Web App/bin/Debug/net6.0/refs/System.ComponentModel.TypeConverter.dll
+Flavorique Web App/bin/Debug/net6.0/refs/System.ComponentModel.Primitives.dll
+Flavorique Web App/bin/Debug/net6.0/refs/System.ComponentModel.EventBasedAsync.dll
+Flavorique Web App/bin/Debug/net6.0/refs/System.ComponentModel.dll
+Flavorique Web App/bin/Debug/net6.0/refs/System.ComponentModel.DataAnnotations.dll
+Flavorique Web App/bin/Debug/net6.0/refs/System.ComponentModel.Annotations.dll
+Flavorique Web App/bin/Debug/net6.0/refs/System.Collections.Specialized.dll
+Flavorique Web App/bin/Debug/net6.0/refs/System.Collections.NonGeneric.dll
+Flavorique Web App/bin/Debug/net6.0/refs/System.Collections.Immutable.dll
+Flavorique Web App/bin/Debug/net6.0/refs/System.Collections.dll
+Flavorique Web App/bin/Debug/net6.0/refs/System.Collections.Concurrent.dll
+Flavorique Web App/bin/Debug/net6.0/refs/System.Buffers.dll
+Flavorique Web App/bin/Debug/net6.0/refs/System.AppContext.dll
+Flavorique Web App/bin/Debug/net6.0/refs/netstandard.dll
+Flavorique Web App/bin/Debug/net6.0/refs/mscorlib.dll
+Flavorique Web App/bin/Debug/net6.0/refs/Microsoft.Win32.Registry.dll
+Flavorique Web App/bin/Debug/net6.0/refs/Microsoft.Win32.Primitives.dll
+Flavorique Web App/bin/Debug/net6.0/refs/Microsoft.VisualBasic.dll
+Flavorique Web App/bin/Debug/net6.0/refs/Microsoft.VisualBasic.Core.dll
+Flavorique Web App/bin/Debug/net6.0/refs/Microsoft.Net.Http.Headers.dll
+Flavorique Web App/bin/Debug/net6.0/refs/Microsoft.JSInterop.dll
+Flavorique Web App/bin/Debug/net6.0/refs/Microsoft.Extensions.WebEncoders.dll
+Flavorique Web App/bin/Debug/net6.0/refs/Microsoft.Extensions.Primitives.dll
+Flavorique Web App/bin/Debug/net6.0/refs/Microsoft.Extensions.Options.dll
+Flavorique Web App/bin/Debug/net6.0/refs/Microsoft.Extensions.Options.DataAnnotations.dll
+Flavorique Web App/bin/Debug/net6.0/refs/Microsoft.Extensions.Options.ConfigurationExtensions.dll
+Flavorique Web App/bin/Debug/net6.0/refs/Microsoft.Extensions.ObjectPool.dll
+Flavorique Web App/bin/Debug/net6.0/refs/Microsoft.Extensions.Logging.TraceSource.dll
+Flavorique Web App/bin/Debug/net6.0/refs/Microsoft.Extensions.Logging.EventSource.dll
+Flavorique Web App/bin/Debug/net6.0/refs/Microsoft.Extensions.Logging.EventLog.dll
+Flavorique Web App/bin/Debug/net6.0/refs/Microsoft.Extensions.Logging.dll
+Flavorique Web App/bin/Debug/net6.0/refs/Microsoft.Extensions.Logging.Debug.dll
+Flavorique Web App/bin/Debug/net6.0/refs/Microsoft.Extensions.Logging.Console.dll
+Flavorique Web App/bin/Debug/net6.0/refs/Microsoft.Extensions.Logging.Configuration.dll
+Flavorique Web App/bin/Debug/net6.0/refs/Microsoft.Extensions.Logging.Abstractions.dll
+Flavorique Web App/bin/Debug/net6.0/refs/Microsoft.Extensions.Localization.dll
+Flavorique Web App/bin/Debug/net6.0/refs/Microsoft.Extensions.Localization.Abstractions.dll
+Flavorique Web App/bin/Debug/net6.0/refs/Microsoft.Extensions.Http.dll
+Flavorique Web App/bin/Debug/net6.0/refs/Microsoft.Extensions.Hosting.dll
+Flavorique Web App/bin/Debug/net6.0/refs/Microsoft.Extensions.Hosting.Abstractions.dll
+Flavorique Web App/bin/Debug/net6.0/refs/Microsoft.Extensions.FileSystemGlobbing.dll
+Flavorique Web App/bin/Debug/net6.0/refs/Microsoft.Extensions.FileProviders.Physical.dll
+Flavorique Web App/bin/Debug/net6.0/refs/Microsoft.Extensions.FileProviders.Composite.dll
+Flavorique Web App/bin/Debug/net6.0/refs/Microsoft.Extensions.FileProviders.Abstractions.dll
+Flavorique Web App/bin/Debug/net6.0/refs/Microsoft.Extensions.Features.dll
+Flavorique Web App/bin/Debug/net6.0/refs/Microsoft.Extensions.Diagnostics.HealthChecks.dll
+Flavorique Web App/bin/Debug/net6.0/refs/Microsoft.Extensions.Diagnostics.HealthChecks.Abstractions.dll
+Flavorique Web App/bin/Debug/net6.0/refs/Microsoft.Extensions.DependencyInjection.dll
+Flavorique Web App/bin/Debug/net6.0/refs/Microsoft.Extensions.DependencyInjection.Abstractions.dll
+Flavorique Web App/bin/Debug/net6.0/refs/Microsoft.Extensions.Configuration.Xml.dll
+Flavorique Web App/bin/Debug/net6.0/refs/Microsoft.Extensions.Configuration.UserSecrets.dll
+Flavorique Web App/bin/Debug/net6.0/refs/Microsoft.Extensions.Configuration.KeyPerFile.dll
+Flavorique Web App/bin/Debug/net6.0/refs/Microsoft.Extensions.Configuration.Json.dll
+Flavorique Web App/bin/Debug/net6.0/refs/Microsoft.Extensions.Configuration.Ini.dll
+Flavorique Web App/bin/Debug/net6.0/refs/Microsoft.Extensions.Configuration.FileExtensions.dll
+Flavorique Web App/bin/Debug/net6.0/refs/Microsoft.Extensions.Configuration.EnvironmentVariables.dll
+Flavorique Web App/bin/Debug/net6.0/refs/Microsoft.Extensions.Configuration.dll
+Flavorique Web App/bin/Debug/net6.0/refs/Microsoft.Extensions.Configuration.CommandLine.dll
+Flavorique Web App/bin/Debug/net6.0/refs/Microsoft.Extensions.Configuration.Binder.dll
+Flavorique Web App/bin/Debug/net6.0/refs/Microsoft.Extensions.Configuration.Abstractions.dll
+Flavorique Web App/bin/Debug/net6.0/refs/Microsoft.Extensions.Caching.Memory.dll
+Flavorique Web App/bin/Debug/net6.0/refs/Microsoft.Extensions.Caching.Abstractions.dll
+Flavorique Web App/bin/Debug/net6.0/refs/Microsoft.CSharp.dll
+Flavorique Web App/bin/Debug/net6.0/refs/Microsoft.AspNetCore.WebUtilities.dll
+Flavorique Web App/bin/Debug/net6.0/refs/Microsoft.AspNetCore.WebSockets.dll
+Flavorique Web App/bin/Debug/net6.0/refs/Microsoft.AspNetCore.StaticFiles.dll
+Flavorique Web App/bin/Debug/net6.0/refs/Microsoft.AspNetCore.SignalR.Protocols.Json.dll
+Flavorique Web App/bin/Debug/net6.0/refs/Microsoft.AspNetCore.SignalR.dll
+Flavorique Web App/bin/Debug/net6.0/refs/Microsoft.AspNetCore.SignalR.Core.dll
+Flavorique Web App/bin/Debug/net6.0/refs/Microsoft.AspNetCore.SignalR.Common.dll
+Flavorique Web App/bin/Debug/net6.0/refs/Microsoft.AspNetCore.Session.dll
+Flavorique Web App/bin/Debug/net6.0/refs/Microsoft.AspNetCore.Server.Kestrel.Transport.Sockets.dll
+Flavorique Web App/bin/Debug/net6.0/refs/Microsoft.AspNetCore.Server.Kestrel.Transport.Quic.dll
+Flavorique Web App/bin/Debug/net6.0/refs/Microsoft.AspNetCore.Server.Kestrel.dll
+Flavorique Web App/bin/Debug/net6.0/refs/Microsoft.AspNetCore.Server.Kestrel.Core.dll
+Flavorique Web App/bin/Debug/net6.0/refs/Microsoft.AspNetCore.Server.IISIntegration.dll
+Flavorique Web App/bin/Debug/net6.0/refs/Microsoft.AspNetCore.Server.IIS.dll
+Flavorique Web App/bin/Debug/net6.0/refs/Microsoft.AspNetCore.Server.HttpSys.dll
+Flavorique Web App/bin/Debug/net6.0/refs/Microsoft.AspNetCore.Routing.dll
+Flavorique Web App/bin/Debug/net6.0/refs/Microsoft.AspNetCore.Routing.Abstractions.dll
+Flavorique Web App/bin/Debug/net6.0/refs/Microsoft.AspNetCore.Rewrite.dll
+Flavorique Web App/bin/Debug/net6.0/refs/Microsoft.AspNetCore.ResponseCompression.dll
+Flavorique Web App/bin/Debug/net6.0/refs/Microsoft.AspNetCore.ResponseCaching.dll
+Flavorique Web App/bin/Debug/net6.0/refs/Microsoft.AspNetCore.ResponseCaching.Abstractions.dll
+Flavorique Web App/bin/Debug/net6.0/refs/Microsoft.AspNetCore.Razor.Runtime.dll
+Flavorique Web App/bin/Debug/net6.0/refs/Microsoft.AspNetCore.Razor.dll
+Flavorique Web App/bin/Debug/net6.0/refs/Microsoft.AspNetCore.Mvc.ViewFeatures.dll
+Flavorique Web App/bin/Debug/net6.0/refs/Microsoft.AspNetCore.Mvc.TagHelpers.dll
+Flavorique Web App/bin/Debug/net6.0/refs/Microsoft.AspNetCore.Mvc.RazorPages.dll
+Flavorique Web App/bin/Debug/net6.0/refs/Microsoft.AspNetCore.Mvc.Razor.dll
+Flavorique Web App/bin/Debug/net6.0/refs/Microsoft.AspNetCore.Mvc.Localization.dll
+Flavorique Web App/bin/Debug/net6.0/refs/Microsoft.AspNetCore.Mvc.Formatters.Xml.dll
+Flavorique Web App/bin/Debug/net6.0/refs/Microsoft.AspNetCore.Mvc.Formatters.Json.dll
+Flavorique Web App/bin/Debug/net6.0/refs/Microsoft.AspNetCore.Mvc.dll
+Flavorique Web App/bin/Debug/net6.0/refs/Microsoft.AspNetCore.Mvc.DataAnnotations.dll
+Flavorique Web App/bin/Debug/net6.0/refs/Microsoft.AspNetCore.Mvc.Cors.dll
+Flavorique Web App/bin/Debug/net6.0/refs/Microsoft.AspNetCore.Mvc.Core.dll
+Flavorique Web App/bin/Debug/net6.0/refs/Microsoft.AspNetCore.Mvc.ApiExplorer.dll
+Flavorique Web App/bin/Debug/net6.0/refs/Microsoft.AspNetCore.Mvc.Abstractions.dll
+Flavorique Web App/bin/Debug/net6.0/refs/Microsoft.AspNetCore.Metadata.dll
+Flavorique Web App/bin/Debug/net6.0/refs/Microsoft.AspNetCore.Localization.Routing.dll
+Flavorique Web App/bin/Debug/net6.0/refs/Microsoft.AspNetCore.Localization.dll
+Flavorique Web App/bin/Debug/net6.0/refs/Microsoft.AspNetCore.Identity.dll
+Flavorique Web App/bin/Debug/net6.0/refs/Microsoft.AspNetCore.HttpsPolicy.dll
+Flavorique Web App/bin/Debug/net6.0/refs/Microsoft.AspNetCore.HttpOverrides.dll
+Flavorique Web App/bin/Debug/net6.0/refs/Microsoft.AspNetCore.HttpLogging.dll
+Flavorique Web App/bin/Debug/net6.0/refs/Microsoft.AspNetCore.Http.Results.dll
+Flavorique Web App/bin/Debug/net6.0/refs/Microsoft.AspNetCore.Http.Features.dll
+Flavorique Web App/bin/Debug/net6.0/refs/Microsoft.AspNetCore.Http.Extensions.dll
+Flavorique Web App/bin/Debug/net6.0/refs/Microsoft.AspNetCore.Http.dll
+Flavorique Web App/bin/Debug/net6.0/refs/Microsoft.AspNetCore.Http.Connections.dll
+Flavorique Web App/bin/Debug/net6.0/refs/Microsoft.AspNetCore.Http.Connections.Common.dll
+Flavorique Web App/bin/Debug/net6.0/refs/Microsoft.AspNetCore.Http.Abstractions.dll
+Flavorique Web App/bin/Debug/net6.0/refs/Microsoft.AspNetCore.Html.Abstractions.dll
+Flavorique Web App/bin/Debug/net6.0/refs/Microsoft.AspNetCore.Hosting.Server.Abstractions.dll
+Flavorique Web App/bin/Debug/net6.0/refs/Microsoft.AspNetCore.Hosting.dll
+Flavorique Web App/bin/Debug/net6.0/refs/Microsoft.AspNetCore.Hosting.Abstractions.dll
+Flavorique Web App/bin/Debug/net6.0/refs/Microsoft.AspNetCore.HostFiltering.dll
+Flavorique Web App/bin/Debug/net6.0/refs/Microsoft.AspNetCore.dll
+Flavorique Web App/bin/Debug/net6.0/refs/Microsoft.AspNetCore.Diagnostics.HealthChecks.dll
+Flavorique Web App/bin/Debug/net6.0/refs/Microsoft.AspNetCore.Diagnostics.dll
+Flavorique Web App/bin/Debug/net6.0/refs/Microsoft.AspNetCore.Diagnostics.Abstractions.dll
+Flavorique Web App/bin/Debug/net6.0/refs/Microsoft.AspNetCore.DataProtection.Extensions.dll
+Flavorique Web App/bin/Debug/net6.0/refs/Microsoft.AspNetCore.DataProtection.dll
+Flavorique Web App/bin/Debug/net6.0/refs/Microsoft.AspNetCore.DataProtection.Abstractions.dll
+Flavorique Web App/bin/Debug/net6.0/refs/Microsoft.AspNetCore.Cors.dll
+Flavorique Web App/bin/Debug/net6.0/refs/Microsoft.AspNetCore.CookiePolicy.dll
+Flavorique Web App/bin/Debug/net6.0/refs/Microsoft.AspNetCore.Connections.Abstractions.dll
+Flavorique Web App/bin/Debug/net6.0/refs/Microsoft.AspNetCore.Components.Web.dll
+Flavorique Web App/bin/Debug/net6.0/refs/Microsoft.AspNetCore.Components.Server.dll
+Flavorique Web App/bin/Debug/net6.0/refs/Microsoft.AspNetCore.Components.Forms.dll
+Flavorique Web App/bin/Debug/net6.0/refs/Microsoft.AspNetCore.Components.dll
+Flavorique Web App/bin/Debug/net6.0/refs/Microsoft.AspNetCore.Components.Authorization.dll
+Flavorique Web App/bin/Debug/net6.0/refs/Microsoft.AspNetCore.Authorization.Policy.dll
+Flavorique Web App/bin/Debug/net6.0/refs/Microsoft.AspNetCore.Authorization.dll
+Flavorique Web App/bin/Debug/net6.0/refs/Microsoft.AspNetCore.Authentication.OAuth.dll
+Flavorique Web App/bin/Debug/net6.0/refs/Microsoft.AspNetCore.Authentication.dll
+Flavorique Web App/bin/Debug/net6.0/refs/Microsoft.AspNetCore.Authentication.Core.dll
+Flavorique Web App/bin/Debug/net6.0/refs/Microsoft.AspNetCore.Authentication.Cookies.dll
+Flavorique Web App/bin/Debug/net6.0/refs/Microsoft.AspNetCore.Authentication.Abstractions.dll
+Flavorique Web App/bin/Debug/net6.0/refs/Microsoft.AspNetCore.Antiforgery.dll
+Flavorique Web App/bin/Debug/net6.0/Microsoft.Win32.SystemEvents.dll
+Flavorique Web App/bin/Debug/net6.0/Microsoft.Extensions.FileProviders.Embedded.dll
+Flavorique Web App/bin/Debug/net6.0/Microsoft.AspNetCore.Identity.UI.dll
+Flavorique Web App/bin/Debug/net6.0/Humanizer.dll
+Flavorique Web App/bin/Debug/net6.0/Flavorique Web App.staticwebassets.runtime.json
+Flavorique Web App/bin/Debug/net6.0/Flavorique Web App.pdb
+Flavorique Web App/bin/Debug/net6.0/Flavorique Web App.dll
+Flavorique Web App/bin/Debug/net6.0/Flavorique Web App.deps.json
+*.cache
+Flavorique Web App/obj/Debug/net6.0/Flavorique Web App.csproj.FileListAbsolute.txt
+Flavorique Web App/obj/Debug/net6.0/Flavorique Web App.dll
+Flavorique Web App/obj/Debug/net6.0/Flavorique Web App.csproj.FileListAbsolute.txt
+Flavorique Web App/obj/Debug/net6.0/Flavorique Web App.csproj.CoreCompileInputs.cache
+Flavorique Web App/obj/Debug/net6.0/Flavorique Web App.csproj.AssemblyReference.cache
+Flavorique Web App/obj/Debug/net6.0/Flavorique Web App.assets.cache
+Flavorique Web App/obj/Debug/net6.0/Flavorique Web App.GeneratedMSBuildEditorConfig.editorconfig
+Flavorique Web App/obj/Debug/net6.0/Flavorique Web App.genruntimeconfig.cache
+Flavorique Web App/obj/Debug/net6.0/Flavorique Web App.pdb
+Flavorique Web App/obj/Debug/net6.0/ref/Flavorique Web App.dll
 Flavorique Web App/obj/Debug/net6.0/refint/Flavorique Web App.dll
+Flavorique Web App/obj/Debug/net6.0/staticwebassets.build.json
+Flavorique Web App/obj/Debug/net6.0/staticwebassets.development.json
+Flavorique Web App/obj/Debug/net6.0/staticwebassets.pack.json
+Flavorique Web App/obj/Flavorique Web App.csproj.nuget.dgspec.json
+Flavorique Web App/obj/Flavorique Web App.csproj.nuget.g.props
+Flavorique Web App/obj/Flavorique Web App.csproj.nuget.g.targets
+Flavorique Web App/obj/project.nuget.cache
+Flavorique Web App/obj/project.assets.json
+.vs/Flavorique Web App/v17/.futdcache.v2
+.vs/Flavorique Web App/v17/.suo

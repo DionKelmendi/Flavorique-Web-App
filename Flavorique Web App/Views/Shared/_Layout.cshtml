@@ -4,40 +4,43 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - Flavorique</title>
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/bootswatchTheme.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/Flavorique_Web_App.styles.css" asp-append-version="true" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
 </head>
 <body>
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-primary border-bottom box-shadow mb-3">
             <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Flavorique</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                <a class="navbar-brand text-light" asp-area="" asp-controller="Home" asp-action="Index">Flavorique</a>
+                <button class="navbar-toggler text-light" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
+                    <span class="navbar-toggler-icon text-light"></span>
                 </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav w-100 justify-content-center">
-                        <li class="nav-item mx-4">
-                            <a class="nav-link text-dark"  asp-controller="Home" asp-action="Index">Home</a>
+                <div class="navbar-collapse collapse d-sm-flex justify-content-between">
+                    <ul class="navbar-nav justify-content-center w-100">
+                        <li class="nav-item">
+                            <a class="nav-link text-light" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
                         </li>
-                        <li class="nav-item mx-4">
-                            <a class="nav-link text-dark"  asp-controller="Home" asp-action="Privacy">Categories</a>
+                        <li class="nav-item">
+                            <a class="nav-link text-light" asp-area="" asp-controller="Category" asp-action="Index">Categories</a>
                         </li>
-                        <li class="nav-item mx-4">
-                            <a class="nav-link text-dark"  asp-controller="Home" asp-action="Privacy">Recipes</a>
+                        <li class="nav-item">
+                            <a class="nav-link text-light" asp-area="" asp-controller="Home" asp-action="Privacy">Recipes</a>
                         </li>
-                        <li class="nav-item mx-4">
-                            <a class="nav-link text-dark"  asp-controller="Home" asp-action="Privacy">Contact</a>
+                        <li class="nav-item">
+                            <a class="nav-link text-light" asp-area="" asp-controller="Home" asp-action="Privacy">Contact</a>
                         </li>
-                        <li class="nav-item mx-4">
-                            <a class="nav-link text-dark"  asp-controller="Home" asp-action="Privacy">About</a>
+                        <li class="nav-item">
+                            <a class="nav-link text-light" asp-area="" asp-controller="Home" asp-action="Privacy">About</a>
                         </li>
-                        <li class="nav-item mx-4">
-                            <a class="nav-link text-dark" asp-controller="Category" asp-action="Index">Category</a>
+                        <li class="nav-item">
+                            <a class="nav-link text-light" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
                         </li>
+                        
                     </ul>
+
                     <partial name="_LoginPartial" />
                 </div>
             </div>
