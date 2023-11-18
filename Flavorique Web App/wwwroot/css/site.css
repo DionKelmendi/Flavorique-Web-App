@@ -16,3 +16,20 @@ html {
 body {
   margin-bottom: 60px;
 }
+
+.viewport-container{
+    position: absolute;
+    left: 0;
+    width: 100%;
+}
+
+@media (max-width: 1000px) {
+    
+    .row-to-column{
+        flex-direction: column;
+    }
+
+    .row-to-column .wider-item {
+        min-width: 80%;
+    }
+}

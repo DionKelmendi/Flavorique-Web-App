@@ -85,7 +85,7 @@ namespace Flavorique_Web_App.Controllers
             return View(obj);
         }
 
-        //GET
+        // POST
         public IActionResult Delete(int? id)
         {
             if (id == null || id == 0)
