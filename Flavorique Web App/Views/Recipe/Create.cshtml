@@ -1,0 +1,43 @@
+﻿@model Recipe
+
+@{
+    var tokenUrl = "https://localhost:7147/token";
+    ViewData["Title"] = "Create";
+}
+
+
+<div id="editor"></div>
+<button onclick="values()" type="button">Submit</button>
+
+<div class="append-div ck-content"></div>
+
+@section Scripts{
+    @{
+    <partial name="_ValidationScriptsPartial" />
+
+    <script src="https://cdn.ckbox.io/ckbox/2.2.0/ckbox.js"></script>
+    <script src="~/assets/vendor/ckeditor5-build-classic/ckeditor.js"></script>
+    <script>
+        ClassicEditor
+            .create(document.querySelector('#editor'), {
+                ckbox: {
+                    tokenUrl: '@tokenUrl',
+                    theme: 'lark'
+                },
+                removePlugins: ['Table'],
+                })
+            .catch(error => {
+                console.log(error);
+            });
+
+        function values() {
+
+            let ckContent = document.querySelector(".ck-content");
+            let body = ckContent.innerHTML;
+
+            let appendDiv = document.querySelector(".append-div");
+            appendDiv.innerHTML = body;
+        }
+    </script>
+    }
+}
