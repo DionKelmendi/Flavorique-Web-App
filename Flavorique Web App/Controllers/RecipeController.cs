@@ -20,6 +20,18 @@ namespace Flavorique_Web_App.Controllers
         }
 
         //GET
+        public IActionResult Details(int? id)
+        {
+            var obj = _db.Recipes.Find(id);
+
+            if (obj == null)
+            {
+                return NotFound();
+            }
+            return View(obj);
+        }
+
+        //GET
         public IActionResult Create()
         {
             return View();
@@ -30,7 +42,13 @@ namespace Flavorique_Web_App.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult Create(Recipe obj)
         {
-            return View();
+            if (ModelState.IsValid)
+            {
+                _db.Recipes.Add(obj);
+                _db.SaveChanges();
+                return RedirectToAction("Index");
+            }
+            return View(obj);
         }
 
         //GET

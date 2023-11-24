@@ -1,0 +1,10 @@
+﻿@model Recipe
+@{
+    ViewData["Title"] = "Details";
+
+}
+
+<div class="append-div ck-content">
+<h1>@Model.Title</h1>
+@Html.Raw(@Model.Body)
+</div>

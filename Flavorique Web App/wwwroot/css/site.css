@@ -41,6 +41,10 @@ body {
     display: none !important;
 }
 
+.ck-content {
+    min-height: 400px;
+}
+
 @media (max-width: 1000px) {
     .row-to-column{
         flex-direction: column;

@@ -4,12 +4,33 @@
     var tokenUrl = "https://localhost:7147/token";
     ViewData["Title"] = "Create";
 }
+<form onsubmit="values()" method="post">
 
+    <div class="border p-3 mt-4">
+        <div class="row pb-2">
+            <h2 class="text-primary"> Create Recipe </h2>
+            <hr />
+        </div>
+        <div class="mb-3">
+            <label asp-for="Title"></label>
+            <input asp-for="Title" class="form-control" />
+            <span asp-validation-for="Title" class="text-danger"></span>
+        </div>
+        <div class="mb-3 d-none">
+            <label asp-for="Body"></label>
+            <input asp-for="Body" class="form-control body-input" />
+            <span asp-validation-for="Body" class="text-danger"></span>
+        </div>
 
-<div id="editor"></div>
-<button onclick="values()" type="button">Submit</button>
+        <div id="editor"></div>
 
-<div class="append-div ck-content"></div>
+        <div class="mt-3">
+        <button type="submit" class="btn btn-primary" style="width: 200px"> Create </button>
+        <a asp-controller="Recipe" asp-action="Index" class="btn btn-secondary" style="width: 200px">Go back</a>
+        </div>
+    </div>
+</form>
+
 
 @section Scripts{
     @{
@@ -35,8 +56,8 @@
             let ckContent = document.querySelector(".ck-content");
             let body = ckContent.innerHTML;
 
-            let appendDiv = document.querySelector(".append-div");
-            appendDiv.innerHTML = body;
+            let bodyInput = document.querySelector(".body-input");
+            bodyInput.value = body;
         }
     </script>
     }

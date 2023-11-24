@@ -1,6 +1,78 @@
-﻿@{
+﻿@model IEnumerable<Recipe>
+@{
+    ViewData["Title"] = "Index";
+
 }
 
-<h1>Index</h1>
+<h1>Recipes</h1>
 
-<a asp-controller="Recipe" asp-action="Create" class="btn btn-primary"><i class="bi bi-plus-circle"></i> &nbsp; Create Recipe</a>
+<div class="container p-3">
+    <div class="row pt-4">
+        <div class="col-6">
+            <h2 class="text-primary"> Recipe List </h2>
+        </div>
+        <div class="col-6 text-end" style="padding:0;">
+            <a asp-controller="Recipe" asp-action="Create" class="btn btn-primary"><i class="bi bi-plus-circle"></i> &nbsp; Create New Recipe</a>
+        </div>
+    </div>
+</div>
+
+<table class="table table-bordered w-100">
+    <thead>
+        <tr class="table-primary">
+            <th>Id</th>
+            <th>Title</th>
+            <th>Date Created</th>
+            <th colspan="3"></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var obj in Model)
+        {
+            <tr>
+                <td>@obj.Id</td>
+                <td>@obj.Title</td>
+                <td>@obj.CreatedDateTime</td>
+                <td class="d-flex justify-content-evenly">
+                    <a asp-controller="Recipe" asp-action="Details" asp-route-id="@obj.Id" class="btn btn-info"><i class="bi bi-search"></i> &nbsp; Detail View</a>
+                    <a asp-controller="Recipe" asp-action="Edit" asp-route-id="@obj.Id" class="btn btn-warning"><i class="bi bi-pencil-square"></i> &nbsp; Edit Recipe</a>
+                    <!-- Former Delete Button
+                    <a asp-controller="Recipe" asp-action="Delete" asp-route-id="@obj.Id" class="btn btn-danger"><i class="bi bi-trash"></i> &nbsp; Delete Recipe</a>
+                    -->
+                    <!-- Button trigger modal -->
+                    <button type="button" onclick="addModalInfo" class="btn btn-danger modalButton" data-bs-toggle="modal" data-bs-target="#deleteModal">
+                        <i class="bi bi-trash"></i> &nbsp; Delete Recipe
+                    </button>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<script>
+    document.addEventListener("click", function (e) {
+
+        const target = e.target;
+        if (target.classList.contains("modalButton")) {
+            let targetRow = target.parentElement.parentElement.cells;
+            let cellData = [targetRow[0].innerText, targetRow[1].innerText, targetRow[2].innerText];
+
+            console.log(cellData);
+
+            let form = document.getElementById("modalForm");
+            form[0].value = cellData[1];
+            form[1].value = cellData[2];
+
+            let deleteButton = document.querySelector(".confirmDelete");
+            deleteButton.href = "Recipe/Delete/" + cellData[0];
+
+            console.log(deleteButton.href);
+        }
+    })
+
+</script>
+
+<!-- Modal -->
+@{
+    <partial name="_DeletePartial" />
+}
