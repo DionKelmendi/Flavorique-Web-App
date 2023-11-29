@@ -1,16 +1,22 @@
 ﻿using Flavorique_Web_App.Data;
 using Flavorique_Web_App.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Identity;
+using System;
 
 namespace Flavorique_Web_App.Controllers
 {
     public class RecipeController : Controller
     {
         private readonly ApplicationDbContext _db;
+        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly SignInManager<ApplicationUser> _signInManager;
 
-        public RecipeController(ApplicationDbContext db)
+        public RecipeController(ApplicationDbContext db, UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager)
         {
             _db = db;
+            _userManager = userManager;
+            _signInManager = signInManager;
         }
 
         public IActionResult Index()
@@ -34,16 +40,31 @@ namespace Flavorique_Web_App.Controllers
         //GET
         public IActionResult Create()
         {
-            return View();
+            if (_signInManager.IsSignedIn(User)) {
+                return View();
+            }
+            return RedirectToAction("Index");
         }
 
         //POST
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Create(Recipe obj)
+        public async Task<IActionResult> Create(Recipe obj)
         {
+            var user = await _userManager.GetUserAsync(User);
+
+            if (user == null)
+            {
+                return BadRequest();
+            }
+
             if (ModelState.IsValid)
             {
+                obj.AuthorId = user.Id;
+
+                string fillerString = "image widget. Press Enter to type after or press Shift + Enter to type before the widget";
+                obj.Body = obj.Body.Replace(fillerString, ""); ;
+
                 _db.Recipes.Add(obj);
                 _db.SaveChanges();
                 return RedirectToAction("Index");
@@ -54,14 +75,21 @@ namespace Flavorique_Web_App.Controllers
         //GET
         public IActionResult Edit(int? id)
         {
+
+            if (!_signInManager.IsSignedIn(User))
+            {
+                return RedirectToAction("Index");
+            }
+
             if (id == null || id == 0)
             {
                 return NotFound();
             }
 
+            var userId = _userManager.GetUserId(User);
             var obj = _db.Recipes.Find(id);
 
-            if (obj == null)
+            if (obj == null || userId != obj.AuthorId)
             {
                 return NotFound();
             }
@@ -71,10 +99,19 @@ namespace Flavorique_Web_App.Controllers
         //POST
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Edit(Recipe obj)
+        public async Task<IActionResult> Edit(Recipe obj)
         {
+            var user = await _userManager.GetUserAsync(User);
+
+            if (user == null)
+            {
+                return BadRequest();
+            }
+
             if (ModelState.IsValid)
             {
+                obj.AuthorId = user.Id;
+
                 _db.Recipes.Update(obj);
                 _db.SaveChanges();
                 return RedirectToAction("Index");

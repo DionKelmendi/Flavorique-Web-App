@@ -11,19 +11,14 @@
             <hr />
         </div>
         <div class="mb-3">
-            <label asp-for="Name"></label>
-            <input asp-for="Name" class="form-control" disabled />
-            <span asp-validation-for="Name" class="text-danger"></span>
+            <label asp-for="Title"></label>
+            <input asp-for="Title" class="form-control" disabled />
+            <span asp-validation-for="Title" class="text-danger"></span>
         </div>
         <div class="mb-3">
-            <label asp-for="Ingredients"></label>
-            <input asp-for="Ingredients" class="form-control" disabled />
-            <span asp-validation-for="Ingredients" class="text-danger"></span>
-        </div>
-        <div class="mb-3">
-            <label asp-for="Instructions"></label>
-            <input asp-for="Instructions" class="form-control" disabled />
-            <span asp-validation-for="Instructions" class="text-danger"></span>
+            <label asp-for="Body"></label>
+            <input asp-for="Body" class="form-control" disabled />
+            <span asp-validation-for="Body" class="text-danger"></span>
         </div>
         <button type="submit" class="btn btn-primary" style="width: 200px"> Delete </button>
         <a asp-controller="Recipe" asp-action="Index" class="btn btn-secondary" style="width: 200px">Go back</a>

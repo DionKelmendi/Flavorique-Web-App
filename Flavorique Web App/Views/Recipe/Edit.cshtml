@@ -1,9 +1,9 @@
 ﻿@model Recipe
 @{
+    var tokenUrl = "https://localhost:7147/token";
     ViewData["Title"] = "Edit";
 }
-
-<form method="post">
+<form onsubmit="setValues()" method="post">
 
     <div class="border p-3 mt-4">
         <div class="row pb-2">
@@ -11,27 +11,63 @@
             <hr />
         </div>
         <div class="mb-3">
-            <label asp-for="Name"></label>
-            <input asp-for="Name" class="form-control" />
-            <span asp-validation-for="Name" class="text-danger"></span>
+            <label asp-for="Title"></label>
+            <input asp-for="Title" class="form-control" />
+            <span asp-validation-for="Title" class="text-danger"></span>
         </div>
-        <div class="mb-3">
-            <label asp-for="Ingredients"></label>
-            <input asp-for="Ingredients" class="form-control" />
-            <span asp-validation-for="Ingredients" class="text-danger"></span>
+        <div id="bodyData" class="mb-3 d-none">
+            <label asp-for="Body"></label>
+            <input asp-for="Body" class="form-control body-input" />
+            <span asp-validation-for="Body" class="text-danger"></span>
         </div>
-        <div class="mb-3">
-            <label asp-for="Instructions"></label>
-            <input asp-for="Instructions" class="form-control" />
-            <span asp-validation-for="Instructions" class="text-danger"></span>
+
+        <div id="editor"></div>
+
+        <div class="mt-3">
+            <button type="submit" class="btn btn-warning" style="width: 200px"> Edit </button>
+            <a asp-controller="Recipe" asp-action="Index" class="btn btn-secondary" style="width: 200px">Go back</a>
         </div>
-        <button type="submit" class="btn btn-primary" style="width: 200px"> Update </button>
-        <a asp-controller="Recipe" asp-action="Index" class="btn btn-secondary" style="width: 200px">Go back</a>
     </div>
 </form>
+
 
 @section Scripts{
     @{
         <partial name="_ValidationScriptsPartial" />
+
+        <script src="https://cdn.ckbox.io/ckbox/2.2.0/ckbox.js"></script>
+        <script src="~/assets/vendor/ckeditor5-build-classic/ckeditor.js"></script>
+        <script>
+            let bodyData = document.querySelector("#bodyData").children[1].value
+            bodyData = bodyData.replace("image widget", "");
+            
+            let editor;
+
+            ClassicEditor
+                .create(document.querySelector('#editor'), {
+                    ckbox: {
+                        tokenUrl: '@tokenUrl',
+                        theme: 'lark'
+                    },
+                    removePlugins: ['Table'],
+                })
+                .then(editor => {
+                    editor.setData(bodyData);
+                })
+                .then(newEditor => {
+                    editor = newEditor;
+                })
+                .catch(error => {
+                    console.log(error);
+                });
+
+            function setValues() {
+                let ckContent = document.querySelector(".ck-content");
+                let body = ckContent.innerHTML;
+
+                let bodyInput = document.querySelector(".body-input");
+                bodyInput.value = body;
+            }
+        </script>
     }
 }
