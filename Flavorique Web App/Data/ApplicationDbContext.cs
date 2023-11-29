@@ -14,6 +14,7 @@ namespace Flavorique_Web_App.Data
 
         public DbSet<Category> Categories { get; set; }
         public DbSet<Recipe> Recipes { get; set; }
+        public DbSet<Tag> Tags { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
