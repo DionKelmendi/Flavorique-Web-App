@@ -1,0 +1,32 @@
+﻿@model Recipe
+@{
+    ViewData["Title"] = "Delete";
+}
+
+<form method="post" asp-action="DeletePOST">
+    <input asp-for="Id" class="form-control" hidden />
+    <div class="border p-3 mt-4">
+        <div class="row pb-2">
+            <h2 class="text-primary"> Delete Recipe </h2>
+            <hr />
+        </div>
+        <div class="mb-3">
+            <label asp-for="Name"></label>
+            <input asp-for="Name" class="form-control" disabled />
+            <span asp-validation-for="Name" class="text-danger"></span>
+        </div>
+        <div class="mb-3">
+            <label asp-for="Ingredients"></label>
+            <input asp-for="Ingredients" class="form-control" disabled />
+            <span asp-validation-for="Ingredients" class="text-danger"></span>
+        </div>
+        <div class="mb-3">
+            <label asp-for="Instructions"></label>
+            <input asp-for="Instructions" class="form-control" disabled />
+            <span asp-validation-for="Instructions" class="text-danger"></span>
+        </div>
+        <button type="submit" class="btn btn-primary" style="width: 200px"> Delete </button>
+        <a asp-controller="Recipe" asp-action="Index" class="btn btn-secondary" style="width: 200px">Go back</a>
+    </div>
+</form>
+
