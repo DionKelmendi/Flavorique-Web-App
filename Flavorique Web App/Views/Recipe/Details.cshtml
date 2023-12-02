@@ -5,6 +5,13 @@
 }
 
 <div class="append-div ck-content">
-<h1>@Model.Title</h1>
-@Html.Raw(@Model.Body)
+    <h1>@Model.Title</h1>
+
+    @Html.Raw(@Model.Body)
 </div>
+
+@section Scripts{
+    @{
+        <script src="~/assets/vendor/build/ckeditor.js"></script>
+    }
+}

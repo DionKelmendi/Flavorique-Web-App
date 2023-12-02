@@ -23,6 +23,15 @@ body {
     width: 100%;
 }
 
+.append-div {
+    word-wrap: break-word;
+}
+
+.append-div figure{
+
+    outline: none !important;
+}
+
 .append-div blockquote {
     border-left: 5px solid #ccc;
     font-style: italic;
