@@ -1,4 +1,4 @@
-html {
+﻿html {
   font-size: 14px;
 }
 
@@ -52,6 +52,74 @@ body {
 
 .ck-content {
     min-height: 400px;
+}
+
+.tag-container{
+    gap: 10px;
+}
+
+.tag-container > * {
+    margin-bottom: 0 !important;
+    text-decoration: none;
+}
+
+.tag-container a {
+    transition: 0.3s all ease-in;
+    font-weight: bold;
+}
+
+.tag-container a:hover {
+    background-color: #ba431a !important;
+}
+
+.star-rating {
+    float: left;
+    border: none;
+}
+
+.star-container{
+
+    display: flex;
+    align-items: center;
+}
+
+.star-rating:not(:checked) > input {
+    position: absolute;
+    top: -9999px;
+    visibility: hidden;
+    clip: rect(0, 0, 0, 0);
+}
+
+.star-rating:not(:checked) > label {
+    float: right;
+    width: 1em;
+    padding: 0 .1em;
+    overflow: hidden;
+    white-space: nowrap;
+    cursor: pointer;
+    font-size: 24px;
+    line-height: 1.2;
+    color: #bbb;
+}
+
+    .star-rating:not(:checked) > label:before {
+        content: '★ ';
+    }
+
+.star-rating > input:checked ~ label {
+    color: #f70;
+}
+
+.star-rating:not(:checked) > label:hover, .star-rating:not(:checked) > label:hover ~ label {
+    color: gold;
+}
+
+.star-rating > input:checked + label:hover, .star-rating > input:checked + label:hover ~ label, .star-rating > input:checked ~ label:hover, .star-rating > input:checked ~ label:hover ~ label, .star-rating > label:hover ~ input:checked ~ label {
+    color: #ea0;
+}
+
+.star-rating > label:active {
+    position: relative;
 }
 
 @media (max-width: 1000px) {

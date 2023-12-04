@@ -1,0 +1,40 @@
+﻿@{
+    var tokenUrl = "https://localhost:7147/token";
+}
+
+<script src="https://cdn.ckbox.io/ckbox/2.2.0/ckbox.js"></script>
+<script src="~/assets/vendor/build/ckeditor.js"></script>
+<script>
+    let bodyData = document.querySelector("#bodyData").children[1].value
+    bodyData = bodyData.replace("image widget", "");
+    bodyData = bodyData.replace(". Press Enter to type after or press Shift + Enter to type before the widget", "");
+
+    let editor;
+
+    ClassicEditor
+        .create(document.querySelector('#editor'), {
+            ckbox: {
+                tokenUrl: '@tokenUrl',
+                theme: 'lark'
+            },
+            removePlugins: ['FormatPainter', 'Table'],
+        })
+        .then(editor => {
+            editor.setData(bodyData);
+        })
+        .then(newEditor => {
+            editor = newEditor;
+        })
+        .catch(error => {
+            console.log(error);
+        });
+
+    function setValues() {
+        let ckContent = document.querySelector(".ck-content");
+        let body = ckContent.innerHTML;
+        body.replace("image widget. Press Enter to type after or press Shift + Enter to type before the widget", "");
+
+        let bodyInput = document.querySelector(".body-input");
+        bodyInput.value = body;
+    }
+</script>
