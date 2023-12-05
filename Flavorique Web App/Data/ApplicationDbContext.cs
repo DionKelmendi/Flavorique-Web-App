@@ -24,7 +24,7 @@ namespace Flavorique_Web_App.Data
                 .HasOne(r => r.Author)
                 .WithMany(u => u.Recipes)
                 .HasForeignKey(r => r.AuthorId)
-                .OnDelete(DeleteBehavior.Restrict);
+                .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }

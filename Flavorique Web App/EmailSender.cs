@@ -8,8 +8,8 @@ namespace Flavorique_Web_App
 
         public Task SendEmailAsync(string email, string subject, string message)
         {
-            var mail = "ENTER_EMAIL_HERE";
-            var password = "ENTER_APP_PASSWORD_HERE";
+            var mail = "dionkelmendi2003@gmail.com";
+            var password = "peaz drfq uakz svyk";
 
             var client = new SmtpClient("smtp.gmail.com", 587)
             {
@@ -17,12 +17,15 @@ namespace Flavorique_Web_App
                 Credentials = new NetworkCredential(mail, password)
             };
 
-            return client.SendMailAsync(
-                new MailMessage(from: mail,
+            var mailMessage = new MailMessage(from: mail,
                                 to: email,
-                                subject, 
+                                subject,
                                 message
-                                ));
+                                );
+
+            mailMessage.IsBodyHtml = true;
+
+            return client.SendMailAsync(mailMessage);
         }
     }
 }
