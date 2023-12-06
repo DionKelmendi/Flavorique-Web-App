@@ -30,13 +30,15 @@ namespace Flavorique_Web_App.Areas.Identity.Pages.Account
         private readonly IUserEmailStore<ApplicationUser> _emailStore;
         private readonly ILogger<RegisterModel> _logger;
         private readonly IEmailSender _emailSender;
+        private readonly RazorViewToStringRenderer _razorViewToStringRenderer;
 
         public RegisterModel(
             UserManager<ApplicationUser> userManager,
             IUserStore<ApplicationUser> userStore,
             SignInManager<ApplicationUser> signInManager,
             ILogger<RegisterModel> logger,
-            IEmailSender emailSender)
+            IEmailSender emailSender,
+            RazorViewToStringRenderer razorViewToStringRenderer)
         {
             _userManager = userManager;
             _userStore = userStore;
@@ -44,6 +46,7 @@ namespace Flavorique_Web_App.Areas.Identity.Pages.Account
             _signInManager = signInManager;
             _logger = logger;
             _emailSender = emailSender;
+            _razorViewToStringRenderer = razorViewToStringRenderer;
         }
 
         /// <summary>
@@ -132,8 +135,17 @@ namespace Flavorique_Web_App.Areas.Identity.Pages.Account
                         values: new { area = "Identity", userId = userId, code = code, returnUrl = returnUrl },
                         protocol: Request.Scheme);
 
+                    var viewName = "~/Views/Email/ConfirmEmail.cshtml";
+					var model = new ConfirmEmailViewModel
+					{
+						Url = callbackUrl,
+						UserName = Input.Email
+					};
+
+					var htmlString = await _razorViewToStringRenderer.RenderViewToStringAsync(viewName, model);
+
                     await _emailSender.SendEmailAsync(Input.Email, "Confirm your email",
-                    $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
+                    htmlString);
 
                     if (_userManager.Options.SignIn.RequireConfirmedAccount)
                     {

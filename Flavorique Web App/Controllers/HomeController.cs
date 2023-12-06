@@ -20,6 +20,11 @@ namespace Flavorique_Web_App.Controllers
             return View();
         }
 
+        public IActionResult Mail()
+        {
+            return View();
+        }
+
         public async Task<IActionResult> ProvaMailer()
         {
             var reciever = "dionkelmendi@hotmail.com";

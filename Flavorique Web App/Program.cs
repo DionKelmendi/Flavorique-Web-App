@@ -28,6 +28,9 @@ builder.Services.AddRazorPages().AddRazorRuntimeCompilation();
 // Add Mailer Services.
 builder.Services.AddTransient<IEmailSender, EmailSender>();
 
+// Add Razor View to String Renderer.
+builder.Services.AddTransient<RazorViewToStringRenderer>();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

@@ -22,11 +22,13 @@ namespace Flavorique_Web_App.Areas.Identity.Pages.Account
     {
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IEmailSender _emailSender;
+        private readonly RazorViewToStringRenderer _razorViewToStringRenderer;
 
-        public ResendEmailConfirmationModel(UserManager<ApplicationUser> userManager, IEmailSender emailSender)
+        public ResendEmailConfirmationModel(UserManager<ApplicationUser> userManager, IEmailSender emailSender, RazorViewToStringRenderer razorViewToStringRenderer, RazorViewToStringRenderer viewToStringRenderer)
         {
             _userManager = userManager;
             _emailSender = emailSender;
+            _razorViewToStringRenderer = razorViewToStringRenderer;
         }
 
         /// <summary>
@@ -77,10 +79,20 @@ namespace Flavorique_Web_App.Areas.Identity.Pages.Account
                 pageHandler: null,
                 values: new { userId = userId, code = code },
                 protocol: Request.Scheme);
+			
+            var viewName = "~/Views/Email/ConfirmEmail.cshtml";
+			var model = new ConfirmEmailViewModel
+			{
+				Url = callbackUrl,
+				UserName = Input.Email
+			};
+
+			var htmlString = await _razorViewToStringRenderer.RenderViewToStringAsync(viewName, model);
+
             await _emailSender.SendEmailAsync(
                 Input.Email,
                 "Confirm your email",
-                $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
+                htmlString);
 
             ModelState.AddModelError(string.Empty, "Verification email sent. Please check your email.");
             return Page();
