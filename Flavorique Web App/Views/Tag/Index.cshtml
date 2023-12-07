@@ -1,0 +1,79 @@
+﻿@model IEnumerable<Tag>
+@{
+    ViewData["Title"] = "Index";
+}
+<h1> Tags</h1>
+
+<div class="container p-3">
+    <div class=" row pt-4">
+        <div class=" col-6 ">
+            <h2 class=" text=primary"> Tag List</h2>
+        </div>
+        <div class=" col-6 text-end " style=" padding:0">
+            <a asp-controller="Tag" asp-action="Create" class=" btn btn-primary"><i class="bi bi-plus-circle"></i> &nbsp; Create New Tag</a>
+        </div>
+    </div>
+</div>
+
+<table class=" table table-bordered w-100">
+    <thead>
+        <tr class="table-primary">
+            <th>Id</th>
+            <th>Tag Name</th>
+            <th colspan="2"></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach(var obj in Model)
+        {
+            <tr>
+                <td>@obj.Id</td>
+                <td>@obj.Name</td>
+                <td class="d-flex justify-content-evenly">
+                    <a asp-controller="Tag" asp-action="Edit" asp-route-id="@obj.Id" class="btn btn-warning"><i class="bi bi-pencil-square"></i> &nbsp; Edit Tag</a>
+                    <!-- Former Delete Button
+                    <a asp-controller="Tag" asp-action="Delete" asp-route-id="@obj.Id" class="btn btn-danger"><i class="bi bi-trash"></i> &nbsp; Delete Tag</a>
+                    -->
+                    <!-- Button trigger modal -->
+                    <button type="button" onclick="addModalInfo" class="btn btn-danger modalButton" data-bs-toggle="modal" data-bs-target="#deleteModal">
+                        <i class="bi bi-trash"></i> &nbsp; Delete Tag
+                    </button>
+                </td>
+                </tr>
+        }
+    </tbody>
+</table>
+
+
+<script>
+    document.addEventListener("click", function (e) {
+
+        const target = e.target;
+        if (target.classList.contains("modalButton")) {
+            let targetRow = target.parentElement.parentElement.cells;
+            let cellData = [targetRow[0].innerText, targetRow[1].innerText, targetRow[2].innerText];
+
+            console.log(cellData);
+
+            let form = document.getElementById("modalForm");
+            form[0].value = cellData[1];
+            form[1].value = cellData[2];
+
+            let deleteButton = document.querySelector(".confirmDelete");
+            deleteButton.href = "Tag/Delete/" + cellData[0];
+
+            console.log(deleteButton.href);
+        }
+    })
+
+</script>
+<!-- Modal -->
+@{
+  //  <partial name="_DeletePartial" />
+}
+
+@section Scripts{
+    @{
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.min.js" integrity="sha384-j0CNLUeiqtyaRmlzUHCPZ+Gy5fQu0dQ6eZ/xAww941Ai1SxSY+0EQqNXNE6DZiVc" crossorigin="anonymous"></script>
+    }
+}
