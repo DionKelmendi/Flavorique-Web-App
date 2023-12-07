@@ -1,0 +1,30 @@
+﻿@model ConfirmEmailViewModel
+<div style="text-align: center; margin: 0; padding: 0;">
+
+	<div style="background: #e95420; color: white; padding: 5px">
+		<h2>Flavorique</h2>
+	</div>
+
+	<div style="background: #fff8f5; padding: 5px;">
+		<p style="margin-top: 50px;">Hi @Model.UserName,</p>
+
+		<p style="margin-top: 50px; margin-bottom: 50px;">
+			Thank you for joining Flavorique!
+			We look forward to seeing the incredible recipes you'll contribute and hope you find inspiration from the wonderful creations of our community.
+		</p>
+
+		<a style="font-size:16px; background:#e95420; color: white; border-radius: 6px; border: none; padding-left: 18px; padding-right: 18px; padding-top: 10px; padding-bottom: 10px; cursor: pointer; text-decoration: none;" href='@Model.Url'>Click Here</a>
+
+		<p style="margin-top: 50px;">Happy cooking!</p>
+		<p>Regards, <br /> The Flavorique Team</p>
+	</div>
+
+	<div style="background: #fbddd2; padding: 5px;">
+		<p>
+			Copyright © 2023 Flavorique Holding Sp. z o.o. All rights reserved. <br />
+			You are receiving this email because you accepted the Flavorique Terms of Use and Privacy Statement.
+		</p>
+
+		<p>Update your email <a href="#" style="color: #e95420">preferences</a> or <a href="#" style="color: #e95420">unsubscribe</a></p>
+	</div>
+</div>

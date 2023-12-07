@@ -1,5 +1,6 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Text;
+using Flavorique_Web_App;
 using Flavorique_Web_App.Data;
 using Flavorique_Web_App.Models;
 using Microsoft.AspNetCore.Identity;
@@ -9,15 +10,26 @@ using Microsoft.IdentityModel.Tokens;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+
+// Connect Database and DbContext.
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(connectionString));
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
+// Sets Default Identity Model.
 builder.Services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = true)
     .AddEntityFrameworkStores<ApplicationDbContext>();
+
+// Add Razor View Services.
 builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages().AddRazorRuntimeCompilation();
+
+// Add Mailer Services.
+builder.Services.AddTransient<IEmailSender, EmailSender>();
+
+// Add Razor View to String Renderer.
+builder.Services.AddTransient<RazorViewToStringRenderer>();
 
 var app = builder.Build();
 

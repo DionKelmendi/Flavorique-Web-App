@@ -36,7 +36,7 @@
                 <td>@obj.Id</td>
                 <td>@UserManager.FindByIdAsync(obj.AuthorId).Result.UserName</td>
                 <td>@obj.Title</td>
-                <td>@obj.CreatedDateTime</td>
+                <td>@obj.CreatedDateTime.ToString("MMMM dd, yyyy")</td>
                 <td class="d-flex justify-content-evenly">
                     <a asp-controller="Recipe" asp-action="Details" asp-route-id="@obj.Id" class="btn btn-info"><i class="bi bi-search"></i> &nbsp; Detail View</a>
                     <a asp-controller="Recipe" asp-action="Edit" asp-route-id="@obj.Id" class="btn btn-warning"><i class="bi bi-pencil-square"></i> &nbsp; Edit Recipe</a>

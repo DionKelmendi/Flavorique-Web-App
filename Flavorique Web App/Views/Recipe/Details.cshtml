@@ -1,17 +1,137 @@
-﻿@model Recipe
+﻿@using Microsoft.AspNetCore.Identity
+@inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
+@model Recipe
 @{
     ViewData["Title"] = "Details";
 
 }
 
-<div class="append-div ck-content">
-    <h1>@Model.Title</h1>
-
-    @Html.Raw(@Model.Body)
+<div id="spinner" class="d-flex align-items-center justify-content-center" style="height: calc(100vh - 108px)">
+    <div class="spinner-border text-primary" style="width: 3rem; height: 3rem;" role="status"></div>
 </div>
+
+<section id="recipe" class="d-none">
+
+    <section class="append-div ck-content">
+        <h1 class="mb-5">@Model.Title</h1>
+    
+        <div class="recipe-body">
+            @Html.Raw(@Model.Body)
+        </div>
+    </section>
+    
+    <section class="d-flex flex-column align-items-center justify-content-evenly text-center">
+        <h1 class="align-self-start">Similar Recipes</h1>
+        <div class="w-100 d-flex flex-column align-items-center justify-content-center">
+            @for (var i = 0; i < 3; i++)
+            {
+                <div class="border-bottom w-75 rounded d-flex align-items-center p-4" style="height:250px">
+                    <img class=" h-100" style="aspect-ratio: 1 / 1" />
+                    <div class="p-5" style="text-align:left">
+                        <p class="text-secondary">November 14, 2023</p>
+                        <h3 class="fw-bolder">Title</h3>
+                        <p style="text-align: justify">This shredded beef Texas chili is rich and hearty, made with 8 simple ingredients! Just saucy chunks of tender beef that shreds apart with the lightest pull of a fork. YUM.</p>
+                        <a asp-controller="Recipe" asp-action="Details" asp-route-id="1" style="font-size: 18px; letter-spacing: 1px">Continue Reading <i class="bi bi-arrow-right"></i></a>
+                    </div>
+                </div>
+            }
+        </div>
+    </section>
+    
+    
+    <section class="tag-container d-flex align-items-center mt-5">
+        <h4 class="me-3">Tags:</h4>
+        
+        @for (var i = 10; i < 21; i++)
+        {
+            <a href="#" class="tag-item p-2 bg-primary text-light rounded">Line @i</a>
+        }
+    </section>
+
+    @if (SignInManager.IsSignedIn(User))
+    {
+        <section class="create-comment-container mt-5 p-5 bg-light rounded">
+            <h4 class="mb-5">Leave a comment</h4>
+
+            <form method="post">
+                <div class="mb-3">
+                    <label>Comment</label>
+                    <textarea style="min-height: 200px" class="form-control"></textarea>
+                    <span class="text-danger"></span>
+                </div>
+                <div class="mb-3 star-container">
+                    <label class="me-3">Recipe rating</label>
+
+                    <fieldset class="star-rating">
+                        <input id="star-1" type="radio" name="rating" value="1" />
+                        <label for="star-1">
+                            <i class="bi bi-star-fill"></i>
+                        </label>
+                        <input id="star-2" type="radio" name="rating" value="2" />
+                        <label for="star-2">
+                            <i class="bi bi-star-fill"></i>
+                        </label>
+                        <input id="star-3" type="radio" name="rating" value="3" />
+                        <label for="star-3">
+                            <i class="bi bi-star-fill"></i>
+                        </label>
+                        <input id="star-4" type="radio" name="rating" value="4" />
+                        <label for="star-4">
+                            <i class="bi bi-star-fill"></i>
+                        </label>
+                        <input id="star-5" type="radio" name="rating" value="5" />
+                        <label for="star-5">
+                            <i class="bi bi-star-fill"></i>
+                        </label>
+                    </fieldset>
+
+                    <span class="text-danger"></span>
+                </div>
+                <button type="submit" style="letter-spacing: 1px" class="p-3 mt-4 btn btn-primary">Post Comment</button>
+            </form>
+        </section>
+    }
+
+    <section class="main-comment-container mt-5">
+        <h4 class="text-primary">50 Comments</h4>
+        <hr class="mb-5" />
+
+        <div class="comment-container d-flex flex-column">
+            @for (var i = 0; i < 5; i++)
+            {
+            <div class="comment-item mb-5">
+                <div class="d-flex align-items-start">
+                    <img src="" class="border rounded-circle" style="width: 100px; aspect-ratio: 1 / 1;"/>
+                    <div class="ms-4">
+                        <h5>Name</h5>
+                        <p style="text-align: justify;">
+                            Comment Content Comment Content Comment Content Comment Content Comment Content Comment Content Comment Content Comment Content Comment Content Comment Content Comment Content Comment Content 
+                        </p>
+                    </div>
+                </div>
+
+                <div class="d-flex justify-content-between">
+                <p class="text-primary">
+                    November 14, 2023 &commat; 12:57
+                </p>
+                <a href="#" class="text-primary">Reply</a>
+                </div>
+
+            </div>
+            }
+        </div>
+
+    </section>
+
+</section>
 
 @section Scripts{
     @{
         <script src="~/assets/vendor/build/ckeditor.js"></script>
+        <script>
+            document.querySelector("#spinner").classList.add("d-none");
+            document.querySelector("#recipe").classList.remove("d-none");
+        </script>
     }
 }

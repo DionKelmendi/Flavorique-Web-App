@@ -60,6 +60,21 @@ namespace Flavorique_Web_App.Controllers
 
             if (ModelState.IsValid)
             {
+                var recipeFromDb = _db.Recipes.FirstOrDefault(c => c.Title == obj.Title); 
+
+                if (recipeFromDb != null) {
+                    ModelState.AddModelError("Title", "Title already exists.");
+                    return View(obj);
+                }
+
+                var content = obj.Body.Replace("&nbsp; ", "");
+
+                if (content.Length < 100)
+                {
+                    ModelState.AddModelError("Body", "Recipe is too short or is empty.");
+                    return View(obj);
+                }
+
                 obj.AuthorId = user.Id;
 
                 string fillerString = "image widget. Press Enter to type after or press Shift + Enter to type before the widget";
@@ -110,6 +125,22 @@ namespace Flavorique_Web_App.Controllers
 
             if (ModelState.IsValid)
             {
+                var recipeFromDb = _db.Recipes.FirstOrDefault(c => c.Title == obj.Title);
+
+                if (recipeFromDb != null)
+                {
+                    ModelState.AddModelError("Title", "Title already exists.");
+                    return View(obj);
+                }
+
+                var content = obj.Body.Replace("&nbsp; ", "");
+
+                if (content.Length < 100)
+                {
+                    ModelState.AddModelError("Body", "Recipe is too short or is empty.");
+                    return View(obj);
+                }
+
                 obj.AuthorId = user.Id;
 
                 _db.Recipes.Update(obj);
