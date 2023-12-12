@@ -34,7 +34,16 @@
         {
             <tr>
                 <td>@obj.Id</td>
-                <td>@UserManager.FindByIdAsync(obj.AuthorId).Result.UserName</td>
+                <td>
+                    @if (obj.AuthorId == null)
+                    {
+                        @("[Deleted User]")
+                    }
+                    else
+                    {
+                        @UserManager.FindByIdAsync(obj.AuthorId).Result.UserName
+                    }
+                </td>
                 <td>@obj.Title</td>
                 <td>@obj.CreatedDateTime.ToString("MMMM dd, yyyy")</td>
                 <td class="d-flex justify-content-evenly">
