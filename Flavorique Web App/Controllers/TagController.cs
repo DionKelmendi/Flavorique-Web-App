@@ -47,24 +47,24 @@ namespace Flavorique_Web_App.Controllers
             }
             return View(obj);
         }
-    
-    // GET
-    public IActionResult Edit(int? id)
-    {
-        if (id == null || id == 0)
+
+        // GET
+        public IActionResult Edit(int? id)
         {
-            return NotFound();
+            if (id == null || id == 0)
+            {
+                return NotFound();
+            }
+
+            var tagFromDb = _db.Tags.Find(id);
+
+            if (tagFromDb == null)
+            {
+                return NotFound();
+            }
+
+            return View(tagFromDb);
         }
-
-        var tagFromDb = _db.Tags.Find(id);
-
-        if (tagFromDb == null)
-        {
-            return NotFound();
-        }
-
-        return View(tagFromDb);
-    }
         // POST
         [HttpPost]
         [ValidateAntiForgeryToken]
