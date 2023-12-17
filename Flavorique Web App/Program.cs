@@ -6,6 +6,7 @@ using Flavorique_Web_App.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using TXTextControl;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -30,6 +31,9 @@ builder.Services.AddTransient<IEmailSender, EmailSender>();
 
 // Add Razor View to String Renderer.
 builder.Services.AddTransient<RazorViewToStringRenderer>();
+
+// Add HTML To PDF Converter.
+builder.Services.AddTransient<HTMLToPDFConverter>();
 
 var app = builder.Build();
 

@@ -102,9 +102,9 @@ body {
     color: #bbb;
 }
 
-    .star-rating:not(:checked) > label:before {
-        content: '★ ';
-    }
+.star-rating:not(:checked) > label:before {
+    content: '★ ';
+}
 
 .star-rating > input:checked ~ label {
     color: #f70;
@@ -122,12 +122,35 @@ body {
     position: relative;
 }
 
-@media (max-width: 1000px) {
-    .row-to-column{
-        flex-direction: column;
-    }
-
-    .row-to-column .wider-item {
-        min-width: 80%;
-    }
+.recipe-content .ck-editor {
+    min-width: 100%;
 }
+
+.recipe-ingredients .item .break{
+    display: none;
+}
+
+.recipe-ingredients .item:hover .break {
+    display: block;
+}
+
+#ingredients {
+    margin-top: 50px;
+}
+
+#ingredients, #instructions {
+    color: #e95420;
+    font-size: 24px;
+    padding-bottom: 5px;
+    border-bottom: 2px solid #e95420;
+}
+
+    @media (max-width: 1000px) {
+        .row-to-column {
+            flex-direction: column;
+        }
+
+            .row-to-column .wider-item {
+                min-width: 80%;
+            }
+    }

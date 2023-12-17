@@ -1,0 +1,93 @@
+﻿@using Microsoft.AspNetCore.Identity
+@model PrintViewModel
+@inject UserManager<ApplicationUser> UserManager
+@{
+	Layout = null;
+}
+<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<meta charset="utf-8" />
+	<title>Print Recipe</title>
+	<style>
+		#printContainer{
+			padding: 20px;
+			width: 800px;
+			border: 5px solid gray;
+		}
+
+		#headContainer {
+			font-size: 12px;
+		}
+
+		img{
+			border: 1px solid black;
+			width: 150px;
+			height: 150px;
+			margin: 0;
+			border-radius: 50%;
+			object-position: center;
+			top: 0px;
+		}
+
+		tr{
+			width: 100%;
+		}
+
+		#printTable, #bodyTd{
+			border: 5px solid gray;
+		}
+
+		td {
+			padding: 20px;
+		}
+
+
+
+	</style>
+</head>
+<body>
+<form id="myForm" asp-controller="Recipe" asp-action="PrintPDF" onsubmit="getValues()" method="post">
+	<input type="hidden" id="title" name="title" value="" />
+	<input type="hidden" id="body" name="body" value="" />
+	<button type="submit">Print</button>
+</form>
+
+	<div id="printContainer">
+		<table id="printTable" style="border: none; padding: 0px; width: 100%;">
+			<tr>
+				<td id="headContainer" style="font-size: 18px !important;">
+					<h1 id="modelTitle">@Model.Title</h1>
+					<p>Author: @Model.Author</p>
+					<p>Reviews: ⭐⭐⭐⭐⭐</p>
+				</td>
+				<td style="padding: 20px;">
+					<img src="@Model.Image" style="position: relative !important; right: 0 !important;">
+				</td>
+			</tr>
+			<tr>
+				<td id="bodyTd" colspan="2" style="border: none !important">
+					@Html.Raw(Model.Body)
+				</td>
+			</tr>
+		</table>
+	</div>
+
+<script>
+	let divs = document.querySelectorAll("div.ck");
+	
+	divs.forEach(function (item, index) { 
+		item.remove();
+	});
+
+	function getValues() { 
+		let title = document.getElementById("title");
+		let body = document.getElementById("body");
+
+		title.value = document.getElementById("modelTitle").innerText;
+		body.value = document.documentElement.outerHTML;
+	}
+</script>
+</body>
+</html>

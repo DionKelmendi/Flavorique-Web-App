@@ -8,8 +8,8 @@ namespace Flavorique_Web_App
 
         public Task SendEmailAsync(string email, string subject, string message)
         {
-            var mail = "dionkelmendi2003@gmail.com";
-            var password = "peaz drfq uakz svyk";
+            var mail = "flavoriqueblog@gmail.com";
+            var password = "tdzb xvvk mkqe bvdl";
 
             var client = new SmtpClient("smtp.gmail.com", 587)
             {

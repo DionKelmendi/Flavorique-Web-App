@@ -14,14 +14,16 @@
 <section id="recipe" class="d-none">
 
     <section class="append-div ck-content">
-        <h1 class="mb-5">@Model.Title</h1>
+        <h1 class="my-5">@Model.Title</h1>
     
+        <a href="#ingredients" class="w-100 d-block bg-light text-center p-3 mb-5 text-decoration-none" style="font-size: 20px;"><i class="bi bi-arrow-down"></i> Jump to recipe</a>
+
         <div class="recipe-body">
             @Html.Raw(@Model.Body)
         </div>
     </section>
     
-    <section class="d-flex flex-column align-items-center justify-content-evenly text-center">
+    <section class="d-flex flex-column align-items-center justify-content-evenly text-center mt-5">
         <h1 class="align-self-start">Similar Recipes</h1>
         <div class="w-100 d-flex flex-column align-items-center justify-content-center">
             @for (var i = 0; i < 3; i++)
@@ -38,7 +40,6 @@
             }
         </div>
     </section>
-    
     
     <section class="tag-container d-flex align-items-center mt-5">
         <h4 class="me-3">Tags:</h4>
@@ -128,10 +129,33 @@
 
 @section Scripts{
     @{
-        <script src="~/assets/vendor/build/ckeditor.js"></script>
-        <script>
-            document.querySelector("#spinner").classList.add("d-none");
-            document.querySelector("#recipe").classList.remove("d-none");
-        </script>
+    <script src="~/assets/vendor/build/ckeditor.js"></script>
+    <script>
+                                            document.querySelector("#spinner").classList.add("d-none");
+                                            document.querySelector("#recipe").classList.remove("d-none");
+    </script>
+
+    <script>
+                                            let ingredients = document.getElementById("ingredients");
+                                            let printBtn = document.createElement("a");
+                                            
+                                            let i = document.createElement("i");
+                                            i.classList.add("bi");
+                                            i.classList.add("bi-printer");
+
+                                            printBtn.appendChild(document.createTextNode("Print Recipe "));
+                                            printBtn.appendChild(i);
+                                            printBtn.classList.add("btn");
+                                            printBtn.classList.add("btn-light");
+                                            printBtn.style.float = "right";
+
+                        let url =  window.location.href;
+                var match = url.match(/\/Details\/(\d+)/);
+
+                            let id = match[1];
+                            printBtn.href = `../Print/${id}`;
+
+                                            ingredients.appendChild(printBtn);
+    </script>
     }
 }

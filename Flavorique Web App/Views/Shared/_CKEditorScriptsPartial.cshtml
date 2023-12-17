@@ -11,7 +11,7 @@
 
     let editor;
 
-    ClassicEditor
+        ClassicEditor
         .create(document.querySelector('#editor'), {
             ckbox: {
                 tokenUrl: '@tokenUrl',
@@ -19,10 +19,8 @@
             },
             removePlugins: ['FormatPainter', 'Table'],
         })
-        .then(editor => {
-            editor.setData(bodyData);
-        })
         .then(newEditor => {
+            newEditor.setData(bodyData);
             editor = newEditor;
         })
         .catch(error => {
