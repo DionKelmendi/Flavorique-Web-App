@@ -11,6 +11,7 @@ using TXTextControl;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+builder.Services.AddControllers();
 
 // Connect Database and DbContext.
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
@@ -35,22 +36,21 @@ builder.Services.AddTransient<RazorViewToStringRenderer>();
 // Add HTML To PDF Converter.
 builder.Services.AddTransient<HTMLToPDFConverter>();
 
+// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-    app.UseMigrationsEndPoint();
-}
-else
-{
-    app.UseExceptionHandler("/Home/Error");
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-    app.UseHsts();
+    app.UseSwagger();
+    app.UseSwaggerUI();
 }
 
-// Configure CBox JWT
-app.MapGet("/token", () =>
+// Configure CkBox JWT
+app.MapGet("/api/CKBox/token", () =>
 {
 
     var environmentId = builder.Configuration.GetValue<string>("CKBoxEnvironmentId");

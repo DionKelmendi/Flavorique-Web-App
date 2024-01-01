@@ -5,6 +5,8 @@ VisualStudioVersion = 17.7.34202.233
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Flavorique Web App", "Flavorique Web App\Flavorique Web App.csproj", "{DFA7F364-1AB1-4958-8368-AF1700830798}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Flavorique MVC", "Flavorique MVC\Flavorique MVC.csproj", "{D2185421-4418-4DA7-BEB4-72F0D2FA3FF5}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{DFA7F364-1AB1-4958-8368-AF1700830798}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DFA7F364-1AB1-4958-8368-AF1700830798}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DFA7F364-1AB1-4958-8368-AF1700830798}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D2185421-4418-4DA7-BEB4-72F0D2FA3FF5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D2185421-4418-4DA7-BEB4-72F0D2FA3FF5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D2185421-4418-4DA7-BEB4-72F0D2FA3FF5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D2185421-4418-4DA7-BEB4-72F0D2FA3FF5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
