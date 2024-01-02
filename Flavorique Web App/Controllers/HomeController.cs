@@ -17,12 +17,7 @@ namespace Flavorique_Web_App.Controllers
 
         public IActionResult Index()
         {
-            return View();
-        }
-
-        public IActionResult Mail()
-        {
-            return View();
+            return Redirect("/swagger/");
         }
 
         public async Task<IActionResult> ProvaMailer()
@@ -34,11 +29,6 @@ namespace Flavorique_Web_App.Controllers
             await _emailSender.SendEmailAsync(reciever, subject, message);
 
             return RedirectToAction("Index");
-        }
-
-        public IActionResult Privacy()
-        {
-            return View();
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

@@ -1,11 +1,11 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Flavorique_Web_App.Models
+namespace Flavorique_MVC.Models
 {
     public class Recipe
     {
         [Key]
-        public int Id {  get; set; }
+        public int Id { get; set; }
         [Required]
         [StringLength(100)]
         public string? Title { get; set; }
@@ -19,5 +19,5 @@ namespace Flavorique_Web_App.Models
         public string? AuthorId { get; set; }
         public ApplicationUser? Author { get; set; }
 
-}
+    }
 }

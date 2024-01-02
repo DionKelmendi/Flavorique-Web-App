@@ -26,4 +26,9 @@
     <PackageReference Include="TXTextControl.TextControl.ASP.SDK" Version="32.0.1" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="wwwroot\css\" />
+    <Folder Include="wwwroot\js\" />
+  </ItemGroup>
+
 </Project>

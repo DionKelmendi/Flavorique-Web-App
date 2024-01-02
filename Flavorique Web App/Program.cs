@@ -8,7 +8,19 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using TXTextControl;
 
+var CORSPolicy = "_CORSPolicy";
+
 var builder = WebApplication.CreateBuilder(args);
+
+// Add URLS to CORS Policy
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(name: CORSPolicy,
+                      policy =>
+                      {
+                          policy.WithOrigins("https://localhost:7122");
+                      });
+});
 
 // Add services to the container.
 builder.Services.AddControllers();
@@ -88,6 +100,8 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
+
+app.UseCors(CORSPolicy);
 
 app.UseAuthentication();
 app.UseAuthorization();
