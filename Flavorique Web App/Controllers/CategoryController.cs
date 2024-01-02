@@ -72,6 +72,12 @@ namespace Flavorique_Web_App.Controllers
             {
                 return BadRequest();
             }
+            if (category == null) { return NotFound(); }
+            if (category.Name.Trim() == category.DisplayOrder.ToString())
+            {
+                ModelState.AddModelError("Name", "Name cannot be the same as Display Order.");
+                return BadRequest(ModelState);
+            }
 
             _db.Entry(category).State = EntityState.Modified;
 
@@ -103,6 +109,13 @@ namespace Flavorique_Web_App.Controllers
             {
                 return Problem("Entity set 'db.Categories' is null.");
             }
+            if (category == null) {  return NotFound(); }
+            if (category.Name.Trim() == category.DisplayOrder.ToString())
+            {
+                ModelState.AddModelError("Name", "Name cannot be the same as Display Order.");
+                return BadRequest(ModelState);
+            }
+
             _db.Categories.Add(category);
             await _db.SaveChangesAsync();
 

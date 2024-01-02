@@ -1,6 +1,9 @@
 ﻿using Flavorique_MVC.Models;
 using Flavorique_MVC.Data;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
+using System.Text;
+using System.Net;
 
 namespace Flavorique_MVC.Controllers
 {
@@ -13,10 +16,18 @@ namespace Flavorique_MVC.Controllers
             _db = db;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            IEnumerable<Category> objCategoryList = _db.Categories.ToList();
-            return View(objCategoryList);
+            IEnumerable<Category> products = new List<Category>();
+            using (var client = new HttpClient())
+            {
+                using (var response = await client.GetAsync("https://localhost:7147/api/Category"))
+                {
+                    string apiResponse = await response.Content.ReadAsStringAsync();
+                    products = JsonConvert.DeserializeObject<List<Category>>(apiResponse);
+                }
+            }
+            return View(products);
         }
 
         //GET
@@ -25,103 +36,136 @@ namespace Flavorique_MVC.Controllers
             return View();
         }
 
-        //POST
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public IActionResult Create(Category obj)
+        public async Task<IActionResult> Create(Category category)
         {
-            if (obj.Name.Trim() == obj.DisplayOrder.ToString())
+            try
             {
-                ModelState.AddModelError("Name", "Name cannot be the same as Display Order.");
-            }
+                using (var client = new HttpClient())
+                {
+                    var response = await client.PostAsync("https://localhost:7147/api/Category",
+                        new StringContent(JsonConvert.SerializeObject(category), Encoding.UTF8, "application/json"));
 
-            if (ModelState.IsValid)
-            {
-                _db.Categories.Add(obj);
-                _db.SaveChanges();
-                return RedirectToAction("Index");
+                    return await HandleResponse(response, category);
+                }
             }
-            return View(obj);
+            catch (Exception ex)
+            {
+                // Log or handle unexpected exceptions
+                ModelState.AddModelError(string.Empty, $"An error occurred: {ex.Message}");
+                return View(category);
+            }
         }
 
         //GET
-        public IActionResult Edit(int? id)
+        public async Task<IActionResult> Edit(int? id)
         {
             if (id == null || id == 0)
             {
                 return NotFound();
             }
 
-            // Returns first object from sequence
-            // var categoryFromDbFirst = _db.Categories.FirstOrDefault(c => c.Id == id); 
+            var category = new Category();
 
-            // Returns object from sequence where the condition is satisfied, returns exception if more than one object is found
-            // var categoryFromDbSingle = _db.Categories.SingleOrDefault(c => c.Id == id); 
-
-            var categoryFromDb = _db.Categories.Find(id);
-
-            if (categoryFromDb == null)
+            using (var client = new HttpClient())
             {
-                return NotFound();
+                using (var response = await client.GetAsync("https://localhost:7147/api/Category/" + id))
+                {
+                    if (response.IsSuccessStatusCode) {
+                        string result = await response.Content.ReadAsStringAsync();
+                        category = JsonConvert.DeserializeObject<Category>(result);
+                    }
+                    else
+                    {
+                        return RedirectToAction("Index");
+                    }
+                }
             }
-            return View(categoryFromDb);
+            return View(category);
         }
 
         //POST
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Edit(Category obj)
+        public async Task<IActionResult> Edit(Category category)
         {
-            if (obj.Name.Trim() == obj.DisplayOrder.ToString())
+            try
             {
-                ModelState.AddModelError("Name", "Name cannot be the same as Display Order.");
-            }
+                var id = category.Id;
 
-            if (ModelState.IsValid)
+                using (var client = new HttpClient())
+                {
+                    var response = await client.PutAsync($"https://localhost:7147/api/Category/{id}",
+                        new StringContent(JsonConvert.SerializeObject(category), Encoding.UTF8, "application/json"));
+
+                    return await HandleResponse(response, category);
+                }
+            }
+            catch (Exception ex)
             {
-                _db.Categories.Update(obj);
-                _db.SaveChanges();
+                // Log or handle unexpected exceptions
+                ModelState.AddModelError(string.Empty, $"An error occurred: {ex.Message}");
+                return View(category);
+            }
+        }
+
+
+        private async Task<IActionResult> HandleResponse(HttpResponseMessage response, Category category)
+        {
+            if (response.IsSuccessStatusCode)
+            {
                 return RedirectToAction("Index");
             }
-            return View(obj);
+
+            var result = await response.Content.ReadAsStringAsync();
+
+            if (response.StatusCode == HttpStatusCode.BadRequest)
+            {
+                // Handle validation errors from the API
+                var validationErrors = JsonConvert.DeserializeObject<Dictionary<string, List<string>>>(result);
+
+                foreach (var error in validationErrors)
+                {
+                    foreach (var errorMessage in error.Value)
+                    {
+                        ModelState.AddModelError(error.Key, errorMessage);
+                    }
+                }
+
+                return View(category);
+            }
+
+            // Handle other non-success status codes
+            ModelState.AddModelError(string.Empty, $"Error: {response.StatusCode}");
+            return View(category);
         }
 
         // POST
-        public IActionResult Delete(int? id)
+        public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null || id == 0)
-            {
-                return NotFound();
+            try {
+
+                if (id == null || id == 0)
+                {
+                    return NotFound();
+                }
+
+                using (var client = new HttpClient())
+                {
+                    using (var response = await client.DeleteAsync($"https://localhost:7147/api/Category/{id}"))
+                    {
+                        string apiResponse = await response.Content.ReadAsStringAsync();
+                    }
+                }
+
+                return RedirectToAction("Index");
             }
-
-            var obj = _db.Categories.Find(id);
-
-            if (obj == null)
+            catch (Exception ex)
             {
-                return NotFound();
+                // Log or handle unexpected exceptions
+                ModelState.AddModelError(string.Empty, $"An error occurred: {ex.Message}");
+                return View();
             }
-            //  return View(categoryFromDb);
-
-            _db.Categories.Remove(obj);
-            _db.SaveChanges();
-            return RedirectToAction("Index");
-
         }
-
-        //POST
-        //[HttpPost]
-        //[ValidateAntiForgeryToken]
-        //public IActionResult DeletePOST(int? id)
-        //{
-        //  var obj = _db.Categories.Find(id);
-
-        //if (obj == null) {
-        //  return NotFound();
-        //}
-
-        //_db.Categories.Remove(obj);
-        //_db.SaveChanges();
-        //return RedirectToAction("Index");
-        // }
     }
 }
