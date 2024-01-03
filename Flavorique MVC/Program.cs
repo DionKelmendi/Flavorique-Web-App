@@ -1,3 +1,4 @@
+using Flavorique_MVC;
 using Flavorique_MVC.Data;
 using Flavorique_MVC.Models;
 using Microsoft.AspNetCore.Identity;
@@ -14,6 +15,12 @@ builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 builder.Services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = true)
     .AddEntityFrameworkStores<ApplicationDbContext>();
 builder.Services.AddControllersWithViews();
+
+// Add Mailer Services.
+builder.Services.AddTransient<IEmailSender, EmailSender>();
+
+// Add Razor View to String Renderer.
+builder.Services.AddTransient<RazorViewToStringRenderer>();
 
 var app = builder.Build();
 

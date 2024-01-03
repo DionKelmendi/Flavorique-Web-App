@@ -1,8 +1,4 @@
-﻿using System.Drawing;
-using TXTextControl;
-using TXTextControl.DocumentServer.PDF.Contents;
-
-namespace Flavorique_Web_App
+﻿namespace Flavorique_Web_App
 {
 	public class HTMLToPDFConverter
 	{
