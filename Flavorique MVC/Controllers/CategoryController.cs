@@ -1,5 +1,4 @@
 ﻿using Flavorique_MVC.Models;
-using Flavorique_MVC.Data;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using System.Text;
@@ -9,25 +8,19 @@ namespace Flavorique_MVC.Controllers
 {
     public class CategoryController : Controller
     {
-        private readonly ApplicationDbContext _db;
-
-        public CategoryController(ApplicationDbContext db)
-        {
-            _db = db;
-        }
 
         public async Task<IActionResult> Index()
         {
-            IEnumerable<Category> products = new List<Category>();
+            IEnumerable<Category> categories = new List<Category>();
             using (var client = new HttpClient())
             {
                 using (var response = await client.GetAsync("https://localhost:7147/api/Category"))
                 {
                     string apiResponse = await response.Content.ReadAsStringAsync();
-                    products = JsonConvert.DeserializeObject<List<Category>>(apiResponse);
+                    categories = JsonConvert.DeserializeObject<List<Category>>(apiResponse);
                 }
             }
-            return View(products);
+            return View(categories);
         }
 
         //GET
@@ -69,7 +62,7 @@ namespace Flavorique_MVC.Controllers
 
             using (var client = new HttpClient())
             {
-                using (var response = await client.GetAsync("https://localhost:7147/api/Category/" + id))
+                using (var response = await client.GetAsync($"https://localhost:7147/api/Category/{id}"))
                 {
                     if (response.IsSuccessStatusCode) {
                         string result = await response.Content.ReadAsStringAsync();

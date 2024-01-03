@@ -84,10 +84,10 @@ namespace Flavorique_Web_App.Controllers
                 .Select(i => new
                 {
                     Title = i.Title,
-                    CreatedDateTime = i.CreatedDateTime.ToString("MMMM d, yyyy"),
+                    CreatedDateTime = i.CreatedDateTime,
                     Body = StripHtmlTags(i.Body).Length > 100 ? StripHtmlTags(i.Body).Substring(0, 100) : StripHtmlTags(i.Body)
                 })
-                .OrderBy(j => j.Title)
+                .OrderByDescending(j => j.CreatedDateTime)
                 .Take(number)
                 .ToList();
 

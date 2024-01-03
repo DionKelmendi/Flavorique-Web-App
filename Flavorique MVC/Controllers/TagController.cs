@@ -1,22 +1,26 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Flavorique_MVC.Data;
 using Flavorique_MVC.Models;
+using Newtonsoft.Json;
+using System.Text;
+using System.Net;
 
 namespace Flavorique_MVC.Controllers
 {
     public class TagController : Controller
     {
-        private readonly ApplicationDbContext _db;
 
-        public TagController(ApplicationDbContext db)
+        public async Task<IActionResult> Index()
         {
-            _db = db;
-        }
-
-        public IActionResult Index()
-        {
-            IEnumerable<Tag> objTagList = _db.Tags.ToList();
-            return View(objTagList);
+            IEnumerable<Tag> tags = new List<Tag>();
+            using (var client = new HttpClient())
+            {
+                using (var response = await client.GetAsync("https://localhost:7147/api/Tag"))
+                {
+                    string apiResponse = await response.Content.ReadAsStringAsync();
+                    tags = JsonConvert.DeserializeObject<List<Tag>>(apiResponse);
+                }
+            }
+            return View(tags);
         }
 
         //GET
@@ -26,99 +30,135 @@ namespace Flavorique_MVC.Controllers
         }
 
         //POST
-
         [HttpPost]
         [ValidateAntiForgeryToken]
-
-        public IActionResult Create(Tag obj)
+        public async Task<IActionResult> Create(Tag tag)
         {
-            if (obj.Name.Trim() == obj.Id.ToString())
+            try
             {
-                ModelState.AddModelError("Name", "Name cannot be the same as Id. ");
-            }
+                using (var client = new HttpClient())
+                {
+                    var response = await client.PostAsync("https://localhost:7147/api/Tag",
+                        new StringContent(JsonConvert.SerializeObject(tag), Encoding.UTF8, "application/json"));
 
-            if (ModelState.IsValid)
-            {
-                _db.Tags.Add(obj);
-                _db.SaveChanges();
-                return RedirectToAction("Index");
+                    return await HandleResponse(response, tag);
+                }
             }
-            return View(obj);
+            catch (Exception ex)
+            {
+                // Log or handle unexpected exceptions
+                ModelState.AddModelError(string.Empty, $"An error occurred: {ex.Message}");
+                return View(tag);
+            }
         }
 
         // GET
-        public IActionResult Edit(int? id)
+        public async Task<IActionResult> Edit(int? id)
         {
             if (id == null || id == 0)
             {
                 return NotFound();
             }
 
-            var tagFromDb = _db.Tags.Find(id);
+            var tag = new Tag();
 
-            if (tagFromDb == null)
+            using (var client = new HttpClient())
             {
-                return NotFound();
+                using (var response = await client.GetAsync($"https://localhost:7147/api/Tag/{id}"))
+                {
+                    if (response.IsSuccessStatusCode)
+                    {
+                        string result = await response.Content.ReadAsStringAsync();
+                        tag = JsonConvert.DeserializeObject<Tag>(result);
+                    }
+                    else
+                    {
+                        return RedirectToAction("Index");
+                    }
+                }
             }
-
-            return View(tagFromDb);
+            return View(tag);
         }
         // POST
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Edit(Tag obj)
+        public async Task<IActionResult> Edit(Tag tag)
         {
-            if (obj.Name.Trim() == obj.Id.ToString())
+            try
             {
-                ModelState.AddModelError("Name", "Name cannot be the same as Id.");
-            }
+                var id = tag.Id;
 
-            if (ModelState.IsValid)
+                using (var client = new HttpClient())
+                {
+                    var response = await client.PutAsync($"https://localhost:7147/api/Tag/{id}",
+                        new StringContent(JsonConvert.SerializeObject(tag), Encoding.UTF8, "application/json"));
+
+                    return await HandleResponse(response, tag);
+                }
+            }
+            catch (Exception ex)
             {
-                _db.Tags.Update(obj);
-                _db.SaveChanges();
+                // Log or handle unexpected exceptions
+                ModelState.AddModelError(string.Empty, $"An error occurred: {ex.Message}");
+                return View(tag);
+            }
+        }
+
+        private async Task<IActionResult> HandleResponse(HttpResponseMessage response, Tag tag)
+        {
+            if (response.IsSuccessStatusCode)
+            {
                 return RedirectToAction("Index");
             }
 
-            return View(obj);
+            var result = await response.Content.ReadAsStringAsync();
+
+            if (response.StatusCode == HttpStatusCode.BadRequest)
+            {
+                // Handle validation errors from the API
+                var validationErrors = JsonConvert.DeserializeObject<Dictionary<string, List<string>>>(result);
+
+                foreach (var error in validationErrors)
+                {
+                    foreach (var errorMessage in error.Value)
+                    {
+                        ModelState.AddModelError(error.Key, errorMessage);
+                    }
+                }
+
+                return View(tag);
+            }
+
+            // Handle other non-success status codes
+            ModelState.AddModelError(string.Empty, $"Error: {response.StatusCode}");
+            return View(tag);
         }
 
-        // GET
-        public IActionResult Delete(int? id)
+        // POST
+        public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null || id == 0)
+            try
             {
-                return NotFound();
+                if (id == null || id == 0)
+                {
+                    return NotFound();
+                }
+
+                using (var client = new HttpClient())
+                {
+                    using (var response = await client.DeleteAsync($"https://localhost:7147/api/Tag/{id}"))
+                    {
+                        string apiResponse = await response.Content.ReadAsStringAsync();
+                    }
+                }
+                return RedirectToAction("Index");
             }
-
-            var obj = _db.Tags.Find(id);
-
-            if (obj == null)
+            catch (Exception ex)
             {
-                return NotFound();
+                // Log or handle unexpected exceptions
+                ModelState.AddModelError(string.Empty, $"An error occurred: {ex.Message}");
+                return View();
             }
-
-            _db.Tags.Remove(obj);
-            _db.SaveChanges();
-            return RedirectToAction("Index");
         }
-
-        // If you want to implement a POST method for Delete, you can uncomment and modify the following:
-
-        //[HttpPost]
-        //[ValidateAntiForgeryToken]
-        //public IActionResult DeletePOST(int? id)
-        //{
-        //    var obj = _db.Tags.Find(id);
-
-        //    if (obj == null)
-        //    {
-        //        return NotFound();
-        //    }
-
-        //    _db.Tags.Remove(obj);
-        //    _db.SaveChanges();
-        //    return RedirectToAction("Index");
-        //}
     }
 }

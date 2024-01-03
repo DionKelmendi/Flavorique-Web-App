@@ -70,6 +70,14 @@ namespace Flavorique_Web_App.Controllers
                 return BadRequest();
             }
 
+            var nameExists = await _db.Tags.AnyAsync(e => e.Name == tag.Name && e.Id != tag.Id);
+
+            if (nameExists)
+            {
+                ModelState.AddModelError("Name", "Tag already exists.");
+                return BadRequest(ModelState);
+            }
+
             _db.Entry(tag).State = EntityState.Modified;
 
             try
@@ -100,6 +108,14 @@ namespace Flavorique_Web_App.Controllers
             {
                 return Problem("Entity set 'db.Tags' is null.");
             }
+            var nameExists = await _db.Tags.AnyAsync(e => e.Name == tag.Name);
+
+            if (nameExists)
+            {
+                ModelState.AddModelError("Name", "Tag already exists.");
+                return BadRequest(ModelState);
+            }
+
             _db.Tags.Add(tag);
             await _db.SaveChangesAsync();
 
