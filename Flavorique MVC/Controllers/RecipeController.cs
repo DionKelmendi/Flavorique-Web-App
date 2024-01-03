@@ -3,6 +3,9 @@ using System.Text.RegularExpressions;
 using Microsoft.AspNetCore.Mvc;
 using Flavorique_MVC.Models;
 using Flavorique_MVC.Data;
+using Newtonsoft.Json;
+using System.Text;
+using System.Net;
 
 namespace Flavorique_MVC.Controllers
 {
@@ -21,22 +24,34 @@ namespace Flavorique_MVC.Controllers
             //_htmlToPDFConverter = htmlToPDFConverter;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            IEnumerable<Recipe> obj = _db.Recipes.ToList();
-            return View(obj);
+            IEnumerable<Recipe> recipes = new List<Recipe>();
+            using (var client = new HttpClient())
+            {
+                using (var response = await client.GetAsync("https://localhost:7147/api/Recipe"))
+                {
+                    string apiResponse = await response.Content.ReadAsStringAsync();
+                    recipes = JsonConvert.DeserializeObject<List<Recipe>>(apiResponse);
+                }
+            }
+            return View(recipes);
         }
 
         //GET
-        public IActionResult Details(int? id)
+        public async Task<IActionResult> Details(int? id)
         {
-            var obj = _db.Recipes.Find(id);
+            var recipe = new Recipe();
 
-            if (obj == null)
+            using (var client = new HttpClient())
             {
-                return NotFound();
+                using (var response = await client.GetAsync($"https://localhost:7147/api/Recipe/{id}"))
+                {
+                    string apiResponse = await response.Content.ReadAsStringAsync();
+                    recipe  = JsonConvert.DeserializeObject<Recipe>(apiResponse);
+                }
             }
-            return View(obj);
+            return View(recipe);
         }
 
         //GET
@@ -52,42 +67,36 @@ namespace Flavorique_MVC.Controllers
         //POST
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(Recipe obj)
+        public async Task<IActionResult> Create(Recipe recipe)
         {
-            var user = await _userManager.GetUserAsync(User);
-
-            if (user == null)
+            try
             {
-                return BadRequest();
-            }
+                var user = await _userManager.GetUserAsync(User);
 
-            if (ModelState.IsValid)
-            {
-                var content = obj.Body.Replace("&nbsp; ", "");
-
-                if (content.Length < 100)
+                if (user == null)
                 {
-                    ModelState.AddModelError("Body", "Recipe is too short or is empty.");
-                    return View(obj);
+                    return Unauthorized();
                 }
+                recipe.AuthorId = user.Id;
 
-                obj.Body = obj.Body.Replace("<p>Ingredients", "<p id=\"ingredients\">Ingredients");
-                obj.Body = obj.Body.Replace("<p>Instructions", "<p id=\"instructions\">Instructions");
+                using (var client = new HttpClient())
+                {
+                    var response = await client.PostAsync("https://localhost:7147/api/Recipe",
+                        new StringContent(JsonConvert.SerializeObject(recipe), Encoding.UTF8, "application/json"));
 
-                obj.AuthorId = user.Id;
-
-                string fillerString = "image widget. Press Enter to type after or press Shift + Enter to type before the widget";
-                obj.Body = obj.Body.Replace(fillerString, ""); ;
-
-                _db.Recipes.Add(obj);
-                _db.SaveChanges();
-                return RedirectToAction("Index");
+                    return await HandleResponse(response, recipe);
+                }
             }
-            return View(obj);
+            catch (Exception ex)
+            {
+                // Log or handle unexpected exceptions
+                ModelState.AddModelError(string.Empty, $"An error occurred: {ex.Message}");
+                return View(recipe);
+            }
         }
 
         //GET
-        public IActionResult Edit(int? id)
+        public async Task<IActionResult> Edit(int? id)
         {
 
             if (!_signInManager.IsSignedIn(User))
@@ -101,107 +110,130 @@ namespace Flavorique_MVC.Controllers
             }
 
             var userId = _userManager.GetUserId(User);
-            var obj = _db.Recipes.Find(id);
+            var recipe = new Recipe();
 
-            if (obj == null || userId != obj.AuthorId)
+            using (var client = new HttpClient())
+            {
+                using (var response = await client.GetAsync($"https://localhost:7147/api/Recipe/{id}"))
+                {
+                    string apiResponse = await response.Content.ReadAsStringAsync();
+                    recipe = JsonConvert.DeserializeObject<Recipe>(apiResponse);
+                }
+            }
+
+            if (recipe == null || userId != recipe.AuthorId)
             {
                 return NotFound();
             }
-            return View(obj);
+            return View(recipe);
         }
 
         //POST
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(Recipe obj)
-        {
-            var user = await _userManager.GetUserAsync(User);
-
-            if (user == null)
-            {
-                return BadRequest();
-            }
-
-            if (ModelState.IsValid)
-            {
-                var content = obj.Body.Replace("&nbsp; ", "");
-
-                if (content.Length < 100)
-                {
-                    ModelState.AddModelError("Body", "Recipe is too short or is empty.");
-                    return View(obj);
-                }
-
-                obj.Body = content.Replace("<p>Ingredients", "<p id=\"ingredients\">Ingredients");
-                obj.Body = obj.Body.Replace("<p>Instructions", "<p id=\"instructions\">Instructions");
-
-                obj.AuthorId = user.Id;
-
-                _db.Recipes.Update(obj);
-                _db.SaveChanges();
-                return RedirectToAction("Index");
-            }
-            return View(obj);
-        }
-
-        // POST
-        public IActionResult Delete(int? id)
-        {
-            if (id == null || id == 0)
-            {
-                return NotFound();
-            }
-
-            var obj = _db.Recipes.Find(id);
-
-            if (obj == null)
-            {
-                return NotFound();
-            }
-
-            _db.Recipes.Remove(obj);
-            _db.SaveChanges();
-            return RedirectToAction("Index");
-        }
-
-        // GET
-        public IActionResult Print(int? id)
+        public async Task<IActionResult> Edit(Recipe recipe)
         {
             try
             {
-                var obj = _db.Recipes.Find(id);
+                var id = recipe.Id;
+                
+                var user = await _userManager.GetUserAsync(User);
 
-                string[] parts = obj.Body.Split(new string[] { "<p id=\"ingredients\">Ingredients" }, StringSplitOptions.None);
-
-                if (parts.Length == 2)
+                if (user == null)
                 {
+                    return Unauthorized();
+                }
+                recipe.AuthorId = user.Id;
 
-                    string pattern = @"src=""([^""]*)""";
+                using (var client = new HttpClient())
+                {
+                    var response = await client.PutAsync($"https://localhost:7147/api/Recipe/{id}",
+                        new StringContent(JsonConvert.SerializeObject(recipe), Encoding.UTF8, "application/json"));
 
-                    Match match = Regex.Match(obj.Body, pattern);
+                    return await HandleResponse(response, recipe);
+                }
+            }
+            catch (Exception ex)
+            {
+                // Log or handle unexpected exceptions
+                ModelState.AddModelError(string.Empty, $"An error occurred: {ex.Message}");
+                return View(recipe);
+            }
+        }
 
-                    string image = "https://ckbox.cloud/nCX3ISMpdWvIZzPqyw4h/assets/_9A8c_VZOve3/images/377.png";
+        private async Task<IActionResult> HandleResponse(HttpResponseMessage response, Recipe recipe)
+        {
+            if (response.IsSuccessStatusCode)
+            {
+                return RedirectToAction("Index");
+            }
 
-                    if (match.Success)
+            var result = await response.Content.ReadAsStringAsync();
+
+            if (response.StatusCode == HttpStatusCode.BadRequest)
+            {
+                // Handle validation errors from the API
+                var validationErrors = JsonConvert.DeserializeObject<Dictionary<string, List<string>>>(result);
+
+                foreach (var error in validationErrors)
+                {
+                    foreach (var errorMessage in error.Value)
                     {
-                        image = match.Value.Substring(5);
-                        image = image.Remove(image.Length - 1, 1);
+                        ModelState.AddModelError(error.Key, errorMessage);
                     }
-
-                    var body = "<p id=\"ingredients\">Ingredients" + parts[1];
-
-                    var viewModel = new PrintViewModel
-                    {
-                        Image = image,
-                        Title = obj.Title,
-                        Author = _userManager.FindByIdAsync(obj.AuthorId).Result.UserName,
-                        Body = body
-                    };
-
-                    return View(viewModel);
                 }
 
-                return RedirectToAction("Details", id);
+                return View(recipe);
+            }
+
+            // Handle other non-success status codes
+            ModelState.AddModelError(string.Empty, $"Error: {response.StatusCode}");
+            return View(recipe);
+        }
+
+        // POST
+        public async Task<IActionResult> Delete(int? id)
+        {
+            try
+            {
+                if (id == null || id == 0)
+                {
+                    return NotFound();
+                }
+
+                using (var client = new HttpClient())
+                {
+                    using (var response = await client.DeleteAsync($"https://localhost:7147/api/Recipe/{id}"))
+                    {
+                        string apiResponse = await response.Content.ReadAsStringAsync();
+                    }
+                }
+                return RedirectToAction("Index");
+            }
+            catch (Exception ex)
+            {
+                // Log or handle unexpected exceptions
+                ModelState.AddModelError(string.Empty, $"An error occurred: {ex.Message}");
+                return View();
+            }
+        }
+
+        // GET
+        public async Task<IActionResult> Print(int? id)
+        {
+            try
+            {
+                var recipe = new PrintViewModel();
+
+                using (var client = new HttpClient())
+                {
+                    using (var response = await client.GetAsync($"https://localhost:7147/api/Recipe/print?id={id}"))
+                    {
+                        string apiResponse = await response.Content.ReadAsStringAsync();
+                        recipe = JsonConvert.DeserializeObject<PrintViewModel>(apiResponse);
+                    }
+                }
+                return View(recipe);
             }
             catch (Exception ex)
             {
@@ -211,11 +243,20 @@ namespace Flavorique_MVC.Controllers
 
         // POST
         /*
-        public IActionResult PrintPDF(string? body, string? title)
+        public async Task<IActionResult> PrintPDF(string? body, string? title)
         {
-            byte[] pdfBytes = _htmlToPDFConverter.ConvertHTMLToPDF(body, title);
+            var file;
 
-            return File(pdfBytes, "application/pdf", title);
+            using (var client = new HttpClient())
+            {
+                using (var response = await client.GetAsync($"https://localhost:7147/api/Recipe/print?body={body}&title={title}"))
+                {
+                    string apiResponse = await response.Content.ReadAsStringAsync();
+                    file = JsonConvert.DeserializeObject<PrintViewModel>(apiResponse);
+                }
+            }
+
+            return File(file);
         }
         */
     }

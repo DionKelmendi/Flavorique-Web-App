@@ -15,13 +15,15 @@ namespace Flavorique_Web_App.Controllers
     [ApiController]
     public class RecipeController : ControllerBase
     {
+        private readonly ILogger<RecipeController> _logger;
         private readonly ApplicationDbContext _db;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly HTMLToPDFConverter _htmlToPDFConverter;
 
-        public RecipeController(ApplicationDbContext db, UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, HTMLToPDFConverter htmlToPDFConverter)
+        public RecipeController(ILogger<RecipeController> logger, ApplicationDbContext db, UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, HTMLToPDFConverter htmlToPDFConverter)
         {
+            _logger = logger;
             _db = db;
             _userManager = userManager;
             _signInManager = signInManager;
@@ -106,11 +108,16 @@ namespace Flavorique_Web_App.Controllers
                     return BadRequest(ModelState);
                 }
 
+                /*
                 var user = await _userManager.GetUserAsync(User);
 
+                if (user == null) {
+                    return Unauthorized();
+                }
+                */
                 var notUpdatedRecipe = await _db.Recipes.FindAsync(id);
 
-                if (user == null || !_signInManager.IsSignedIn(User) || notUpdatedRecipe?.AuthorId != user.Id)
+                if (notUpdatedRecipe?.AuthorId != recipe.AuthorId) // previously was != user.Id
                 {
                     return Unauthorized();
                 }
@@ -130,7 +137,7 @@ namespace Flavorique_Web_App.Controllers
                 recipe.Body = content.Replace("<p>Ingredients", "<p id=\"ingredients\">Ingredients");
                 recipe.Body = recipe.Body.Replace("<p>Instructions", "<p id=\"instructions\">Instructions");
 
-                recipe.AuthorId = user.Id;
+                //recipe.AuthorId = user.Id;
 
                 _db.Entry(notUpdatedRecipe).CurrentValues.SetValues(recipe);
 
@@ -152,21 +159,35 @@ namespace Flavorique_Web_App.Controllers
         }
 
         // POST: api/Recipe
-        // JSON shoul have "author" : null to avoid headaches
+        // JSON should have "author" : null to avoid headaches
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
         public async Task<ActionResult<Recipe>> PostRecipe(Recipe recipe)
         {
-            if (_db.Recipes == null)
+            if (_db == null || _db.Recipes == null)
             {
                 return Problem("Entity set 'db.Recipes' is null.");
             }
 
+            if (recipe == null)
+            {
+                return BadRequest("Recipe object is null.");
+            }
+
+            /*
             var user = await _userManager.GetUserAsync(User);
 
-            if (user == null || !ModelState.IsValid)
+            if (user == null)
             {
-                return BadRequest();
+                _logger.LogInformation("User is null. Unauthorized access.");
+                return Unauthorized(); 
+            }
+            */
+
+            if (!ModelState.IsValid)
+            {
+                ModelState.AddModelError("Body", "Model state is not valid");
+                return BadRequest(ModelState);
             }
 
             var content = recipe.Body.Replace("&nbsp; ", "");
@@ -174,22 +195,23 @@ namespace Flavorique_Web_App.Controllers
             if (content.Length < 100)
             {
                 ModelState.AddModelError("Body", "Recipe is too short or is empty.");
-                return BadRequest();
+                return BadRequest(ModelState);
             }
 
             recipe.Body = recipe.Body.Replace("<p>Ingredients", "<p id=\"ingredients\">Ingredients");
             recipe.Body = recipe.Body.Replace("<p>Instructions", "<p id=\"instructions\">Instructions");
 
-            recipe.AuthorId = user.Id;
+            //recipe.AuthorId = user.Id;
 
             string fillerString = "image widget. Press Enter to type after or press Shift + Enter to type before the widget";
-            recipe.Body = recipe.Body.Replace(fillerString, ""); 
+            recipe.Body = recipe.Body.Replace(fillerString, "");
 
             _db.Recipes.Add(recipe);
             await _db.SaveChangesAsync();
 
             return CreatedAtAction(nameof(GetRecipes), new { id = recipe.Id }, recipe);
         }
+
 
         // DELETE: api/Recipe/5
         [HttpDelete("{id}")]
@@ -259,22 +281,41 @@ namespace Flavorique_Web_App.Controllers
             return NoContent();
         }
 
-        // GET: api/Recipe/printPDF
-        // Returns the file for printing
         [HttpGet("PrintPDF")]
-        public IActionResult PrintPDF(string body, string title)
-        {
-            if (string.IsNullOrWhiteSpace(body) || string.IsNullOrWhiteSpace(title))
-            {
-                return BadRequest("Invalid request. Body and Title are required.");
-            }
+		public async Task<IActionResult> PrintPDF(int id)
+		{
+			ActionResult<PrintViewModel> result = await Print(id);
 
-            byte[] pdfBytes = _htmlToPDFConverter.ConvertHTMLToPDF(body, title);
+            var printViewModel = result.Value;
 
-            return File(pdfBytes, "application/pdf", title);
-        }
+            string style = "<style>\r\n\t\t#printContainer {\r\n\t\t\tpadding: 20px;\r\n\t\t\twidth: 800px;\r\n\t\t\tborder: 5px solid gray;\r\n\t\t}\r\n\r\n\t\t#headContainer {\r\n\t\t\tfont-size: 12px;\r\n\t\t}\r\n\r\n\t\timg {\r\n\t\t\tborder: 1px solid black;\r\n\t\t\twidth: 150px;\r\n\t\t\theight: 150px;\r\n\t\t\tmargin: 0;\r\n\t\t\tborder-radius: 50%;\r\n\t\t\tobject-position: center;\r\n\t\t\ttop: 0px;\r\n\t\t}\r\n\r\n\t\ttr {\r\n\t\t\twidth: 100%;\r\n\t\t}\r\n\r\n\t\t#printTable, #bodyTd {\r\n\t\t\tborder: 5px solid gray;\r\n\t\t}\r\n\r\n\t\ttd {\r\n\t\t\tpadding: 20px;\r\n\t\t}\r\n\r\n\t</style>";
+            string table = $"<div id=\"printContainer\">\r\n\t\t<table id=\"printTable\">\r\n\t\t\t<tr>\r\n\t\t\t\t<td id=\"headContainer\">\r\n\t\t\t\t\t<h1 id=\"modelTitle\">{printViewModel.Title}</h1>\r\n\t\t\t\t\t<p>Author: {printViewModel.Author}</p>\r\n\t\t\t\t\t<p>Reviews: ⭐⭐⭐⭐⭐</p>\r\n\t\t\t\t</td>\r\n\t\t\t\t<td>\r\n\t\t\t\t\t<img src=\"{printViewModel.Image}\">\r\n\t\t\t\t</td>\r\n\t\t\t</tr>\r\n\t\t\t<tr>\r\n\t\t\t\t<td id=\"bodyTd\" colspan=\"2\">\r\n\t\t\t\t\t{printViewModel.Body}\r\n\t\t\t\t</td>\r\n\t\t\t</tr>\r\n\t\t</table>\r\n\t</div>";
 
-        private static string StripHtmlTags(string input)
+			_logger.LogInformation(printViewModel.Body);
+
+			byte[] pdfBytes = _htmlToPDFConverter.ConvertHTMLToPDF(style + table, printViewModel.Title);
+
+			return File(pdfBytes, "application/pdf", printViewModel.Title);
+		}
+
+		/*
+// GET: api/Recipe/printPDF
+// Returns the file for printing
+[HttpGet("PrintPDF")]
+public IActionResult PrintPDF(string body, string title)
+{
+	if (string.IsNullOrWhiteSpace(body) || string.IsNullOrWhiteSpace(title))
+	{
+		return BadRequest("Invalid request. Body and Title are required.");
+	}
+
+	byte[] pdfBytes = _htmlToPDFConverter.ConvertHTMLToPDF(body, title);
+
+	return File(pdfBytes, "application/pdf", title);
+}
+*/
+
+		private static string StripHtmlTags(string input)
         {
             return Regex.Replace(input, "<.*?>", string.Empty);
         }

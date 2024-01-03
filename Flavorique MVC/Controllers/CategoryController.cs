@@ -102,7 +102,6 @@ namespace Flavorique_MVC.Controllers
             }
         }
 
-
         private async Task<IActionResult> HandleResponse(HttpResponseMessage response, Category category)
         {
             if (response.IsSuccessStatusCode)

@@ -26,7 +26,6 @@
 			width: 150px;
 			height: 150px;
 			margin: 0;
-			border-radius: 50%;
 			object-position: center;
 			top: 0px;
 		}
@@ -46,12 +45,9 @@
 	</style>
 </head>
 <body>
-	<form id="myForm" asp-controller="Recipe" asp-action="PrintPDF" onsubmit="getValues()" method="post">
-		<input type="hidden" id="title" name="title" value="" />
-		<input type="hidden" id="body" name="body" value="" />
-		<button type="submit">Print</button>
-	</form>
-
+	<a id="printButton" href="">
+		<button>Print</button>
+	</a>
 	<div id="printContainer">
 		<table id="printTable" style="border: none; padding: 0px; width: 100%;">
 			<tr>
@@ -71,21 +67,15 @@
 			</tr>
 		</table>
 	</div>
-
-	<script>
-		let divs = document.querySelectorAll("div.ck");
-
-		divs.forEach(function (item, index) {
-			item.remove();
-		});
-
-		function getValues() {
-			let title = document.getElementById("title");
-			let body = document.getElementById("body");
-
-			title.value = document.getElementById("modelTitle").innerText;
-			body.value = document.documentElement.outerHTML;
-		}
-	</script>
 </body>
 </html>
+
+<script>
+
+	let printBtn = document.getElementById("printButton");
+	let url = window.location.href;
+	var match = url.match(/\/Print\/(\d+)/);
+	let id = match[1];
+	let printUrl = `https://localhost:7147/api/Recipe/PrintPDF?id=${id}`;
+	printBtn.href = printUrl;
+</script>

@@ -24,6 +24,10 @@ builder.Services.AddCors(options =>
 
 // Add services to the container.
 builder.Services.AddControllers();
+builder.Services.AddLogging(builder =>
+{
+    builder.AddConsole();
+});
 
 // Connect Database and DbContext.
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
