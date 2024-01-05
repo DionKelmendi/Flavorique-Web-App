@@ -8,6 +8,10 @@ using Microsoft.EntityFrameworkCore;
 using System.Text.RegularExpressions;
 using Microsoft.CodeAnalysis;
 using Flavorique_Web_App.Data.Migrations;
+using System.Text.Json.Serialization;
+using System.Text.Json;
+using System.Xml.Linq;
+using Newtonsoft.Json;
 
 namespace Flavorique_Web_App.Controllers
 {
@@ -59,18 +63,26 @@ namespace Flavorique_Web_App.Controllers
         }
 
         // GET: api/Recipe
-        [HttpGet("name")]
-        public ActionResult<IEnumerable<string>> GetRecipeName()
+        [HttpGet("user/{username}")]
+        public async Task<ActionResult> GetRecipeByUserName(string username)
         {
             if (_db.Recipes == null)
             {
                 return NotFound();
-            }
+			}
 
-            var result = _db.Recipes.Select(i => i.Title).OrderBy(j => j).ToList(); // Convert the result to a list of strings
+            var user = await _userManager.FindByNameAsync(username);
 
-            return result;
-        }
+			if (user == null)
+			{
+				return NotFound($"User with username {username} not found.");
+			}
+
+			var result = _db.Recipes.Where(recipe => recipe.AuthorId == user.Id).ToList();
+            _logger.LogInformation($"Result count: {result.Count}");
+
+			return Ok(result);
+		}
 
         // GET: api/Recipe/short
         // Shortened version of the recipe, for recommended / other views
@@ -108,16 +120,15 @@ namespace Flavorique_Web_App.Controllers
                     return BadRequest(ModelState);
                 }
 
-                /*
                 var user = await _userManager.GetUserAsync(User);
 
                 if (user == null) {
-                    return Unauthorized();
+                    return Unauthorized("User not found.");
                 }
-                */
+                
                 var notUpdatedRecipe = await _db.Recipes.FindAsync(id);
 
-                if (notUpdatedRecipe?.AuthorId != recipe.AuthorId) // previously was != user.Id
+                if (notUpdatedRecipe?.AuthorId != user.Id)
                 {
                     return Unauthorized();
                 }
@@ -137,7 +148,7 @@ namespace Flavorique_Web_App.Controllers
                 recipe.Body = content.Replace("<p>Ingredients", "<p id=\"ingredients\">Ingredients");
                 recipe.Body = recipe.Body.Replace("<p>Instructions", "<p id=\"instructions\">Instructions");
 
-                //recipe.AuthorId = user.Id;
+                recipe.AuthorId = user.Id;
 
                 _db.Entry(notUpdatedRecipe).CurrentValues.SetValues(recipe);
 
@@ -173,8 +184,7 @@ namespace Flavorique_Web_App.Controllers
             {
                 return BadRequest("Recipe object is null.");
             }
-
-            /*
+            
             var user = await _userManager.GetUserAsync(User);
 
             if (user == null)
@@ -182,7 +192,6 @@ namespace Flavorique_Web_App.Controllers
                 _logger.LogInformation("User is null. Unauthorized access.");
                 return Unauthorized(); 
             }
-            */
 
             if (!ModelState.IsValid)
             {
@@ -201,13 +210,16 @@ namespace Flavorique_Web_App.Controllers
             recipe.Body = recipe.Body.Replace("<p>Ingredients", "<p id=\"ingredients\">Ingredients");
             recipe.Body = recipe.Body.Replace("<p>Instructions", "<p id=\"instructions\">Instructions");
 
-            //recipe.AuthorId = user.Id;
+            recipe.AuthorId = user.Id;
 
-            string fillerString = "image widget. Press Enter to type after or press Shift + Enter to type before the widget";
+            _logger.LogInformation(recipe.AuthorId);
+            _logger.LogInformation(user.Id);
+
+			string fillerString = "image widget. Press Enter to type after or press Shift + Enter to type before the widget";
             recipe.Body = recipe.Body.Replace(fillerString, "");
 
-            _db.Recipes.Add(recipe);
-            await _db.SaveChangesAsync();
+			_db.Recipes.Add(recipe);
+			await _db.SaveChangesAsync();
 
             return CreatedAtAction(nameof(GetRecipes), new { id = recipe.Id }, recipe);
         }

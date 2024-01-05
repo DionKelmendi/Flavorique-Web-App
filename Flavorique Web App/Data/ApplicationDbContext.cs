@@ -22,7 +22,7 @@ namespace Flavorique_Web_App.Data
 
             builder.Entity<Recipe>()
                 .HasOne(r => r.Author)
-                .WithMany(u => u.Recipes)
+                .WithMany()
                 .HasForeignKey(r => r.AuthorId)
                 .OnDelete(DeleteBehavior.SetNull);
         }
