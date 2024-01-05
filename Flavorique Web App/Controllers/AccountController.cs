@@ -15,16 +15,14 @@ namespace Flavorique_Web_App.Controllers
 	public class AccountController : Controller
 	{
 		private readonly ILogger<AccountController> _logger;
-		private readonly ApplicationDbContext _db;
 		private readonly UserManager<ApplicationUser> _userManager;
 		private readonly SignInManager<ApplicationUser> _signInManager;
 		private readonly IEmailSender _emailSender;
 		private readonly RazorViewToStringRenderer _razorViewToStringRenderer;
 
-		public AccountController(ILogger<AccountController> logger, ApplicationDbContext db, UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, IEmailSender emailSender, RazorViewToStringRenderer razorViewToStringRenderer)
+		public AccountController(ILogger<AccountController> logger, UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, IEmailSender emailSender, RazorViewToStringRenderer razorViewToStringRenderer)
 		{
 			_logger = logger;
-			_db = db;
 			_userManager = userManager;
 			_signInManager = signInManager;
 			_emailSender = emailSender;
@@ -230,6 +228,224 @@ namespace Flavorique_Web_App.Controllers
 
 			// Failed login
 			return BadRequest("Invalid email or password");
+		}
+
+		[HttpPost("logout")]
+		public async Task<IActionResult> Logout()
+		{
+			await _signInManager.SignOutAsync();
+
+			return Ok("Logout successful");
+		}
+
+		[HttpPost("resend-email/{email}")]
+		public async Task<IActionResult> ResendEmailConfirmation(string email) 
+		{
+			var user = await _userManager.FindByEmailAsync(email);
+
+			if (user == null)
+			{
+				return BadRequest("User not found");
+			}
+
+			if (user.EmailConfirmed) {
+				return BadRequest("Email is already confirmed.");
+			}
+
+			var userId = user.Id;
+			var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+			code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
+			var callbackUrl = Url.Page(
+				"/Account/ConfirmEmail",
+				pageHandler: null,
+				values: new { area = "Identity", userId = userId, code = code }, // , returnUrl = returnUrl
+				protocol: Request.Scheme);
+
+			var viewName = "~/Views/Email/ConfirmEmail.cshtml";
+			var emailModel = new ConfirmEmailViewModel
+			{
+				Url = callbackUrl,
+				UserName = email
+			};
+
+			var htmlString = await _razorViewToStringRenderer.RenderViewToStringAsync(viewName, emailModel);
+
+			await _emailSender.SendEmailAsync(email, "Confirm your email",
+			htmlString);
+
+			return Ok("Email sent. Check your inbox.");
+		}
+
+		[HttpPost("forgot-password/{email}")]
+		public async Task<IActionResult> ForgotPassword(string email) 
+		{
+			var user = await _userManager.FindByEmailAsync(email);
+			if (user == null)
+			{
+				return BadRequest("User not found");
+			}
+
+			var code = await _userManager.GeneratePasswordResetTokenAsync(user);
+			code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
+			var callbackUrl = Url.Page(
+				"/Account/ResetPassword",
+				pageHandler: null,
+				values: new { area = "Identity", code },
+				protocol: Request.Scheme);
+
+			var viewName = "~/Views/Email/ForgotPassword.cshtml";
+			var emailModel = new ConfirmEmailViewModel
+			{
+				Url = callbackUrl,
+				UserName = email
+			};
+
+			var htmlString = await _razorViewToStringRenderer.RenderViewToStringAsync(viewName, emailModel);
+
+			await _emailSender.SendEmailAsync(email, "Confirm your email",
+			htmlString);
+			return Ok("Email sent. Check your inbox.");
+		}
+
+		// Just for testing only
+		// Remove after creating the necessary Views
+		[HttpPost("confirm-email/{id}")]
+		public async Task<IActionResult> ConfirmEmail(string id)
+		{
+			var user = await _userManager.FindByIdAsync(id);
+
+			if (user == null)
+			{
+				return NotFound("User not found");
+			}
+
+			user.EmailConfirmed = true;
+
+			var result = await _userManager.UpdateAsync(user);
+
+			if (result.Succeeded)
+			{
+				return Ok("Email confirmed successfully");
+			}
+
+			// Handle errors if the update fails
+			return BadRequest("Failed to confirm email");
+		}
+
+		[HttpPost("change-password")]
+		public async Task<IActionResult> ChangePassword([FromBody] APIChangePasswordModel model) 
+		{
+			var user = await _userManager.GetUserAsync(User);
+
+			if (user == null)
+			{
+				return NotFound("User not found");
+			}
+
+			var result = await _userManager.ChangePasswordAsync(user, model.OldPassword, model.NewPassword);
+
+			if (result.Succeeded)
+			{
+				await _signInManager.RefreshSignInAsync(user);
+
+				return Ok("Password changed successfully");
+			}
+
+			return BadRequest("Failed to change password");
+		}
+
+		[HttpDelete("user-delete")]
+		public async Task<IActionResult> DeleteAccount(string password)
+		{
+			var user = await _userManager.GetUserAsync(User);
+
+			if (user == null)
+			{
+				return NotFound("User not found");
+			}
+
+			var passwordCheck = await _userManager.CheckPasswordAsync(user, password);
+
+			if (!passwordCheck)
+			{
+				return BadRequest("Invalid password");
+			}
+
+			var result = await _userManager.DeleteAsync(user);
+
+			if (result.Succeeded)
+			{
+				await _signInManager.SignOutAsync();
+
+				return Ok("Account deleted successfully");
+			}
+			
+			return BadRequest("Failed to delete account");
+		}
+
+		[HttpDelete("admin-delete")]
+		public async Task<IActionResult> AdminDeleteAccount(string id)
+		{
+
+			var user = await _userManager.FindByIdAsync(id);
+
+			if (user == null)
+			{
+				return NotFound("User not found");
+			}
+
+			var result = await _userManager.DeleteAsync(user);
+
+			if (result.Succeeded)
+			{
+				await _signInManager.SignOutAsync();
+
+				return Ok("Account deleted successfully");
+			}
+
+			return BadRequest("Failed to delete account");
+		}
+
+		[HttpPut("user")]
+		public async Task<IActionResult> PutAccount(APIProfile model) 
+		{
+			var user = await _userManager.GetUserAsync(User);
+
+			if (user == null)
+			{
+				return NotFound("User not found");
+			}
+
+			if (user.Email != model.Email) { 
+				var existingUser = await _userManager.FindByEmailAsync(model.Email);
+
+				if (existingUser != null) {
+					return BadRequest("Email is already in use.");
+				}
+			}
+
+			if (user.UserName != model.UserName)
+			{
+				var existingUser = await _userManager.FindByNameAsync(model.UserName);
+
+				if (existingUser != null)
+				{
+					return BadRequest("Username is already in use.");
+				}
+			}
+
+			var emailResult = await _userManager.SetEmailAsync(user, model.Email);
+			var userNameResult = await _userManager.SetUserNameAsync(user, model.UserName);
+			var phoneResult = await _userManager.SetPhoneNumberAsync(user, model.PhoneNumber);
+
+			if (emailResult.Succeeded && userNameResult.Succeeded && phoneResult.Succeeded)
+			{
+				await _signInManager.RefreshSignInAsync(user);
+
+				return Ok("Information changed successfully");
+			}
+
+			return BadRequest("Failed to change info.");
 		}
 	}
 }
