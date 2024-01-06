@@ -1,0 +1,107 @@
+﻿@model IEnumerable<UserInfo>
+@{
+    ViewData["Title"] = "Index";
+
+}
+
+<h1>Users</h1>
+
+<div class="container p-3">
+    <div class="row pt-4">
+        <div class="col-6">
+            <h2 class="text-primary"> User List </h2>
+        </div>
+    </div>
+</div>
+
+<table class="table table-bordered w-100">
+    <thead>
+        <tr class="table-primary">
+            <th>User Id</th>
+            <th>Email</th>
+            <th>Username</th>
+            <th>Phone Number</th>
+            <th>Confirmed Email</th>
+            <th>Enabled 2FA</th>
+            <th colspan="3"></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var obj in Model)
+        {
+            <tr>
+                <td>@obj.Id</td>
+                <td>@obj.Email</td>
+                <td>@obj.UserName</td>
+                <td>
+                    @if (obj.PhoneNumber == null)
+                    {
+                        @("None")
+                    }
+                    else
+                    {
+                        @obj.PhoneNumber
+                    }
+                </td>
+                <td class="d-flex flex-column" style="gap: 20px;">
+                    @if (obj.EmailConfirmed)
+                    {
+                           @obj.EmailConfirmed
+                           <a asp-controller="Account" asp-action="ToggleEmailConfirm" asp-route-id="@obj.Id" class="btn btn-danger">Unconfirm</a>
+                    }
+                    else
+                    {
+                        @obj.EmailConfirmed
+                        <a asp-controller="Account" asp-action="ToggleEmailConfirm" asp-route-id="@obj.Id" class="btn btn-success">Confirm</a>
+                    }
+                </td>
+                <td>@obj.TwoFactorEnabled</td>
+                <td>
+                    <a asp-controller="Account" asp-action="Details" asp-route-id="@obj.Id" class="btn btn-info"><i class="bi bi-search"></i> &nbsp; Detail View</a>
+                </td>
+                <td>
+                    <a asp-controller="Account" asp-action="Edit" asp-route-id="@obj.Id" class="btn btn-warning"><i class="bi bi-pencil-square"></i> &nbsp; Edit User</a>
+                </td>
+                <td>
+                    <button type="button" onclick="addModalInfo" class="btn btn-danger modalButton" data-bs-toggle="modal" data-bs-target="#deleteModal">
+                        <i class="bi bi-trash"></i> &nbsp; Delete Account
+                    </button>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<script>
+    document.addEventListener("click", function (e) {
+
+        const target = e.target;
+        if (target.classList.contains("modalButton")) {
+            let targetRow = target.parentElement.parentElement.cells;
+            let cellData = [targetRow[0].innerText, targetRow[1].innerText, targetRow[2].innerText];
+
+            console.log(cellData);
+
+            let form = document.getElementById("modalForm");
+            form[0].value = cellData[1];
+            form[1].value = cellData[2];
+
+            let deleteButton = document.querySelector(".confirmDelete");
+            deleteButton.href = "Account/Delete/" + cellData[0];
+
+            console.log(deleteButton.href);
+        }
+    })
+
+</script>
+
+<!-- Modal -->
+@{
+    <partial name="_DeletePartial" />
+}
+
+@section Scripts{
+    @{
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.min.js" integrity="sha384-j0CNLUeiqtyaRmlzUHCPZ+Gy5fQu0dQ6eZ/xAww941Ai1SxSY+0EQqNXNE6DZiVc" crossorigin="anonymous"></script>
+    }
+}

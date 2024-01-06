@@ -1,8 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
-using System.Text.RegularExpressions;
 using Microsoft.AspNetCore.Mvc;
 using Flavorique_MVC.Models;
-using Flavorique_MVC.Data;
 using Newtonsoft.Json;
 using System.Text;
 using System.Net;
@@ -11,17 +9,13 @@ namespace Flavorique_MVC.Controllers
 {
     public class RecipeController : Controller
     {
-        private readonly ApplicationDbContext _db;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
-        //private readonly HTMLToPDFConverter _htmlToPDFConverter;
 
-        public RecipeController(ApplicationDbContext db, UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager) // html to pdf removed from constructor
+        public RecipeController(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager) 
         {
-            _db = db;
             _userManager = userManager;
             _signInManager = signInManager;
-            //_htmlToPDFConverter = htmlToPDFConverter;
         }
 
         public async Task<IActionResult> Index()

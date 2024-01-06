@@ -78,7 +78,17 @@ namespace Flavorique_Web_App.Controllers
 				return NotFound($"User with username {username} not found.");
 			}
 
-			var result = _db.Recipes.Where(recipe => recipe.AuthorId == user.Id).ToList();
+            var result = _db.Recipes
+                .Where(recipe => recipe.AuthorId == user.Id)
+                .Select(i => new ShortRecipe
+                {
+                    Id = i.Id,
+                    Title = i.Title,
+                    CreatedDateTime = i.CreatedDateTime,
+                    Body = StripHtmlTags(i.Body).Length > 200 ? StripHtmlTags(i.Body).Substring(0, 200) : StripHtmlTags(i.Body)
+                })
+                .OrderBy(j => j.CreatedDateTime)
+                .ToList();
             _logger.LogInformation($"Result count: {result.Count}");
 
 			return Ok(result);
@@ -95,11 +105,12 @@ namespace Flavorique_Web_App.Controllers
             }
 
             var result = _db.Recipes
-                .Select(i => new
+                .Select(i => new ShortRecipe
                 {
+                    Id = i.Id,
                     Title = i.Title,
                     CreatedDateTime = i.CreatedDateTime,
-                    Body = StripHtmlTags(i.Body).Length > 100 ? StripHtmlTags(i.Body).Substring(0, 100) : StripHtmlTags(i.Body)
+                    Body = StripHtmlTags(i.Body).Length > 200 ? StripHtmlTags(i.Body).Substring(0, 200) : StripHtmlTags(i.Body)
                 })
                 .OrderByDescending(j => j.CreatedDateTime)
                 .Take(number)

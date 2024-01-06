@@ -35,10 +35,11 @@ namespace Flavorique_Web_App.Controllers
 			var users = _userManager.Users
 				.Select(user => new UserInfo
 				{
-					   UserId = user.Id,
+					   Id = user.Id,
 					   Email = user.Email,
 					   UserName = user.UserName,
 					   PhoneNumber = user.PhoneNumber,
+					   EmailConfirmed = user.EmailConfirmed,
 					   TwoFactorEnabled = user.TwoFactorEnabled
 				})
 				.ToList();
@@ -56,9 +57,9 @@ namespace Flavorique_Web_App.Controllers
 				return NotFound("User not found");
 			}
 
-			var userInfo = new UserInfo
+            var userInfo = new UserInfo
 			{
-				UserId = user.Id,
+				Id = user.Id,
 				Email = user.Email,
 				UserName = user.UserName,
 				PhoneNumber = user.PhoneNumber,
@@ -81,7 +82,7 @@ namespace Flavorique_Web_App.Controllers
 
 			var userInfo = new UserInfo
 			{
-				UserId = user.Id,
+				Id = user.Id,
 				Email = user.Email,
 				UserName = user.UserName,
 				PhoneNumber = user.PhoneNumber,
@@ -105,7 +106,7 @@ namespace Flavorique_Web_App.Controllers
 
 			var userInfo = new UserInfo
 			{
-				UserId = user.Id,
+				Id = user.Id,
 				Email = user.Email,
 				UserName = user.UserName,
 				PhoneNumber = user.PhoneNumber,
@@ -129,7 +130,7 @@ namespace Flavorique_Web_App.Controllers
 
 			var userInfo = new UserInfo
 			{
-				UserId = user.Id,
+				Id = user.Id,
 				Email = user.Email,
 				UserName = user.UserName,
 				PhoneNumber = user.PhoneNumber,
@@ -309,8 +310,8 @@ namespace Flavorique_Web_App.Controllers
 
 		// Just for testing only
 		// Remove after creating the necessary Views
-		[HttpPost("confirm-email/{id}")]
-		public async Task<IActionResult> ConfirmEmail(string id)
+		[HttpPost("toggle-confirm-email/{id}")]
+		public async Task<IActionResult> ToggleConfirmEmail(string id)
 		{
 			var user = await _userManager.FindByIdAsync(id);
 
@@ -319,17 +320,17 @@ namespace Flavorique_Web_App.Controllers
 				return NotFound("User not found");
 			}
 
-			user.EmailConfirmed = true;
+            user.EmailConfirmed = !user.EmailConfirmed;
 
-			var result = await _userManager.UpdateAsync(user);
+            var result = await _userManager.UpdateAsync(user);
 
 			if (result.Succeeded)
 			{
-				return Ok("Email confirmed successfully");
+				return Ok("Email confirmed set to " + user.EmailConfirmed);
 			}
 
 			// Handle errors if the update fails
-			return BadRequest("Failed to confirm email");
+			return BadRequest("Failed to toggle confirm email");
 		}
 
 		[HttpPost("change-password")]
@@ -383,7 +384,7 @@ namespace Flavorique_Web_App.Controllers
 			return BadRequest("Failed to delete account");
 		}
 
-		[HttpDelete("admin-delete")]
+		[HttpDelete("admin-delete/{id}")]
 		public async Task<IActionResult> AdminDeleteAccount(string id)
 		{
 
@@ -441,11 +442,61 @@ namespace Flavorique_Web_App.Controllers
 			if (emailResult.Succeeded && userNameResult.Succeeded && phoneResult.Succeeded)
 			{
 				await _signInManager.RefreshSignInAsync(user);
+				
+				user.EmailConfirmed = true;
+                var result = await _userManager.UpdateAsync(user);
 
-				return Ok("Information changed successfully");
+                return Ok("Information changed successfully");
 			}
 
 			return BadRequest("Failed to change info.");
 		}
-	}
+
+        [HttpPut("user/admin/{id}")]
+        public async Task<IActionResult> AdminPutAccount(APIProfile model, string id)
+        {
+            var user = await _userManager.FindByIdAsync(id);
+
+            if (user == null)
+            {
+                return NotFound("User not found");
+            }
+
+            if (user.Email != model.Email)
+            {
+                var existingUser = await _userManager.FindByEmailAsync(model.Email);
+
+                if (existingUser != null)
+                {
+                    return BadRequest("Email is already in use.");
+                }
+            }
+
+            if (user.UserName != model.UserName)
+            {
+                var existingUser = await _userManager.FindByNameAsync(model.UserName);
+
+                if (existingUser != null)
+                {
+                    return BadRequest("Username is already in use.");
+                }
+            }
+
+			var confirmedEmail = user.EmailConfirmed;
+
+            var emailResult = await _userManager.SetEmailAsync(user, model.Email);
+            var userNameResult = await _userManager.SetUserNameAsync(user, model.UserName);
+            var phoneResult = await _userManager.SetPhoneNumberAsync(user, model.PhoneNumber);
+
+            if (emailResult.Succeeded && userNameResult.Succeeded && phoneResult.Succeeded)
+            {
+                user.EmailConfirmed = confirmedEmail;
+                var result = await _userManager.UpdateAsync(user);
+
+                return Ok("Information changed successfully");
+            }
+
+            return BadRequest("Failed to change info.");
+        }
+    }
 }

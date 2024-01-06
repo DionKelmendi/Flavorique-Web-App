@@ -1,0 +1,60 @@
+﻿@model AccountDetailViewModel
+@{
+    ViewData["Title"] = "Edit";
+}
+<h1>@Model.UserInfo.Id</h1>
+<h1>@Model.UserInfo.Email</h1>
+<h1>@Model.UserInfo.UserName</h1>
+<h1>@Model.UserInfo.PhoneNumber</h1>
+
+    <section>
+        <div>
+            <img src="" />
+            <p>@Model.UserInfo.UserName</p>
+        </div>
+
+        <div>
+            <p>Username <span>@Model.UserInfo.UserName</span></p>
+            <hr />
+
+            <p>Email <span>@Model.UserInfo.Email</span></p>
+            <hr />
+
+            <p>
+                Phone Number 
+                <span>
+                    @if (Model.UserInfo.PhoneNumber == null)
+                    {
+                        @("None")
+                    }
+                    else
+                    {
+                        @Model.UserInfo.PhoneNumber
+                    }
+                </span>
+            </p>
+            <hr />
+        </div>
+    </section>
+
+@if (!Model.Recipes.Any())
+{
+    <p>No recipes found.</p>    
+}
+else
+{
+    @foreach (var obj in Model.Recipes)
+    {
+        <h1></h1>
+        <div class="border-bottom w-75 rounded d-flex align-items-center p-4 text-break" style="height:250px">
+            <img class=" h-100" style="aspect-ratio: 1 / 1" />
+            <div class="p-5" style="text-align:left">
+                <p class="text-secondary">@obj.CreatedDateTime.ToString("MMMM d, yyyy")</p>
+                <h3 class="fw-bolder">@obj.Title</h3>
+                <p style="text-align: justify">@obj.Body</p>
+                <a asp-controller="Recipe" asp-action="Details" asp-route-id="@obj.Id" style="font-size: 18px; letter-spacing: 1px">Continue Reading <i class="bi bi-arrow-right"></i></a>
+            </div>
+        </div>
+    }
+
+}
