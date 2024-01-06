@@ -64,7 +64,7 @@ namespace Flavorique_Web_App.Controllers
 
         // GET: api/Recipe
         [HttpGet("user/{username}")]
-        public async Task<ActionResult> GetRecipeByUserName(string username)
+        public async Task<ActionResult> GetRecipesByUserName(string username)
         {
             if (_db.Recipes == null)
             {
@@ -85,9 +85,11 @@ namespace Flavorique_Web_App.Controllers
                     Id = i.Id,
                     Title = i.Title,
                     CreatedDateTime = i.CreatedDateTime,
-                    Body = StripHtmlTags(i.Body).Length > 200 ? StripHtmlTags(i.Body).Substring(0, 200) : StripHtmlTags(i.Body)
+                    Body = StripHtmlTags(i.Body).Length > 200 ? StripHtmlTags(i.Body).Substring(0, 200) : StripHtmlTags(i.Body),
+                    Image = GetImageFromHtml(i.Body)
                 })
-                .OrderBy(j => j.CreatedDateTime)
+                .OrderByDescending(j => j.CreatedDateTime)
+                .Take(3)
                 .ToList();
             _logger.LogInformation($"Result count: {result.Count}");
 
@@ -110,7 +112,8 @@ namespace Flavorique_Web_App.Controllers
                     Id = i.Id,
                     Title = i.Title,
                     CreatedDateTime = i.CreatedDateTime,
-                    Body = StripHtmlTags(i.Body).Length > 200 ? StripHtmlTags(i.Body).Substring(0, 200) : StripHtmlTags(i.Body)
+                    Body = StripHtmlTags(i.Body).Length > 200 ? StripHtmlTags(i.Body).Substring(0, 200) : StripHtmlTags(i.Body),
+                    Image = GetImageFromHtml(i.Body)
                 })
                 .OrderByDescending(j => j.CreatedDateTime)
                 .Take(number)
@@ -269,19 +272,10 @@ namespace Flavorique_Web_App.Controllers
 
                 if (parts.Length == 2)
                 {
-                    string pattern = @"src=""([^""]*)""";
-
-                    Match match = Regex.Match(recipe.Body, pattern);
-
-                    string image = "https://ckbox.cloud/nCX3ISMpdWvIZzPqyw4h/assets/_9A8c_VZOve3/images/377.png";
-
-                    if (match.Success)
-                    {
-                        image = match.Value.Substring(5);
-                        image = image.Remove(image.Length - 1, 1);
-                    }
 
                     var body = "<p id=\"ingredients\">Ingredients" + parts[1];
+
+                    var image = GetImageFromHtml(recipe.Body);
 
                     var author = await _userManager.FindByIdAsync(recipe.AuthorId);
 
@@ -321,24 +315,24 @@ namespace Flavorique_Web_App.Controllers
 			return File(pdfBytes, "application/pdf", printViewModel.Title);
 		}
 
-		/*
-// GET: api/Recipe/printPDF
-// Returns the file for printing
-[HttpGet("PrintPDF")]
-public IActionResult PrintPDF(string body, string title)
-{
-	if (string.IsNullOrWhiteSpace(body) || string.IsNullOrWhiteSpace(title))
-	{
-		return BadRequest("Invalid request. Body and Title are required.");
-	}
+        private static string GetImageFromHtml(string htmlContent)
+        {
+            string pattern = @"src=""([^""]*)""";
+            Match match = Regex.Match(htmlContent, pattern);
 
-	byte[] pdfBytes = _htmlToPDFConverter.ConvertHTMLToPDF(body, title);
+            if (match.Success)
+            {
+                var image = match.Value.Substring(5);
+                image = image.Remove(image.Length - 1, 1);
+                
+                return match.Groups[1].Value;
+            }
 
-	return File(pdfBytes, "application/pdf", title);
-}
-*/
+            // Please make an URL for the Website Logo
+            return "https://ckbox.cloud/nCX3ISMpdWvIZzPqyw4h/assets/_9A8c_VZOve3/images/377.png";
+        }
 
-		private static string StripHtmlTags(string input)
+        private static string StripHtmlTags(string input)
         {
             return Regex.Replace(input, "<.*?>", string.Empty);
         }

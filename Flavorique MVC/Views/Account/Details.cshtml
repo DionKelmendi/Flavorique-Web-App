@@ -2,59 +2,82 @@
 @{
     ViewData["Title"] = "Edit";
 }
-<h1>@Model.UserInfo.Id</h1>
-<h1>@Model.UserInfo.Email</h1>
-<h1>@Model.UserInfo.UserName</h1>
-<h1>@Model.UserInfo.PhoneNumber</h1>
 
-    <section>
-        <div>
-            <img src="" />
-            <p>@Model.UserInfo.UserName</p>
+<section class="d-flex flex-column">
+    <div>
+
+        <h4> User info </h4>
+
+        <p>Username <span>@Model.UserInfo.UserName</span></p>
+        <hr />
+
+        <p>Email <span>@Model.UserInfo.Email</span></p>
+        <hr />
+
+        <p>
+            Phone Number 
+            <span>
+                @if (Model.UserInfo.PhoneNumber == null)
+                {
+                    @("None")
+                }
+                else
+                {
+                    @Model.UserInfo.PhoneNumber
+                }
+            </span>
+        </p>
+        <hr />
+    </div>
+
+    <div class="d-flex justify-content-around">
+        <div class="d-flex flex-column">
+            <h4>Most Recent User Recipes</h4>
+            
+            @if (!Model.Recipes.Any())
+            {
+                <p>No recipes found.</p>    
+            }
+            else
+            {
+                <div class="d-flex flex-column w-50">
+                @foreach (var obj in Model.Recipes)
+                {
+                        <div class="border-bottom rounded d-flex align-items-center p-4 text-break" style="height:150px; width: 200%">
+                        <img src="@obj.Image" class="h-100 rounded-circle" style="aspect-ratio: 1 / 1; object-fit: cover; object-position: center;" />
+                        <div class="ps-5 m-0" style="text-align:left">
+                            <p class="text-secondary m-0">@obj.CreatedDateTime.ToString("MMMM d, yyyy")</p>
+                            <h3 class="fw-bolder m-0">@obj.Title</h3>
+                            <a asp-controller="Recipe" asp-action="Details" asp-route-id="@obj.Id" style="font-size: 18px; letter-spacing: 1px; margin: 0;">Continue Reading <i class="bi bi-arrow-right"></i></a>
+                        </div>
+                    </div>
+                }
+                </div>
+            }
         </div>
+        <div class="d-flex flex-column">
+            <h4>Most Recent User Comments</h4>
 
-        <div>
-            <p>Username <span>@Model.UserInfo.UserName</span></p>
-            <hr />
-
-            <p>Email <span>@Model.UserInfo.Email</span></p>
-            <hr />
-
-            <p>
-                Phone Number 
-                <span>
-                    @if (Model.UserInfo.PhoneNumber == null)
+            @if (!Model.Recipes.Any())
+            {
+                <p>No comments found.</p>
+            }
+            else
+            {
+                <div class="d-flex flex-column w-50">
+                    @foreach (var obj in Model.Recipes)
                     {
-                        @("None")
+                        <div class="border-bottom rounded d-flex align-items-center p-4 text-break" style="height:150px; width: 200%">
+                            <img class="h-100" style="aspect-ratio: 1 / 1" />
+                            <div class="ps-5 m-0" style="text-align:left">
+                                <p class="text-secondary m-0">@obj.CreatedDateTime.ToString("MMMM d, yyyy")</p>
+                                <h3 class="fw-bolder m-0">@obj.Title</h3>
+                                <a asp-controller="Recipe" asp-action="Details" asp-route-id="@obj.Id" style="font-size: 18px; letter-spacing: 1px; margin: 0;">Continue Reading <i class="bi bi-arrow-right"></i></a>
+                            </div>
+                        </div>
                     }
-                    else
-                    {
-                        @Model.UserInfo.PhoneNumber
-                    }
-                </span>
-            </p>
-            <hr />
+                </div>
+            }
         </div>
-    </section>
-
-@if (!Model.Recipes.Any())
-{
-    <p>No recipes found.</p>    
-}
-else
-{
-    @foreach (var obj in Model.Recipes)
-    {
-        <h1></h1>
-        <div class="border-bottom w-75 rounded d-flex align-items-center p-4 text-break" style="height:250px">
-            <img class=" h-100" style="aspect-ratio: 1 / 1" />
-            <div class="p-5" style="text-align:left">
-                <p class="text-secondary">@obj.CreatedDateTime.ToString("MMMM d, yyyy")</p>
-                <h3 class="fw-bolder">@obj.Title</h3>
-                <p style="text-align: justify">@obj.Body</p>
-                <a asp-controller="Recipe" asp-action="Details" asp-route-id="@obj.Id" style="font-size: 18px; letter-spacing: 1px">Continue Reading <i class="bi bi-arrow-right"></i></a>
-            </div>
-        </div>
-    }
-
-}
+    </div>
+</section>

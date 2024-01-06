@@ -4,6 +4,7 @@ using Flavorique_MVC.Models;
 using Microsoft.AspNetCore.Identity;
 using System.Text;
 using System.Net;
+using System.Text.RegularExpressions;
 
 namespace Flavorique_MVC.Controllers
 {
@@ -159,7 +160,6 @@ namespace Flavorique_MVC.Controllers
                     using (var response = await client.GetAsync($"https://localhost:7147/api/Recipe/user/{user.UserName}"))
                     {
                         string apiResponse = await response.Content.ReadAsStringAsync();
-
                         recipes = JsonConvert.DeserializeObject<List<ShortRecipe>>(apiResponse);
                     }
                 }
