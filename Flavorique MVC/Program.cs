@@ -1,6 +1,7 @@
 using Flavorique_MVC;
 using Flavorique_MVC.Data;
 using Flavorique_MVC.Models;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 

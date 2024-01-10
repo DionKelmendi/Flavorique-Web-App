@@ -7,6 +7,9 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.WebUtilities;
 using System.Text;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
 
 namespace Flavorique_Web_App.Controllers
 {
@@ -93,31 +96,6 @@ namespace Flavorique_Web_App.Controllers
 			return Ok(userInfo);
 		}
 
-		/*
-		[HttpGet("email/{email}")]
-		public async Task<IActionResult> GetUserByEmail(string email)
-		{
-			var user = await _userManager.FindByEmailAsync(email);
-
-			if (user == null)
-			{
-				return NotFound("User not found");
-			}
-
-			var userInfo = new UserInfo
-			{
-				Id = user.Id,
-				Email = user.Email,
-				UserName = user.UserName,
-				PhoneNumber = user.PhoneNumber,
-				EmailConfirmed = user.EmailConfirmed,
-				TwoFactorEnabled = user.TwoFactorEnabled,
-			};
-
-			return Ok(userInfo);
-		}
-		*/
-
 		[HttpGet("name/{name}")]
 		public async Task<IActionResult> GetUserByName(string name)
 		{
@@ -197,6 +175,9 @@ namespace Flavorique_Web_App.Controllers
 			return BadRequest(ModelState);
 		}
 
+
+		// Currently unused
+		// Works fine in API, but I cant figure out how to create the Cookie code that Identity Uses, so using the default login page
 		[HttpPost("login")]
 		public async Task<IActionResult> Login([FromBody] APILoginModel model)
 		{
@@ -208,12 +189,20 @@ namespace Flavorique_Web_App.Controllers
 			}
 
 			var result = await _signInManager.PasswordSignInAsync(user, model.Password, model.RememberMe, lockoutOnFailure: false);
+            
+			var userIdentity = (ClaimsIdentity)User.Identity;
+            var claims = userIdentity.Claims;
 
-			if (result.Succeeded)
+            foreach (var claim in claims)
 			{
-				// Successful login
-				return Ok("Login successful");
-			}
+                _logger.LogCritical(claim.ToString());
+            }
+
+            if (result.Succeeded)
+			{
+                // Successful login
+                return Ok(true);
+            }
 
 			if (result.RequiresTwoFactor)
 			{
@@ -229,6 +218,13 @@ namespace Flavorique_Web_App.Controllers
 
 			// Failed login
 			return BadRequest("Invalid email or password");
+		}
+
+		[HttpGet("isUserSignedIn")]
+		public IActionResult isUserSignedIn()
+		{
+			var signedIn = Request.Cookies[".AspNetCore.Identity.Application"];
+            return Ok(signedIn != null);
 		}
 
 		[HttpPost("logout")]

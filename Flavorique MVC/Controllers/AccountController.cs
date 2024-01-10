@@ -5,6 +5,8 @@ using Microsoft.AspNetCore.Identity;
 using System.Text;
 using System.Net;
 using System.Text.RegularExpressions;
+using Microsoft.Extensions.Logging;
+using System.Security.Cryptography.Xml;
 
 namespace Flavorique_MVC.Controllers
 {
@@ -179,6 +181,47 @@ namespace Flavorique_MVC.Controllers
                 return RedirectToAction("Index");
             }
         }
+
+        public IActionResult Login()
+        {
+            return Redirect("https://localhost:7147/Identity/Account/Login");
+            //return View();
+        }
+
+        // Commented since its causing too much hassle, easier to redirect to api Login
+        /*
+        [HttpPost]
+        public async Task<IActionResult> Login(APILoginModel model) {
+
+            bool responseCheck = false;
+
+            using (var handler = new HttpClientHandler())
+            {
+                var cookieContainer = new CookieContainer();
+                cookieContainer.Add(new Uri("https://localhost:7147"), new Cookie(".AspNetCore.Identity.Application", Request.Cookies[".AspNetCore.Identity.Application"]));
+
+                handler.CookieContainer = cookieContainer;
+
+                using (var client = new HttpClient(handler))
+                {
+                    {
+                        var jsonContent = new StringContent(JsonConvert.SerializeObject(model), Encoding.UTF8, "application/json");
+
+                        bool.TryParse(await jsonContent.ReadAsStringAsync(), out responseCheck);
+
+                        var response = await client.PostAsync("https://localhost:7147/api/Account/login",
+                            jsonContent);
+
+                        _logger.LogInformation(await jsonContent.ReadAsStringAsync());
+                        _logger.LogCritical(await response.Content.ReadAsStringAsync());
+
+                    }
+                }
+            }
+
+            return View();
+        }
+        */
 
         // POST
         public async Task<IActionResult> ToggleEmailConfirm(string? id)

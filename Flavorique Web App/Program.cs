@@ -3,6 +3,8 @@ using System.Text;
 using Flavorique_Web_App;
 using Flavorique_Web_App.Data;
 using Flavorique_Web_App.Models;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -18,7 +20,10 @@ builder.Services.AddCors(options =>
     options.AddPolicy(name: CORSPolicy,
                       policy =>
                       {
-                          policy.WithOrigins("https://localhost:7122");
+                          policy.WithOrigins("https://localhost:7122", "http://localhost:3000")
+                          .AllowAnyHeader()
+                          .AllowAnyMethod()
+                          .AllowCredentials();
                       });
 });
 
@@ -38,6 +43,18 @@ builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 // Sets Default Identity Model.
 builder.Services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = true)
     .AddEntityFrameworkStores<ApplicationDbContext>();
+
+// Cookie Services for Identity
+builder.Services.ConfigureApplicationCookie(options =>
+{
+    // Cookie settings
+    options.Cookie.HttpOnly = true;
+    options.ExpireTimeSpan = TimeSpan.FromMinutes(5);
+
+    options.LoginPath = "/api/Account/login";
+    options.LogoutPath = "/api/Account/logout";
+    options.SlidingExpiration = true;
+});
 
 // Add Razor View Services.
 builder.Services.AddControllersWithViews();
@@ -68,7 +85,6 @@ if (app.Environment.IsDevelopment())
 // Configure CkBox JWT
 app.MapGet("/api/CKBox/token", () =>
 {
-
     var environmentId = builder.Configuration.GetValue<string>("CKBoxEnvironmentId");
     var accessKey = builder.Configuration.GetValue<string>("CKBoxAccessKey");
     var securityKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(accessKey));

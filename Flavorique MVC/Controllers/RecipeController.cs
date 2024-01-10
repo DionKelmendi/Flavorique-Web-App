@@ -9,13 +9,15 @@ namespace Flavorique_MVC.Controllers
 {
     public class RecipeController : Controller
     {
+        private readonly ILogger<RecipeController> _logger;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
 
-        public RecipeController(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager) 
+        public RecipeController(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, ILogger<RecipeController> logger)
         {
             _userManager = userManager;
             _signInManager = signInManager;
+            _logger = logger;
         }
 
         public async Task<IActionResult> Index()
@@ -51,7 +53,7 @@ namespace Flavorique_MVC.Controllers
         //GET
         public IActionResult Create()
         {
-            if (_signInManager.IsSignedIn(User))
+            if (userSignedIn())
             {
                 return View();
             }
@@ -65,26 +67,27 @@ namespace Flavorique_MVC.Controllers
         {
             try
             {
-                var user = await _userManager.GetUserAsync(User);
-
-                if (user == null)
+                using (var handler = new HttpClientHandler())
                 {
-                    return Unauthorized();
-                }
-                recipe.AuthorId = user.Id;
+                    var cookieContainer = new CookieContainer();
+                    cookieContainer.Add(new Uri("https://localhost:7147"), new Cookie(".AspNetCore.Identity.Application", Request.Cookies[".AspNetCore.Identity.Application"]));
 
-                using (var client = new HttpClient())
-                {
-                    var response = await client.PostAsync("https://localhost:7147/api/Recipe",
-                        new StringContent(JsonConvert.SerializeObject(recipe), Encoding.UTF8, "application/json"));
+                    handler.CookieContainer = cookieContainer;
 
-                    return await HandleResponse(response, recipe);
+                    using (var client = new HttpClient(handler))
+                    {
+                        var jsonContent = new StringContent(JsonConvert.SerializeObject(recipe), Encoding.UTF8, "application/json");
+
+                        var response = await client.PostAsync("https://localhost:7147/api/Recipe", jsonContent);
+
+                        return await HandleResponse(response, recipe);
+                    }
                 }
             }
             catch (Exception ex)
             {
                 // Log or handle unexpected exceptions
-                ModelState.AddModelError(string.Empty, $"An error occurred: {ex.Message}");
+                ModelState.AddModelError("Body", $"An error occurred: {ex.Message}");
                 return View(recipe);
             }
         }
@@ -93,7 +96,7 @@ namespace Flavorique_MVC.Controllers
         public async Task<IActionResult> Edit(int? id)
         {
 
-            if (!_signInManager.IsSignedIn(User))
+            if (!userSignedIn())
             {
                 return RedirectToAction("Index");
             }
@@ -103,7 +106,8 @@ namespace Flavorique_MVC.Controllers
                 return NotFound();
             }
 
-            var userId = _userManager.GetUserId(User);
+            _logger.LogInformation("Starting recipe fetch");
+
             var recipe = new Recipe();
 
             using (var client = new HttpClient())
@@ -112,10 +116,14 @@ namespace Flavorique_MVC.Controllers
                 {
                     string apiResponse = await response.Content.ReadAsStringAsync();
                     recipe = JsonConvert.DeserializeObject<Recipe>(apiResponse);
+                    _logger.LogInformation(apiResponse);
+
                 }
             }
 
-            if (recipe == null || userId != recipe.AuthorId)
+            _logger.LogWarning("Ended recipe fetch");
+
+            if (recipe == null)
             {
                 return NotFound();
             }
@@ -129,22 +137,20 @@ namespace Flavorique_MVC.Controllers
         {
             try
             {
-                var id = recipe.Id;
-                
-                var user = await _userManager.GetUserAsync(User);
-
-                if (user == null)
+                using (var handler = new HttpClientHandler())
                 {
-                    return Unauthorized();
-                }
-                recipe.AuthorId = user.Id;
+                    var cookieContainer = new CookieContainer();
+                    cookieContainer.Add(new Uri("https://localhost:7147"), new Cookie(".AspNetCore.Identity.Application", Request.Cookies[".AspNetCore.Identity.Application"]));
 
-                using (var client = new HttpClient())
-                {
-                    var response = await client.PutAsync($"https://localhost:7147/api/Recipe/{id}",
-                        new StringContent(JsonConvert.SerializeObject(recipe), Encoding.UTF8, "application/json"));
+                    handler.CookieContainer = cookieContainer;
 
-                    return await HandleResponse(response, recipe);
+                    using (var client = new HttpClient(handler))
+                    {
+                        var jsonContent = new StringContent(JsonConvert.SerializeObject(recipe), Encoding.UTF8, "application/json");
+                        var response = await client.PutAsync($"https://localhost:7147/api/Recipe/{recipe.Id}", jsonContent);
+
+                        return await HandleResponse(response, recipe);
+                    }
                 }
             }
             catch (Exception ex)
@@ -235,23 +241,10 @@ namespace Flavorique_MVC.Controllers
             }
         }
 
-        // POST
-        /*
-        public async Task<IActionResult> PrintPDF(string? body, string? title)
+        private bool userSignedIn()
         {
-            var file;
-
-            using (var client = new HttpClient())
-            {
-                using (var response = await client.GetAsync($"https://localhost:7147/api/Recipe/print?body={body}&title={title}"))
-                {
-                    string apiResponse = await response.Content.ReadAsStringAsync();
-                    file = JsonConvert.DeserializeObject<PrintViewModel>(apiResponse);
-                }
-            }
-
-            return File(file);
+            var signedIn = Request.Cookies[".AspNetCore.Identity.Application"];
+            return signedIn != null;
         }
-        */
     }
 }
