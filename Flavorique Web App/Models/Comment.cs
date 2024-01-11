@@ -9,6 +9,7 @@ public class Comment
     [Required]
     public string Body { get; set; }
     public DateTime CreatedDateTime { get; set; } = DateTime.Now;
+    public DateTime UpdatedDateTime { get; set; }
     public string? AuthorId { get; set; }
     public ApplicationUser? Author { get; set; }
     public int RecipeId { get; set; }
