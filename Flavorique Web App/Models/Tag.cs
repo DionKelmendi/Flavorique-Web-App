@@ -9,5 +9,6 @@ namespace Flavorique_Web_App.Models
         public int Id {  get; set; }
         [Required]
         public string Name { get; set; }
+        public List<Recipe> Recipes { get; set; }
     }
 }

@@ -18,6 +18,7 @@ namespace Flavorique_Web_App.Models
         public DateTime CreatedDateTime { get; set; } = DateTime.Now;
         public string? AuthorId { get; set; }
         public ApplicationUser? Author { get; set; }
+        public List<Tag> Tags { get; set; }
 
 }
 }

@@ -4,6 +4,7 @@ using Flavorique_Web_App.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Flavorique_Web_App.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240111191849_AddedManyToManyRecipeTag")]
+    partial class AddedManyToManyRecipeTag
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -108,36 +110,6 @@ namespace Flavorique_Web_App.Data.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Categories");
-                });
-
-            modelBuilder.Entity("Flavorique_Web_App.Models.Comment", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<string>("AuthorId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("Body")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("CreatedDateTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("RecipeId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("AuthorId");
-
-                    b.HasIndex("RecipeId");
-
-                    b.ToTable("Comments");
                 });
 
             modelBuilder.Entity("Flavorique_Web_App.Models.Recipe", b =>
@@ -347,23 +319,6 @@ namespace Flavorique_Web_App.Data.Migrations
                     b.HasIndex("TagsId");
 
                     b.ToTable("RecipeTag");
-                });
-
-            modelBuilder.Entity("Flavorique_Web_App.Models.Comment", b =>
-                {
-                    b.HasOne("Flavorique_Web_App.Models.ApplicationUser", "Author")
-                        .WithMany()
-                        .HasForeignKey("AuthorId");
-
-                    b.HasOne("Flavorique_Web_App.Models.Recipe", "Recipe")
-                        .WithMany()
-                        .HasForeignKey("RecipeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Author");
-
-                    b.Navigation("Recipe");
                 });
 
             modelBuilder.Entity("Flavorique_Web_App.Models.Recipe", b =>
