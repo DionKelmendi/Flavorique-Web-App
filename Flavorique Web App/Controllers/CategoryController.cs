@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Flavorique_Web_App.Models;
 using Flavorique_Web_App.Data;
 using Microsoft.EntityFrameworkCore;
+using System.Runtime.Intrinsics.Arm;
 
 namespace Flavorique_Web_App.Controllers
 {
@@ -15,21 +16,66 @@ namespace Flavorique_Web_App.Controllers
     public class CategoryController : ControllerBase
     {
         private readonly ApplicationDbContext _db;
+        private readonly ILogger<CategoryController> _logger;
 
-        public CategoryController(ApplicationDbContext db)
+        public CategoryController(ApplicationDbContext db, ILogger<CategoryController> logger)
         {
             _db = db;
+            _logger = logger;
         }
 
         // GET: api/Categories
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Category>>> GetCategories()
+        public async Task<ActionResult<PaginatedList<Category>>> GetCategories(string? sortOrder, string? searchString, int? pageNumber)
         {
             if (_db.Categories == null)
             {
                 return NotFound();
             }
-            return await _db.Categories.ToListAsync();
+
+            IEnumerable<Category> categories = await _db.Categories.ToListAsync();
+
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                categories = categories.Where(c => c.Name.Contains(searchString));
+            }
+            int count = categories.Count();
+
+            switch (sortOrder)
+            {
+                case "name":
+                    categories = categories.OrderBy(c => c.Name);
+                    break;
+                case "nameDesc":
+                    categories = categories.OrderByDescending(c => c.Name);
+                    break;
+                case "display":
+                    categories = categories.OrderBy(c => c.DisplayOrder);
+                    break;
+                case "displayDesc":
+                    categories = categories.OrderByDescending(c => c.DisplayOrder);
+                    break;
+                case "date":
+                    categories = categories.OrderBy(c => c.CreatedDateTime);
+                    break;
+                case "dateDesc":
+                    categories = categories.OrderByDescending(c => c.CreatedDateTime);
+                    break;
+                case "idDesc":
+                    categories = categories.OrderByDescending(c => c.Id);
+                    break;
+                default:
+                    categories = categories.OrderBy(c => c.Id);
+                    break;
+            }
+
+            int pageSize = 5;
+            PaginatedList<Category> result = await PaginatedList<Category>.CreateAsync(categories, pageNumber ?? 1, pageSize);
+
+            _logger.LogInformation(result.ToString());
+
+            // Return an object that includes both the paginated list and pagination information
+            return Ok(new { data = result, pageIndex = result.PageIndex, totalPages = result.TotalPages, count = count });
         }
 
         // GET: api/Categories/5

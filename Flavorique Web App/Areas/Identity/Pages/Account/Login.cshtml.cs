@@ -104,7 +104,7 @@ namespace Flavorique_Web_App.Areas.Identity.Pages.Account
             ReturnUrl = returnUrl;
         }
 
-        public async Task<IActionResult> OnPostAsync(string returnUrl = null)
+        public async Task<IActionResult> OnPostAsync(string returnUrl = null, string from = "r")
         {
             returnUrl ??= Url.Content("~/");
 
@@ -124,7 +124,9 @@ namespace Flavorique_Web_App.Areas.Identity.Pages.Account
                     if (result.Succeeded)
                     {
                         _logger.LogInformation("User logged in.");
-                        return LocalRedirect(returnUrl);
+
+                        return from.Equals("m") ? Redirect("https://localhost:7122") : Redirect("http://localhost:3000");
+                        //return LocalRedirect(returnUrl);
                     }
                     if (result.RequiresTwoFactor)
                     {

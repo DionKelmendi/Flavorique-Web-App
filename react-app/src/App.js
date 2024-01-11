@@ -36,7 +36,7 @@ function App() {
     <div className="App">
       <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
-        <a href='https://localhost:7147/Identity/Account/Login'> Prova </a>
+        <a href='https://localhost:7147/Identity/Account/Login?from=r'> Prova </a>
         <p>
           Edit <code>src/App.js</code> and save to reload.
         </p>

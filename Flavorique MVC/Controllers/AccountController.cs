@@ -184,7 +184,7 @@ namespace Flavorique_MVC.Controllers
 
         public IActionResult Login()
         {
-            return Redirect("https://localhost:7147/Identity/Account/Login");
+            return Redirect("https://localhost:7147/Identity/Account/Login?from=m");
             //return View();
         }
 

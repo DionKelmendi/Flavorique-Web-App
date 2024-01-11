@@ -1,7 +1,9 @@
-﻿@model IEnumerable<Category>
+﻿@model PaginatedList<Category>
 @{
     ViewData["Title"] = "Index";
-
+    string sortValue = Context.Request.Query["sortOrder"].ToString();
+    var prevDisabled = Model.PageIndex == 1 ? "disabled" : "";
+    var nextDisabled = Model.PageIndex == Model.TotalPages ? "disabled" : "";
 }
 
 <h1>Categories</h1>
@@ -17,13 +19,32 @@
     </div>
 </div>
 
+<form asp-action="Index" method="get">
+    <div class="form-actions d-flex align-items-baseline justify-content-between">
+        <p>
+            Find by name: <input type="text" name="SearchString" value="@ViewData["CurrentFilter"]" />
+            <input type="submit" value="Search" class="btn btn-primary" />
+        </p>
+        <a asp-action="Index">Back to Full List</a>
+
+    </div>
+</form>
+
 <table class="table table-bordered w-100">
     <thead>
         <tr class="table-primary">
-            <th>Id</th>
-            <th>Category Name</th>
-            <th>Display Order</th>
-            <th>Date Created</th>
+            <th>
+                <a asp-action="Index" asp-route-sortOrder="@ViewData["IdSortParm"]" asp-route-searchString="@ViewData["CurrentFilter"]">Id</a>
+            </th>
+            <th>
+                <a asp-action="Index" asp-route-sortOrder="@ViewData["NameSortParm"]" asp-route-searchString="@ViewData["CurrentFilter"]">Category Name</a>
+            </th>
+            <th>
+                <a asp-action="Index" asp-route-sortOrder="@ViewData["DisplaySortParm"]" asp-route-searchString="@ViewData["CurrentFilter"]">Display Order</a>
+            </th>
+            <th>
+                <a asp-action="Index" asp-route-sortOrder="@ViewData["DateSortParm"]" asp-route-searchString="@ViewData["CurrentFilter"]">Date Created</a>
+            </th>
             <th colspan="2"></th>
         </tr>
     </thead>
@@ -49,6 +70,33 @@
         }
     </tbody>
 </table>
+
+<a asp-action="Index"
+   asp-route-sortOrder="@ViewData["CurrentSort"]"
+   asp-route-pageNumber="@(Model.PageIndex - 1)"
+   asp-route-searchString="@ViewData["CurrentFilter"]"
+   class="btn btn-light @prevDisabled">
+    Previous
+</a>
+
+@for(int i = 1; i < 5; i++)
+{
+    <a asp-action="Index"
+       asp-route-sortOrder="@ViewData["CurrentSort"]"
+       asp-route-pageNumber="@i"
+       asp-route-searchString="@ViewData["CurrentFilter"]"
+       class="btn @(Model.PageIndex == i ? "btn-primary" : "btn-light")">
+        @i
+    </a>
+}
+
+<a asp-action="Index"
+   asp-route-sortOrder="@ViewData["CurrentSort"]"
+   asp-route-pageNumber="@(Model.PageIndex + 1)"
+   asp-route-searchString="@ViewData["CurrentFilter"]"
+   class="btn btn-light @nextDisabled">
+    Next
+</a>
 
 <script>
     document.addEventListener("click", function (e) {

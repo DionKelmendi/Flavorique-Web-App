@@ -3,24 +3,60 @@ using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using System.Text;
 using System.Net;
+using Microsoft.AspNetCore.Identity;
 
 namespace Flavorique_MVC.Controllers
 {
     public class CategoryController : Controller
     {
+        private readonly ILogger<CategoryController> _logger;
 
-        public async Task<IActionResult> Index()
+        public CategoryController(ILogger<CategoryController> logger)
+        {
+            _logger = logger;
+        }
+        public async Task<IActionResult> Index(string sortOrder, string searchString, int pageNumber)
         {
             IEnumerable<Category> categories = new List<Category>();
+            int pageIndex = 1;
+            int totalPages = 1;
+            int count = 0;
+
             using (var client = new HttpClient())
             {
-                using (var response = await client.GetAsync("https://localhost:7147/api/Category"))
+                using (var response = await client.GetAsync($"https://localhost:7147/api/Category?sortOrder={sortOrder}&searchString={searchString}&pageNumber={pageNumber}"))
                 {
                     string apiResponse = await response.Content.ReadAsStringAsync();
-                    categories = JsonConvert.DeserializeObject<List<Category>>(apiResponse);
+
+                    var responseObject = JsonConvert.DeserializeAnonymousType(apiResponse, new { data = Enumerable.Empty<Category>(), pageIndex = 1, totalPages = 1, count = 0 });
+
+                    categories = responseObject.data;
+                    pageIndex = responseObject.pageIndex;
+                    totalPages = responseObject.totalPages;
+                    count = responseObject.count;
+
+                    _logger.LogCritical(responseObject.pageIndex.ToString());
+                    _logger.LogCritical(pageIndex.ToString());
                 }
             }
-            return View(categories);
+
+            ViewData["IdSortParm"] = String.IsNullOrEmpty(sortOrder) ? "idDesc" : "";
+            ViewData["NameSortParm"] = sortOrder == "name" ? "nameDesc" : "name";
+            ViewData["DisplaySortParm"] = sortOrder == "display" ? "displayDesc" : "display";
+            ViewData["DateSortParm"] = sortOrder == "date" ? "dateDesc" : "date";
+            ViewData["CurrentFilter"] = searchString;
+            ViewData["CurrentSort"] = sortOrder;
+
+            if (pageIndex == 0)
+            {
+                pageIndex = 1;
+            }
+
+            _logger.LogWarning(categories.Count().ToString());
+
+            var paginatedList = new PaginatedList<Category>(categories.ToList(), count, pageIndex, 5);
+
+            return View(paginatedList);
         }
 
         //GET
