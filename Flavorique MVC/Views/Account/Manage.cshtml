@@ -1,0 +1,67 @@
+﻿@model AccountProfileViewModel
+<h1>Manage your account</h1>
+<div>
+    <h2>Change your account settings</h2>
+    <hr />
+    <div class="row">
+        <div class="col-md-6" style="width: 40%">
+            <h3>Update Profile Info</h3>
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-floating">
+                <input asp-for="UserInfo.UserName" class="form-control" disabled />
+                <label asp-for="UserInfo.UserName" class="form-label"></label>
+                <span asp-validation-for="UserInfo.UserName" class="text-danger"></span>
+
+            </div>
+            <div class="form-floating">
+                <input asp-for="UserInfo.Email" class="form-control" disabled/>
+                <label asp-for="UserInfo.Email" class="form-label"></label>
+                <span asp-validation-for="UserInfo.Email" class="text-danger"></span>
+            </div>
+            <div class="form-floating">
+                <input asp-for="UserInfo.PhoneNumber" class="form-control" disabled />
+                <label asp-for="UserInfo.PhoneNumber" class="form-label"></label>
+                <span asp-validation-for="UserInfo.PhoneNumber" class="text-danger"></span>
+            </div>
+            <a asp-controller="Account" asp-action="Edit" asp-route-id="@Model.UserInfo?.Id" asp-route-returnRoute="Manage" class="w-100 btn btn-lg btn-primary">Edit User</a>
+        </div>
+        <div class="col-md-6" style="width: 40%">
+            <h3>Change Password</h3>
+            <form id="change-password-form" method="post" asp-action="Manage">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <input type="hidden" name="id" value="@Model.UserInfo?.Id" />
+                <div class="form-floating">
+                    <input asp-for="ChangePasswordModel.OldPassword" name="OldPassword" class="form-control" autocomplete="current-password" aria-required="true" />
+                    <label asp-for="ChangePasswordModel.OldPassword" class="form-label">Current Password</label>
+                    <span asp-validation-for="ChangePasswordModel.OldPassword" class="text-danger"></span>
+                </div>
+                <div class="form-floating">
+                    <input asp-for="ChangePasswordModel.NewPassword" name="NewPassword" class="form-control" autocomplete="new-password" aria-required="true" />
+                    <label asp-for="ChangePasswordModel.NewPassword" class="form-label">New Password</label>
+                    <span asp-validation-for="ChangePasswordModel.NewPassword" class="text-danger"></span>
+
+                </div>
+                <div class="form-floating">
+                    <input asp-for="ChangePasswordModel.ConfirmPassword" name="ConfirmPassword" class="form-control" autocomplete="new-password" aria-required="true" />
+                    <label asp-for="ChangePasswordModel.ConfirmPassword" class="form-label">Confirm New Password</label>
+                    <span asp-validation-for="ChangePasswordModel.ConfirmPassword" class="text-danger"></span>
+                </div>
+                <button type="submit" class="w-100 btn btn-lg btn-primary">Update password</button>
+            </form>
+        </div>
+        <div class="col-md-6" style="width: 20%">
+            <p>Your account contains personal data that you have given us. This page allows you to delete that data.</p>
+            <p>
+                <strong>Deleting this data will permanently remove your account, and this cannot be recovered.</strong>
+            </p>
+            <p>
+                <a asp-controller="Account" asp-action="Delete" asp-route-id="@Model.UserInfo?.Id" asp-route-returnRoute="User" class="btn btn-danger">Delete</a>
+            </p>
+        </div>
+    </div>
+</div>
+@section Scripts{
+    @{
+        <partial name="_ValidationScriptsPartial" />
+    }
+}

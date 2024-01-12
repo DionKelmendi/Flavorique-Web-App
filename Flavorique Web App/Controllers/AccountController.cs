@@ -270,7 +270,7 @@ namespace Flavorique_Web_App.Controllers
 		}
 
 		[HttpPost("logout")]
-		public async Task<IActionResult> Logout()
+        public async Task<IActionResult> Logout()
 		{
 			await _signInManager.SignOutAsync();
 
@@ -371,10 +371,10 @@ namespace Flavorique_Web_App.Controllers
 			return BadRequest("Failed to toggle confirm email");
 		}
 
-		[HttpPost("change-password")]
-		public async Task<IActionResult> ChangePassword([FromBody] APIChangePasswordModel model) 
+		[HttpPost("change-password/{id}")]
+		public async Task<IActionResult> ChangePassword([FromBody] APIChangePasswordModel model, string id) 
 		{
-			var user = await _userManager.GetUserAsync(User);
+			var user = await _userManager.FindByIdAsync(id);
 
 			if (user == null)
 			{
@@ -386,7 +386,6 @@ namespace Flavorique_Web_App.Controllers
 			if (result.Succeeded)
 			{
 				await _signInManager.RefreshSignInAsync(user);
-
 				return Ok("Password changed successfully");
 			}
 
@@ -445,53 +444,8 @@ namespace Flavorique_Web_App.Controllers
 			return BadRequest("Failed to delete account");
 		}
 
-		[HttpPut("user")]
-		public async Task<IActionResult> PutAccount(APIProfile model) 
-		{
-			var user = await _userManager.GetUserAsync(User);
-
-			if (user == null)
-			{
-				return NotFound("User not found");
-			}
-
-			if (user.Email != model.Email) { 
-				var existingUser = await _userManager.FindByEmailAsync(model.Email);
-
-				if (existingUser != null) {
-					return BadRequest("Email is already in use.");
-				}
-			}
-
-			if (user.UserName != model.UserName)
-			{
-				var existingUser = await _userManager.FindByNameAsync(model.UserName);
-
-				if (existingUser != null)
-				{
-					return BadRequest("Username is already in use.");
-				}
-			}
-
-			var emailResult = await _userManager.SetEmailAsync(user, model.Email);
-			var userNameResult = await _userManager.SetUserNameAsync(user, model.UserName);
-			var phoneResult = await _userManager.SetPhoneNumberAsync(user, model.PhoneNumber);
-
-			if (emailResult.Succeeded && userNameResult.Succeeded && phoneResult.Succeeded)
-			{
-				await _signInManager.RefreshSignInAsync(user);
-				
-				user.EmailConfirmed = true;
-                var result = await _userManager.UpdateAsync(user);
-
-                return Ok("Information changed successfully");
-			}
-
-			return BadRequest("Failed to change info.");
-		}
-
-        [HttpPut("user/admin/{id}")]
-        public async Task<IActionResult> AdminPutAccount(APIProfile model, string id)
+        [HttpPut("user/{id}")]
+        public async Task<IActionResult> PutAccount(APIProfile model, string id)
         {
             var user = await _userManager.FindByIdAsync(id);
 
@@ -525,6 +479,10 @@ namespace Flavorique_Web_App.Controllers
             var emailResult = await _userManager.SetEmailAsync(user, model.Email);
             var userNameResult = await _userManager.SetUserNameAsync(user, model.UserName);
             var phoneResult = await _userManager.SetPhoneNumberAsync(user, model.PhoneNumber);
+
+			_logger.LogWarning(emailResult.Succeeded.ToString());
+			_logger.LogWarning(userNameResult.Succeeded.ToString());
+			_logger.LogWarning(phoneResult.Succeeded.ToString());
 
             if (emailResult.Succeeded && userNameResult.Succeeded && phoneResult.Succeeded)
             {

@@ -42,9 +42,6 @@ namespace Flavorique_MVC.Controllers
                     pageIndex = responseObject.pageIndex;
                     totalPages = responseObject.totalPages;
                     count = responseObject.count;
-
-                    _logger.LogCritical(responseObject.pageIndex.ToString());
-                    _logger.LogCritical(pageIndex.ToString());
                 }
 			}
             ViewData["IdSortParm"] = String.IsNullOrEmpty(sortOrder) ? "idDesc" : "";
@@ -65,8 +62,68 @@ namespace Flavorique_MVC.Controllers
             return View(paginatedList);
         }
 
+        public async Task<IActionResult> Manage()
+        {
+            try
+            {
+                var user = new UserInfo();
+
+                using (var handler = new HttpClientHandler())
+                {
+                    var cookieContainer = new CookieContainer();
+                    cookieContainer.Add(new Uri("https://localhost:7147"), new Cookie(".AspNetCore.Identity.Application", Request.Cookies[".AspNetCore.Identity.Application"]));
+
+                    handler.CookieContainer = cookieContainer;
+
+                    using (var client = new HttpClient(handler))
+                    {
+                        {
+                            var response = await client.GetAsync("https://localhost:7147/api/Account/user");
+                            string apiResponse = await response.Content.ReadAsStringAsync();
+                            user = JsonConvert.DeserializeObject<UserInfo>(apiResponse);
+                        }
+                    }
+                }
+
+                var profileModel = new AccountProfileViewModel
+                {
+                    UserInfo = user,
+                    ChangePasswordModel = new APIChangePasswordModel()
+                };
+                return View(profileModel);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                _logger.LogError("User not found");
+                return RedirectToAction("Index");
+            }
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Manage(APIChangePasswordModel model, string id) 
+        {
+            using (var handler = new HttpClientHandler())
+            {
+                var cookieContainer = new CookieContainer();
+                cookieContainer.Add(new Uri("https://localhost:7147"), new Cookie(".AspNetCore.Identity.Application", Request.Cookies[".AspNetCore.Identity.Application"]));
+
+                handler.CookieContainer = cookieContainer;
+
+                using (var client = new HttpClient(handler))
+                {
+                    var jsonContent = new StringContent(JsonConvert.SerializeObject(model), Encoding.UTF8, "application/json");
+                    var response = await client.PostAsync($"https://localhost:7147/api/Account/change-password/{id}",
+                        jsonContent);
+
+                    _logger.LogInformation(response.ToString());
+                }
+            }
+            return RedirectToAction("Index");
+        }
+
         //GET
-        public async Task<IActionResult> Edit(string id)
+        public async Task<IActionResult> Edit(string id, string returnRoute = "Index")
         {
 			var user = await _userManager.FindByIdAsync(id);
             var userInfo = new UserInfo
@@ -77,13 +134,17 @@ namespace Flavorique_MVC.Controllers
                 PhoneNumber = user.PhoneNumber,
             };
 
+            ViewData["ReturnRoute"] = returnRoute;
+
+            _logger.LogCritical(returnRoute);
+
             return View(userInfo);
         }
 
         //POST
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(UserInfo model)
+        public async Task<IActionResult> Edit(UserInfo model, string returnRoute = "Index")
         {
             try
             {
@@ -96,53 +157,58 @@ namespace Flavorique_MVC.Controllers
                     PhoneNumber = model.PhoneNumber,
                 };
 
-                using (var client = new HttpClient())
+                using (var handler = new HttpClientHandler())
                 {
-                    var response = await client.PutAsync($"https://localhost:7147/api/Account/user/admin/{id}",
-                        new StringContent(JsonConvert.SerializeObject(profileModel), Encoding.UTF8, "application/json"));
+                    var cookieContainer = new CookieContainer();
+                    cookieContainer.Add(new Uri("https://localhost:7147/"), new Cookie(".AspNetCore.Identity.Application", Request.Cookies[".AspNetCore.Identity.Application"]));
+                    _logger.LogInformation($"Cookie Value: {Request.Cookies[".AspNetCore.Identity.Application"]}");
+                    handler.CookieContainer = cookieContainer;
 
-                    if (response.IsSuccessStatusCode)
+                    using (var client = new HttpClient(handler))
                     {
-                        return RedirectToAction("Index");
-                    }
+                        var response = await client.PutAsync($"https://localhost:7147/api/Account/user/{id}",
+                            new StringContent(JsonConvert.SerializeObject(profileModel), Encoding.UTF8, "application/json"));
 
-                    var result = await response.Content.ReadAsStringAsync();
-
-                    if (response.StatusCode == HttpStatusCode.BadRequest)
-                    {
-                        // Handle validation errors from the API
-                        var validationErrors = JsonConvert.DeserializeObject<Dictionary<string, List<string>>>(result);
-
-                        foreach (var error in validationErrors)
+                        if (response.IsSuccessStatusCode)
                         {
-                            foreach (var errorMessage in error.Value)
-                            {
-                                ModelState.AddModelError(error.Key, errorMessage);
-                            }
+                            return RedirectToAction(returnRoute);
                         }
 
+                        var result = await response.Content.ReadAsStringAsync();
+
+                        if (response.StatusCode == HttpStatusCode.BadRequest)
+                        {
+                            // Handle validation errors from the API
+                            var validationErrors = JsonConvert.DeserializeObject<Dictionary<string, List<string>>>(result);
+
+                            foreach (var error in validationErrors)
+                            {
+                                foreach (var errorMessage in error.Value)
+                                {
+                                    ModelState.AddModelError(error.Key, errorMessage);
+                                }
+                            }
+                            _logger.LogWarning("Bad Request");
+                            return View(model);
+                        }
+
+                        _logger.LogWarning(response.StatusCode.ToString());
                         return View(model);
                     }
-
-                    // Handle other non-success status codes
-                    ModelState.AddModelError(string.Empty, $"Error: {response.StatusCode}");
-                    return View(model);
                 }
             }
             catch (Exception ex)
             {
-                // Log or handle unexpected exceptions
                 ModelState.AddModelError(string.Empty, $"An error occurred: {ex.Message}");
                 return View(model);
             }
         }
 
         // POST
-        public async Task<IActionResult> Delete(string? id)
+        public async Task<IActionResult> Delete(string? id, string returnRoute = "User")
         {
             try
             {
-
                 if (id == null)
                 {
                     return NotFound();
@@ -156,7 +222,7 @@ namespace Flavorique_MVC.Controllers
                     }
                 }
 
-                return RedirectToAction("Index");
+                return RedirectToAction(returnRoute);
             }
             catch (Exception ex)
             {
@@ -209,7 +275,6 @@ namespace Flavorique_MVC.Controllers
                 return RedirectToAction("Index");
             }
         }
-
         public IActionResult Login()
         {
             return Redirect("https://localhost:7147/Identity/Account/Login?from=m");
@@ -250,6 +315,12 @@ namespace Flavorique_MVC.Controllers
             return View();
         }
         */
+
+        [HttpGet]
+        public async Task<IActionResult> Logout() 
+        {
+            return Redirect("https://localhost:7147/Identity/Account/Logout");
+        }
 
         // POST
         public async Task<IActionResult> ToggleEmailConfirm(string? id)

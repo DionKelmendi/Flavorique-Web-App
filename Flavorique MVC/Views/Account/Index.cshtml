@@ -82,7 +82,7 @@
                     <a asp-controller="Account" asp-action="Details" asp-route-id="@obj.Id" class="btn btn-info"><i class="bi bi-search"></i> &nbsp; Detail View</a>
                 </td>
                 <td>
-                    <a asp-controller="Account" asp-action="Edit" asp-route-id="@obj.Id" class="btn btn-warning"><i class="bi bi-pencil-square"></i> &nbsp; Edit User</a>
+                    <a asp-controller="Account" asp-action="Edit" asp-route-id="@obj.Id" asp-route-returnRoute="Index" class="btn btn-warning"><i class="bi bi-pencil-square"></i> &nbsp; Edit User</a>
                 </td>
                 <td>
                     <button type="button" onclick="addModalInfo" class="btn btn-danger modalButton" data-bs-toggle="modal" data-bs-target="#deleteModal">
@@ -136,7 +136,7 @@
             form[1].value = cellData[2];
 
             let deleteButton = document.querySelector(".confirmDelete");
-            deleteButton.href = "Account/Delete/" + cellData[0];
+            deleteButton.href = "Account/Delete/" + cellData[0] + "?returnRoute=Index";
 
             console.log(deleteButton.href);
         }
