@@ -12,21 +12,53 @@ namespace Flavorique_Web_App.Controllers
     public class TagController : ControllerBase
     {
         private readonly ApplicationDbContext _db;
+        private readonly ILogger<TagController> _logger;
 
-        public TagController(ApplicationDbContext db)
+        public TagController(ApplicationDbContext db, ILogger<TagController> logger)
         {
             _db = db;
+            _logger = logger;
         }
 
         // GET: api/Tag
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Tag>>> GetTags()
+        public async Task<ActionResult<PaginatedList<Tag>>> GetTags(string? sortOrder, string? searchString, int? pageNumber)
         {
             if (_db.Tags == null)
             {
                 return NotFound();
             }
-            return await _db.Tags.ToListAsync();
+            IEnumerable<Tag> tags = await _db.Tags.ToListAsync();
+
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                tags = tags.Where(t => t.Name.ToLower().Contains(searchString.ToLower()));
+            }
+            int count = tags.Count();
+
+            switch (sortOrder)
+            {
+                case "name":
+                    tags = tags.OrderBy(t => t.Name);
+                    break;
+                case "nameDesc":
+                    tags = tags.OrderByDescending(t => t.Name);
+                    break;
+                case "idDesc":
+                    tags = tags.OrderByDescending(t => t.Id);
+                    break;
+                default:
+                    tags = tags.OrderBy(t => t.Id);
+                    break;
+            }
+
+            int pageSize = 5;
+            PaginatedList<Tag> result = await PaginatedList<Tag>.CreateAsync(tags, pageNumber ?? 1, pageSize);
+
+            _logger.LogInformation(result.ToString());
+
+            // Return an object that includes both the paginated list and pagination information
+            return Ok(new { data = result, pageIndex = result.PageIndex, totalPages = result.TotalPages, count = count });
         }
 
         // GET: api/Tag/5

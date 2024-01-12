@@ -37,7 +37,7 @@ namespace Flavorique_Web_App.Controllers
 
             if (!String.IsNullOrEmpty(searchString))
             {
-                categories = categories.Where(c => c.Name.Contains(searchString));
+                categories = categories.Where(c => c.Name.ToLower().Contains(searchString.ToLower()));
             }
             int count = categories.Count();
 

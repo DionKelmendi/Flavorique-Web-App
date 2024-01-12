@@ -3,24 +3,58 @@ using Flavorique_MVC.Models;
 using Newtonsoft.Json;
 using System.Text;
 using System.Net;
+using Microsoft.Data.SqlClient;
 
 namespace Flavorique_MVC.Controllers
 {
     public class TagController : Controller
     {
+        private readonly ILogger<TagController> _logger;
 
-        public async Task<IActionResult> Index()
+        public TagController(ILogger<TagController> logger)
+        {
+            _logger = logger;
+        }
+        public async Task<IActionResult> Index(string sortOrder, string searchString, int pageNumber)
         {
             IEnumerable<Tag> tags = new List<Tag>();
+            int pageIndex = 1;
+            int totalPages = 1;
+            int count = 0;
+
             using (var client = new HttpClient())
             {
-                using (var response = await client.GetAsync("https://localhost:7147/api/Tag"))
+                using (var response = await client.GetAsync($"https://localhost:7147/api/Tag?sortOrder={sortOrder}&searchString={searchString}&pageNumber={pageNumber}"))
                 {
                     string apiResponse = await response.Content.ReadAsStringAsync();
-                    tags = JsonConvert.DeserializeObject<List<Tag>>(apiResponse);
+
+                    var responseObject = JsonConvert.DeserializeAnonymousType(apiResponse, new { data = Enumerable.Empty<Tag>(), pageIndex = 1, totalPages = 1, count = 0 });
+
+                    tags = responseObject.data;
+                    pageIndex = responseObject.pageIndex;
+                    totalPages = responseObject.totalPages;
+                    count = responseObject.count;
+
+                    _logger.LogCritical(responseObject.pageIndex.ToString());
+                    _logger.LogCritical(pageIndex.ToString());
                 }
             }
-            return View(tags);
+
+            ViewData["IdSortParm"] = String.IsNullOrEmpty(sortOrder) ? "idDesc" : "";
+            ViewData["NameSortParm"] = sortOrder == "name" ? "nameDesc" : "name";
+            ViewData["CurrentFilter"] = searchString;
+            ViewData["CurrentSort"] = sortOrder;
+
+            if (pageIndex == 0)
+            {
+                pageIndex = 1;
+            }
+
+            _logger.LogWarning(tags.Count().ToString());
+
+            var paginatedList = new PaginatedList<Tag>(tags.ToList(), count, pageIndex, 5);
+
+            return View(paginatedList);
         }
 
         //GET

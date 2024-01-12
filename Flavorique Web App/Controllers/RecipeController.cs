@@ -36,13 +36,50 @@ namespace Flavorique_Web_App.Controllers
 
         // GET: api/Recipe
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Recipe>>> GetRecipes()
+        public async Task<ActionResult<IEnumerable<Recipe>>> GetRecipes(string? sortOrder, string? searchString, int? pageNumber)
         {
             if (_db.Recipes == null)
             {
                 return NotFound();
             }
-            return await _db.Recipes.ToListAsync();
+            IEnumerable<Recipe> recipes = await _db.Recipes.ToListAsync();
+
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                recipes = recipes.Where(r => r.Title.ToLower().Contains(searchString.ToLower()) 
+                                        || _userManager.Users.Any(u => u.Id == r.AuthorId && u.UserName.ToLower().Contains(searchString.ToLower())));
+            }
+            int count = recipes.Count();
+
+            switch (sortOrder)
+            {
+                case "title":
+                    recipes = recipes.OrderBy(r => r.Title);
+                    break;
+                case "titleDesc":
+                    recipes = recipes.OrderByDescending(r => r.Title);
+                    break;
+                case "date":
+                    recipes = recipes.OrderBy(r => r.CreatedDateTime);
+                    break;
+                case "dateDesc":
+                    recipes = recipes.OrderByDescending(r => r.CreatedDateTime);
+                    break;
+                case "idDesc":
+                    recipes = recipes.OrderByDescending(r => r.Id);
+                    break;
+                default:
+                    recipes = recipes.OrderBy(r => r.Id);
+                    break;
+            }
+
+            int pageSize = 5;
+            PaginatedList<Recipe> result = await PaginatedList<Recipe>.CreateAsync(recipes, pageNumber ?? 1, pageSize);
+
+            _logger.LogInformation(result.ToString());
+
+            // Return an object that includes both the paginated list and pagination information
+            return Ok(new { data = result, pageIndex = result.PageIndex, totalPages = result.TotalPages, count = count });
         }
 
         // GET: api/Recipe/5

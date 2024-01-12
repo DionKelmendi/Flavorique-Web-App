@@ -23,19 +23,47 @@ namespace Flavorique_MVC.Controllers
             _logger = logger;
         }
 
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string sortOrder, string searchString, int pageNumber)
 		{
 			IEnumerable<UserInfo> users = new List<UserInfo>();
-			using (var client = new HttpClient())
+            int pageIndex = 1;
+            int totalPages = 1;
+            int count = 0;
+
+            using (var client = new HttpClient())
 			{
-				using (var response = await client.GetAsync("https://localhost:7147/api/Account"))
+				using (var response = await client.GetAsync($"https://localhost:7147/api/Account?sortOrder={sortOrder}&searchString={searchString}&pageNumber={pageNumber}"))
 				{
-					string apiResponse = await response.Content.ReadAsStringAsync();
-					users = JsonConvert.DeserializeObject<List<UserInfo>>(apiResponse);
-				}
+                    string apiResponse = await response.Content.ReadAsStringAsync();
+
+                    var responseObject = JsonConvert.DeserializeAnonymousType(apiResponse, new { data = Enumerable.Empty<UserInfo>(), pageIndex = 1, totalPages = 1, count = 0 });
+
+                    users = responseObject.data;
+                    pageIndex = responseObject.pageIndex;
+                    totalPages = responseObject.totalPages;
+                    count = responseObject.count;
+
+                    _logger.LogCritical(responseObject.pageIndex.ToString());
+                    _logger.LogCritical(pageIndex.ToString());
+                }
 			}
-			return View(users);
-		}
+            ViewData["IdSortParm"] = String.IsNullOrEmpty(sortOrder) ? "idDesc" : "";
+            ViewData["UserNameSortParm"] = sortOrder == "username" ? "usernameDesc" : "username";
+            ViewData["EmailSortParm"] = sortOrder == "email" ? "emailDesc" : "email";
+            ViewData["PhoneSortParm"] = sortOrder == "phone" ? "phoneDesc" : "phone";
+            ViewData["EmailConfirmedSortParm"] = sortOrder == "eConfirmed" ? "eConfirmedDesc" : "eConfirmed";
+            ViewData["CurrentFilter"] = searchString;
+            ViewData["CurrentSort"] = sortOrder;
+
+            if (pageIndex == 0)
+            {
+                pageIndex = 1;
+            }
+
+            var paginatedList = new PaginatedList<UserInfo>(users.ToList(), count, pageIndex, 5);
+
+            return View(paginatedList);
+        }
 
         //GET
         public async Task<IActionResult> Edit(string id)

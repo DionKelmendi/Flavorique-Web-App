@@ -33,9 +33,9 @@ namespace Flavorique_Web_App.Controllers
 		}
 
 		[HttpGet]
-		public IActionResult GetUsers()
+		public async Task<IActionResult> GetUsers(string? sortOrder, string? searchString, int? pageNumber)
 		{
-			var users = _userManager.Users
+			IEnumerable<UserInfo> users = _userManager.Users
 				.Select(user => new UserInfo
 				{
 					   Id = user.Id,
@@ -47,7 +47,49 @@ namespace Flavorique_Web_App.Controllers
 				})
 				.ToList();
 
-			return Ok(users);
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                users = users.Where(u => u.UserName.ToLower().Contains(searchString.ToLower()) || u.Email.ToLower().Contains(searchString.ToLower()));
+            }
+            int count = users.Count();
+
+            switch (sortOrder)
+            {
+                case "username":
+                    users = users.OrderBy(u => u.UserName);
+                    break;
+                case "usernameDesc":
+                    users = users.OrderByDescending(u => u.UserName);
+                    break;
+                case "email":
+                    users = users.OrderBy(u => u.Email);
+                    break;
+                case "emailDesc":
+                    users = users.OrderByDescending(u => u.Email);
+                    break;
+                case "phone":
+                    users = users.OrderBy(u => u.PhoneNumber);
+                    break;
+                case "phoneDesc":
+                    users = users.OrderByDescending(u => u.PhoneNumber);
+                    break;
+                case "eConfirmed":
+                    users = users.OrderByDescending(u => u.EmailConfirmed);
+                    break;
+                case "eConfirmedDesc":
+                    users = users.OrderBy(u => u.EmailConfirmed);
+                    break;
+                case "idDesc":
+                    users = users.OrderByDescending(u => u.Id);
+                    break;
+                default:
+                    users = users.OrderBy(u => u.Id);
+                    break;
+            }
+
+            int pageSize = 5;
+            PaginatedList<UserInfo> result = await PaginatedList<UserInfo>.CreateAsync(users, pageNumber ?? 1, pageSize);
+            return Ok(new { data = result, pageIndex = result.PageIndex, totalPages = result.TotalPages, count = count });
 		}
 
 		[HttpGet("user")]
