@@ -1,7 +1,10 @@
 import logo from './logo.svg';
-import React, { useState, useEffect } from 'react';
-import Header from './components/header';
 import './App.css';
+import React, { useState, useEffect } from 'react';
+import { Route, Routes, Navigate, } from "react-router-dom";
+import Header from './components/Header';
+import Home from './pages/Home';
+import Footer from './components/Footer';
 
 function App() {
 
@@ -31,7 +34,12 @@ function App() {
 
   return (
     <>
+      <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"></link>
       <Header userData={userData} />
+      <Routes>
+        <Route path="" element={<Home />} />
+      </Routes>
+      <Footer userData={userData} />
     </>
   );
 }

@@ -11,8 +11,8 @@ export default function Header({ userData }) {
 
   return (
     <header>
-      <nav className="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-primary border-bottom box-shadow mb-3">
-        <div className="container-fluid">
+      <nav className="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-primary border-bottom box-shadow">
+        <div className="container-fluid" style={{ width: "60%" }}>
           <Link className='navbar-brand text-light' to="/"> Flavorique </Link>
           <button className="navbar-toggler text-light" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
             aria-expanded="false" aria-label="Toggle navigation">
