@@ -222,7 +222,14 @@ namespace Flavorique_MVC.Controllers
                     }
                 }
 
-                return RedirectToAction(returnRoute);
+                if (returnRoute == "Index")
+                {
+                    return RedirectToAction(returnRoute);
+                }
+                else
+                {
+                    return Redirect("http://localhost:3000");
+                }
             }
             catch (Exception ex)
             {

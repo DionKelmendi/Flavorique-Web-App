@@ -20,6 +20,22 @@ namespace Flavorique_Web_App.Controllers
             return Redirect("/swagger/");
         }
 
+        [HttpGet("logo")]
+        public IActionResult GetLogo()
+        {
+            // Assuming the image is stored in the wwwroot/images folder
+            var imagePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/images/logo.png");
+
+            // Check if the file exists
+            if (!System.IO.File.Exists(imagePath))
+            {
+                return NotFound(); // or return a default image or handle accordingly
+            }
+
+            var imageBytes = System.IO.File.ReadAllBytes(imagePath);
+            return File(imageBytes, "image/png");
+        }
+
         public async Task<IActionResult> ProvaMailer()
         {
             var reciever = "dionkelmendi@hotmail.com";

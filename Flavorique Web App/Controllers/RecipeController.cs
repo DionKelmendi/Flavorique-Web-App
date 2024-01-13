@@ -12,6 +12,7 @@ using System.Text.Json.Serialization;
 using System.Text.Json;
 using System.Xml.Linq;
 using Newtonsoft.Json;
+using TXTextControl;
 
 namespace Flavorique_Web_App.Controllers
 {
@@ -323,13 +324,18 @@ namespace Flavorique_Web_App.Controllers
                         Author = author.UserName,
                         Body = body
                     };
-
+                    _logger.LogCritical(viewModel.Image);
+                    _logger.LogCritical(viewModel.Title);
+                    _logger.LogCritical(viewModel.Author);
+                    _logger.LogCritical(viewModel.Body);
                     return viewModel;
                 }
+
+                return BadRequest("Recipe is missing ingredient list");
             }
             catch (Exception ex)
             {
-                throw ex;
+                return BadRequest(ex.Message);
             }
 
             return NoContent();
@@ -367,6 +373,10 @@ namespace Flavorique_Web_App.Controllers
 
             // Please make an URL for the Website Logo
             return "https://ckbox.cloud/nCX3ISMpdWvIZzPqyw4h/assets/_9A8c_VZOve3/images/377.png";
+            /*
+             * This does return the Logo, but since the site is local, it cannot be seen by e-mails
+            return "https://localhost:7147/logo";
+            */
         }
 
         private static string StripHtmlTags(string input)
