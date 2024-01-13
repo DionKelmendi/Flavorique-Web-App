@@ -32,7 +32,7 @@ namespace Flavorique_Web_App.Controllers
 			_razorViewToStringRenderer = razorViewToStringRenderer;
 		}
 
-		[HttpGet]
+        [HttpGet]
 		public async Task<IActionResult> GetUsers(string? sortOrder, string? searchString, int? pageNumber)
 		{
 			IEnumerable<UserInfo> users = _userManager.Users

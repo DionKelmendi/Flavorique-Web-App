@@ -15,6 +15,7 @@ using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
+using System.Xml.Linq;
 
 namespace Flavorique_Web_App.Areas.Identity.Pages.Account
 {
@@ -125,7 +126,11 @@ namespace Flavorique_Web_App.Areas.Identity.Pages.Account
                     {
                         _logger.LogInformation("User logged in.");
 
-                        return from.Equals("m") ? Redirect("https://localhost:7122") : Redirect("http://localhost:3000");
+                        //var cookie = Request.Cookies[".AspNetCore.Identity.Application"]; If domain name is different
+
+                        return from.Equals("m") ? Redirect("https://localhost:7122") : Redirect($"http://localhost:3000");
+                        
+                        //return from.Equals("m") ? Redirect("https://localhost:7122") : Redirect($"http://localhost:3000?c={cookie}"); If domain name is different
                         //return LocalRedirect(returnUrl);
                     }
                     if (result.RequiresTwoFactor)
