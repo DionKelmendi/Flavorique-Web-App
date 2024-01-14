@@ -1,21 +1,18 @@
 
 import logo from './logo.svg';
-import './App.css';
+import './index.css';
 import React, { useState, useEffect } from 'react';
 import { Route, Routes, Navigate, } from "react-router-dom";
 import Header from './components/Header';
 import Home from './pages/Home';
 import Footer from './components/Footer';
-
- import React from 'react';
-import Navbar from './Navbar';
-
 import Categories from './pages/Categories';
 import Recipes from './pages/Recipes';
-import{Route, Routes} from "react-router-dom";
+import AllRecipes from './pages/AllRecipes';
+import Tags from './pages/Tags';
 
 
- function App  () {
+function App() {
 
   const [userData, setUserData] = useState(null);
   const [error, setError] = useState(null);
@@ -45,15 +42,13 @@ import{Route, Routes} from "react-router-dom";
     <>
       <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"></link>
       <Header userData={userData} />
-      <Navbar/>
-      <div className="container">
       <Routes>
-       
-        <Route path = "/" element={<Home/>}/>
-         <Route path = "/Categories" element={<Categories/>}/>
-        <Route path = "/Recipes" element={<Recipes/>}/>
+        <Route path="/" element={<Home />} />
+        <Route path="/Categories" element={<Categories />} />
+        <Route path="/Tags" element={<Tags />} />
+        <Route path="/Recipes" element={<Recipes />} />
+        <Route path="/Recipes/All" element={<AllRecipes />} />
       </Routes>
-      </div>
       <Footer userData={userData} />
     </>
   );
@@ -61,5 +56,5 @@ import{Route, Routes} from "react-router-dom";
 
 export default App;
 
-  
+
 

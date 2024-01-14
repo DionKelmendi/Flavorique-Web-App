@@ -1,4 +1,18 @@
-export default function Recipes() {
+import { React, useState, useEffect } from 'react'
+import { Link } from 'react-router-dom';
+import SmallRecipeItem from '../components/recipeComponents.js/SmallRecipeItem';
+import CategoryItem from '../components/recipeComponents.js/CategoryItem';
+import Hero from '../components/recipeComponents.js/Hero';
+import TopRecipes from '../components/recipeComponents.js/TopRecipes';
+import CategoryList from '../components/recipeComponents.js/CategoryList';
 
-    return <h1>Recipes</h1>
-    }
+export default function Recipes({ }) {
+
+    return (
+        <section className='recipeMainContainer'>
+            <Hero />
+            <TopRecipes />
+            <CategoryList amount={5} />
+        </section>
+    )
+}

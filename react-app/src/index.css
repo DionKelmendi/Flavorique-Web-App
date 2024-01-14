@@ -342,6 +342,20 @@ ul ul {
   margin-bottom: 0
 }
 
+.coloredBullets ::before {
+  content: "\2022";
+  color: #e95420;
+  font-weight: bold;
+  display: inline-block;
+  width: 1em;
+  transform: scale(1.5);
+  margin-left: -1.1em;
+}
+
+.coloredBullets ::marker {
+  display: none;
+}
+
 dt {
   font-weight: 700
 }
@@ -8635,6 +8649,10 @@ fieldset:disabled .btn {
 
 .w-50 {
   width: 50% !important
+}
+
+.w-60 {
+  width: 60% !important
 }
 
 .w-75 {

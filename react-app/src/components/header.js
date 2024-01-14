@@ -1,6 +1,5 @@
-import { React, useState } from 'react'
+import { React, useState, useEffect } from 'react'
 import { Link } from 'react-router-dom';
-import { useEffect } from 'react';
 
 export default function Header({ userData }) {
 
@@ -11,32 +10,35 @@ export default function Header({ userData }) {
 
   return (
     <header>
-      <nav className="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-primary border-bottom box-shadow">
-        <div className="container-fluid" style={{ width: "60%" }}>
-          <Link className='navbar-brand text-light' to="/"> Flavorique </Link>
+      <nav className="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-primary border-bottom box-shadow py-3">
+        <div className="container-fluid w-60 p-0">
+          <Link to="/" className='navbar-brand text-light' style={{ fontSize: "32px" }}>
+            <img height={75} src="https://localhost:7147/logo" className="me-2" style={{ filter: "grayscale(30%)" }} />
+            Flavorique
+          </Link>
           <button className="navbar-toggler text-light" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
             aria-expanded="false" aria-label="Toggle navigation">
             <span className="navbar-toggler-icon text-light"></span>
           </button>
-          <div className="navbar-collapse collapse d-sm-flex justify-content-between">
-            <ul className="navbar-nav justify-content-center w-100">
+          <div className="navbar-collapse collapse d-sm-flex justify-content-between align-items-center" style={{ fontSize: "18px" }}>
+            <ul className="navbar-nav">
               <li className="nav-item">
                 <Link className='nav-link text-light' to="/"> Home </Link>
               </li>
               <li className="nav-item">
-                <Link className='nav-link text-light' to="/recipes"> Recipes </Link>
+                <Link className='nav-link text-light' to="/Recipes"> Recipes </Link>
               </li>
               <li className="nav-item">
-                <Link className='nav-link text-light' to="/tags"> Tags </Link>
+                <Link className='nav-link text-light' to="/Tags"> Tags </Link>
               </li>
               <li className="nav-item">
-                <Link className='nav-link text-light' to="/contact"> Contact </Link>
+                <Link className='nav-link text-light' to="/Contact"> Contact </Link>
               </li>
               <li className="nav-item">
-                <Link className='nav-link text-light' to="/about"> About </Link>
+                <Link className='nav-link text-light' to="/About"> About </Link>
               </li>
               <li className="nav-item">
-                <Link className='nav-link text-light' to="/privacy"> Privacy </Link>
+                <Link className='nav-link text-light' to="/Privacy"> Privacy </Link>
               </li>
             </ul>
             <ul className="navbar-nav">

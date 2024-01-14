@@ -28,7 +28,7 @@ export default function SearchRecipes() {
       <h5 className='m-0'>
         or
       </h5>
-      <Link to="/recipes" className='btn btn-lg btn-primary'>
+      <Link to="/Recipes/All" className='btn btn-lg btn-primary'>
         View All Recipes
       </Link>
     </>

@@ -1,6 +1,5 @@
-import { React, useState } from 'react'
+import { React, useState, useEffect } from 'react'
 import { Link } from 'react-router-dom';
-import { useEffect } from 'react';
 
 export default function Footer({ userData }) {
 
@@ -24,7 +23,7 @@ export default function Footer({ userData }) {
   };
 
   return (
-    <footer className='p-5 pb-4' style={{ background: "#f7f7f7" }}>
+    <footer className='p-5 pb-4' style={{ background: "white" }}>
       <div className='m-auto d-flex justify-content-between' style={{ width: "calc(60% + 64px)", color: "black" }}>
         <div>
           <h5 style={{ paddingLeft: "32px" }}>Flavorique</h5>
@@ -36,13 +35,13 @@ export default function Footer({ userData }) {
               <Link to="/about" className='text-secondary-emphasis text-decoration-none' style={{ letterSpacing: "1px" }}>About Us</Link>
             </li>
             <li>
-              <Link to="/recipes" className='text-secondary-emphasis text-decoration-none' style={{ letterSpacing: "1px" }}>Recipes</Link>
+              <Link to="/Recipes" className='text-secondary-emphasis text-decoration-none' style={{ letterSpacing: "1px" }}>Recipes</Link>
             </li>
             <li>
-              <Link to="/recipes" className='text-secondary-emphasis text-decoration-none' style={{ letterSpacing: "1px" }}>Tags</Link>
+              <Link to="/Recipes" className='text-secondary-emphasis text-decoration-none' style={{ letterSpacing: "1px" }}>Tags</Link>
             </li>
             <li>
-              <Link to="/recipes/top" className='text-secondary-emphasis text-decoration-none' style={{ letterSpacing: "1px" }}>Our Top Recipes</Link>
+              <Link to="/Recipes/top" className='text-secondary-emphasis text-decoration-none' style={{ letterSpacing: "1px" }}>Our Top Recipes</Link>
             </li>
           </ul>
         </div>
@@ -77,7 +76,7 @@ export default function Footer({ userData }) {
             <h5 className='m-0'>Sign up for email updates</h5>
             <p className='m-0'>Get notified when a new change is added</p>
           </div>
-          <form onSubmit={handleFormSubmit}>
+          <form id="footerForm" onSubmit={handleFormSubmit}>
             <div className="input-group">
               <input type="text" placeholder='Name' className="form-control rounded me-2" value={nameValue} onChange={handleNameChange} />
               <input type="text" placeholder='Email' className="form-control rounded me-2" value={emailValue} onChange={handleEmailChange} />
@@ -95,7 +94,7 @@ export default function Footer({ userData }) {
           )}
         </div>
       </div>
-      <div className="m-auto d-flex justify-content-between" style={{ width: "60%" }}>
+      <div className="m-auto d-flex justify-content-between w-60">
         <div className="d-flex align-items-center">
           <img height={75} src="https://localhost:7147/logo" style={{ filter: "grayscale(30%)" }} />
           <h2 className='m-0 ms-3 me-4'>Flavorique</h2>
@@ -118,7 +117,7 @@ export default function Footer({ userData }) {
           </Link>
         </div>
       </div>
-      <div className="m-auto mt-4 d-flex justify-content-center" style={{ width: "60%", gap: "20px" }}>
+      <div className="m-auto mt-4 d-flex justify-content-center w-60" style={{ gap: "20px" }}>
         <Link to="privacy" className='text-secondary-emphasis text-decoration-none' style={{ fontSize: "14px" }}>Privacy Policy</Link>
         <Link to="terms" className='text-secondary-emphasis text-decoration-none' style={{ fontSize: "14px" }}>Terms of Service</Link>
       </div>
