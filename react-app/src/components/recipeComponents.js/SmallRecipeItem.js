@@ -25,7 +25,7 @@ export default function SmallRecipeItem({ id, src, title, reviews, rating }) {
   }
 
   return (
-    <Link to={"/recipe/" + id} className='text-decoration-none' style={{ width: "33%", color: "black" }}>
+    <Link to={"/recipe/" + id} className='text-decoration-none hoverable' style={{ width: "33%", color: "black" }}>
       <div className='d-flex m-3'>
         <img height={100} width={100} src={src} className='me-3' />
         <div className='d-flex flex-column justify-content-between'>

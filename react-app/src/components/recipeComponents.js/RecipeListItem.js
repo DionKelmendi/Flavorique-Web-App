@@ -25,7 +25,7 @@ export default function RecipeListItem({ id, src, title, reviews, rating }) {
   }
 
   return (
-    <Link to={"/recipe/" + id} className='text-decoration-none mt-5' style={{ width: "25%", color: "black" }}>
+    <Link to={"/recipe/" + id} className='text-decoration-none mt-5 hoverable' style={{ width: "25%", color: "black" }}>
       <div className='d-flex flex-column justify-content-center align-items-center text-center m-0'>
         <img width={250} height={250} src={src} />
         <div className='d-flex flex-column justify-content-between align-items-center'>
