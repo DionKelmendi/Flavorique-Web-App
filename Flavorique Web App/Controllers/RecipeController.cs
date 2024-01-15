@@ -91,7 +91,7 @@ namespace Flavorique_Web_App.Controllers
             {
                 return NotFound();
             }
-            var recipe = await _db.Recipes.FindAsync(id);
+            var recipe = await _db.Set<Recipe>().Where(r => r.Id == id).Include(r => r.Comments).FirstOrDefaultAsync();
 
             if (recipe == null)
             {
@@ -263,6 +263,7 @@ namespace Flavorique_Web_App.Controllers
             recipe.Body = recipe.Body.Replace("<p>Instructions", "<p id=\"instructions\">Instructions");
 
             recipe.AuthorId = user.Id;
+            recipe.Author = user;
 
             _logger.LogInformation(recipe.AuthorId);
             _logger.LogInformation(user.Id);

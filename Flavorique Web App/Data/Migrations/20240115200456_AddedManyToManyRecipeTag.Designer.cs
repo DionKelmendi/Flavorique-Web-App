@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Flavorique_Web_App.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240111222100_UpdateComments")]
-    partial class UpdateComments
+    [Migration("20240115200456_AddedManyToManyRecipeTag")]
+    partial class AddedManyToManyRecipeTag
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -112,39 +112,6 @@ namespace Flavorique_Web_App.Data.Migrations
                     b.ToTable("Categories");
                 });
 
-            modelBuilder.Entity("Flavorique_Web_App.Models.Comment", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<string>("AuthorId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("Body")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("CreatedDateTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("RecipeId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("UpdatedDateTime")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("AuthorId");
-
-                    b.HasIndex("RecipeId");
-
-                    b.ToTable("Comments");
-                });
-
             modelBuilder.Entity("Flavorique_Web_App.Models.Recipe", b =>
                 {
                     b.Property<int>("Id")
@@ -173,6 +140,29 @@ namespace Flavorique_Web_App.Data.Migrations
                     b.HasIndex("AuthorId");
 
                     b.ToTable("Recipes");
+                });
+
+            modelBuilder.Entity("Flavorique_Web_App.Models.RecipeTag", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<int>("RecipeId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("TagId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("RecipeId");
+
+                    b.HasIndex("TagId");
+
+                    b.ToTable("RecipeTags");
                 });
 
             modelBuilder.Entity("Flavorique_Web_App.Models.Tag", b =>
@@ -329,48 +319,6 @@ namespace Flavorique_Web_App.Data.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("RecipeTag", b =>
-                {
-                    b.Property<int>("RecipesId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("TagsId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("RecipeId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("TagId")
-                        .HasColumnType("int");
-
-                    b.HasKey("RecipesId", "TagsId");
-
-                    b.HasIndex("RecipeId");
-
-                    b.HasIndex("TagId");
-
-                    b.HasIndex("TagsId");
-
-                    b.ToTable("RecipeTag");
-                });
-
-            modelBuilder.Entity("Flavorique_Web_App.Models.Comment", b =>
-                {
-                    b.HasOne("Flavorique_Web_App.Models.ApplicationUser", "Author")
-                        .WithMany()
-                        .HasForeignKey("AuthorId");
-
-                    b.HasOne("Flavorique_Web_App.Models.Recipe", "Recipe")
-                        .WithMany()
-                        .HasForeignKey("RecipeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Author");
-
-                    b.Navigation("Recipe");
-                });
-
             modelBuilder.Entity("Flavorique_Web_App.Models.Recipe", b =>
                 {
                     b.HasOne("Flavorique_Web_App.Models.ApplicationUser", "Author")
@@ -379,6 +327,25 @@ namespace Flavorique_Web_App.Data.Migrations
                         .OnDelete(DeleteBehavior.SetNull);
 
                     b.Navigation("Author");
+                });
+
+            modelBuilder.Entity("Flavorique_Web_App.Models.RecipeTag", b =>
+                {
+                    b.HasOne("Flavorique_Web_App.Models.Recipe", "Recipe")
+                        .WithMany()
+                        .HasForeignKey("RecipeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Flavorique_Web_App.Models.Tag", "Tag")
+                        .WithMany()
+                        .HasForeignKey("TagId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Recipe");
+
+                    b.Navigation("Tag");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -428,29 +395,6 @@ namespace Flavorique_Web_App.Data.Migrations
                     b.HasOne("Flavorique_Web_App.Models.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("RecipeTag", b =>
-                {
-                    b.HasOne("Flavorique_Web_App.Models.Recipe", null)
-                        .WithMany()
-                        .HasForeignKey("RecipeId");
-
-                    b.HasOne("Flavorique_Web_App.Models.Recipe", null)
-                        .WithMany()
-                        .HasForeignKey("RecipesId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Flavorique_Web_App.Models.Tag", null)
-                        .WithMany()
-                        .HasForeignKey("TagId");
-
-                    b.HasOne("Flavorique_Web_App.Models.Tag", null)
-                        .WithMany()
-                        .HasForeignKey("TagsId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

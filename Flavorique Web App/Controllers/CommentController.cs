@@ -1,8 +1,10 @@
 ﻿using Flavorique_Web_App.Data;
+using Flavorique_Web_App.DTOs;
 using Flavorique_Web_App.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Diagnostics;
 
 namespace Flavorique_Web_App.Controllers;
 
@@ -52,7 +54,7 @@ public class CommentController : ControllerBase
     }
 
     [HttpPut]
-    public async Task<IActionResult> UpdateComment(Comment comment)
+    public async Task<IActionResult> UpdateComment(UpdateCommentDto comment)
     {
         if (comment == null)
         {
@@ -62,9 +64,9 @@ public class CommentController : ControllerBase
         var user = await _userManager.GetUserAsync(User);
 
         if (user == null)
-        {
+        { 
             return Unauthorized("User not found.");
-        } 
+        }
         
         var commentExists = await _db.Set<Comment>().Where(x => x.Id == comment.Id).FirstOrDefaultAsync();
 
@@ -78,13 +80,15 @@ public class CommentController : ControllerBase
             return Unauthorized("This is not your comment");
         }
 
-        commentExists = comment;
 
-        var updatedComment = _db.Set<Comment>().Update(comment);
+        commentExists.Body = comment.Body;
+        commentExists.UpdatedDateTime = DateTime.Now;
+
+        var updateComment = _db.Set<Comment>().Update(commentExists);
 
         _logger.LogInformation("Comment is being updated");
 
-        if (updatedComment == null)
+        if (updateComment == null)
         {
             return BadRequest("Comment cannot be updated");
         }
@@ -93,13 +97,15 @@ public class CommentController : ControllerBase
 
         _logger.LogInformation("Comment has been updated");
 
-        return Ok(updatedComment);
+        var commentResponse = await _db.Set<Comment>().Where(x => x.Id == comment.Id).Include(x => x.Recipe).FirstOrDefaultAsync();
+
+        return Ok(commentResponse);
     }
 
     [HttpPost]
-    public async Task<IActionResult> InsertComment(Comment comment)
+    public async Task<IActionResult> InsertComment(CreateCommentDto commentToInsert)
     {
-        if (comment == null)
+        if (commentToInsert == null)
         {
             return BadRequest("Comment cannot be null");
         }
@@ -111,15 +117,15 @@ public class CommentController : ControllerBase
             return Unauthorized("User not found");
         }
 
-        var commentToInsert = new Comment
+        var comment = new Comment
         {
-            Body = comment.Body,
-            RecipeId = comment.RecipeId,
+            Body = commentToInsert.Body,
+            RecipeId = commentToInsert.RecipeId,
             AuthorId = user?.Id,
             CreatedDateTime = DateTime.UtcNow,
         };
 
-        var insertedComment = await _db.Set<Comment>().AddAsync(commentToInsert);
+        var insertedComment = await _db.Set<Comment>().AddAsync(comment);
         
         _logger.LogInformation("Comment is being insterted");
 

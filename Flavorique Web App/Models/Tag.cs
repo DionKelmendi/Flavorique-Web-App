@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+﻿using Newtonsoft.Json;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Configuration;
 namespace Flavorique_Web_App.Models
@@ -9,6 +10,7 @@ namespace Flavorique_Web_App.Models
         public int Id {  get; set; }
         [Required]
         public string Name { get; set; }
-        public List<Recipe> Recipes { get; set; }
     }
 }
+
+

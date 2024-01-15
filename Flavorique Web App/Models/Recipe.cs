@@ -1,4 +1,6 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Newtonsoft.Json;
+using System.ComponentModel.DataAnnotations;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Flavorique_Web_App.Models
 {
@@ -17,8 +19,7 @@ namespace Flavorique_Web_App.Models
         //public string Instructions { get; set; }
         public DateTime CreatedDateTime { get; set; } = DateTime.Now;
         public string? AuthorId { get; set; }
+        public List<Comment> Comments { get; set; }
         public ApplicationUser? Author { get; set; }
-        public List<Tag> Tags { get; set; }
-
-}
+    }
 }

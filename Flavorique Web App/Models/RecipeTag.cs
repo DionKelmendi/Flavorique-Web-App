@@ -1,15 +1,11 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace Flavorique_Web_App.Models;
-
-public class RecipeTag
+﻿namespace Flavorique_Web_App.Models
 {
-    [Key]
-    public int Id { get; set; }
-    [Required]
-    public int RecipeId { get; set; }
-    [Required]
-    public int TagId { get; set; }
-    public Tag Tag { get; set; }
-    public Recipe Recipe { get; set; }
+    public class RecipeTag
+    {
+        public int Id { get; set; }
+        public int RecipeId { get; set; }
+        public int TagId { get; set; }
+        public Recipe Recipe { get; set; }
+        public Tag Tag { get; set; }
+    }
 }
