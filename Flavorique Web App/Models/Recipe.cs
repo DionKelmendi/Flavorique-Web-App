@@ -19,7 +19,7 @@ namespace Flavorique_Web_App.Models
         //public string Instructions { get; set; }
         public DateTime CreatedDateTime { get; set; } = DateTime.Now;
         public string? AuthorId { get; set; }
-        public List<Comment> Comments { get; set; }
+        public List<Comment>? Comments { get; set; }
         public ApplicationUser? Author { get; set; }
     }
 }

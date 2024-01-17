@@ -12,6 +12,7 @@ import Recipes from './pages/Recipes';
 import AllRecipes from './pages/AllRecipes';
 import DetailRecipe from './pages/DetailRecipe';
 import PrintRecipe from './pages/PrintRecipe';
+import CreateRecipe from './pages/CreateRecipe';
 import Tags from './pages/Tags';
 
 
@@ -38,7 +39,6 @@ function App() {
         return response.json();
       })
       .then(data => {
-        console.log("Setting user data");
         setUserData(data);
       })
       .catch(error => {
@@ -55,8 +55,9 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/Categories" element={<Categories />} />
         <Route path="/Tags" element={<Tags />} />
-        <Route path="/Recipes" element={<Recipes />} />
+        <Route path="/Recipes" element={<Recipes userData={userData} />} />
         <Route path="/Recipes/All" element={<AllRecipes />} />
+        <Route path="/Recipes/Create" element={<CreateRecipe />} />
         <Route path="/Recipes/Detail/:id?" element={<DetailRecipe />} />
         <Route path="/Recipes/Print/:id?" element={<PrintRecipe />} />
       </Routes>

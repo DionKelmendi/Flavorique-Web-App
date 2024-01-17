@@ -3,11 +3,6 @@ import { Link } from 'react-router-dom';
 
 export default function Header({ userData }) {
 
-  useEffect(() => {
-    console.log("Fetching user data");
-    console.log(userData);
-  }, [])
-
   return (
     <header>
       <nav className="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-primary border-bottom box-shadow py-3">

@@ -42,7 +42,7 @@ export default function PrintRecipe({ }) {
 
             <div className='d-flex justify-content-between'>
               <h1 className='py-5'>{recipeData.title}</h1>
-              <img height={150} src={recipeData.image} />
+              <img height={150} style={{ aspectRatio: "1 / 1" }} src={recipeData.image} />
             </div>
             <div dangerouslySetInnerHTML={{ __html: recipeData.body }} />
           </div>

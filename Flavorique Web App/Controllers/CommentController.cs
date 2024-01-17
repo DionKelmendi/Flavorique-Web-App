@@ -53,6 +53,21 @@ public class CommentController : ControllerBase
         return Ok(comment);
     }
 
+    [HttpGet("{id}")]
+    public async Task<IActionResult> GetCommentsByRecipe(int id)
+    {
+        if (_db.Set<Comment>().ToList().Count == 0)
+        {
+            return NotFound("There are no comments");
+        }
+        var comment = await _db.Set<Comment>().Where(x => x.RecipeId == id).FirstOrDefaultAsync();
+        if (comment == null)
+        {
+            return NotFound("Comment not found");
+        }
+        return Ok(comment);
+    }
+
     [HttpPut]
     public async Task<IActionResult> UpdateComment(UpdateCommentDto comment)
     {

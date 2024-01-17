@@ -5,7 +5,7 @@ import CategoryItem from './CategoryItem';
 export default function CategoryList({ amount }) {
 
   const categoryItems = Array(amount).fill(null).map((_, index) => (
-    <CategoryItem id="3" name="Popular Categories" />
+    <CategoryItem key={index} id="3" name="Popular Categories" />
   ));
 
   return (

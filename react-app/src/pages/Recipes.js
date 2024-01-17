@@ -6,11 +6,11 @@ import Hero from '../components/recipeComponents.js/Hero';
 import TopRecipes from '../components/recipeComponents.js/TopRecipes';
 import CategoryList from '../components/recipeComponents.js/CategoryList';
 
-export default function Recipes({ }) {
+export default function Recipes({ userData }) {
 
     return (
         <section className='recipeMainContainer'>
-            <Hero />
+            <Hero userData={userData} />
             <TopRecipes />
             <CategoryList amount={5} />
         </section>

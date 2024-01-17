@@ -5,7 +5,7 @@ import SmallRecipeItem from './SmallRecipeItem';
 export default function TopRecipes({ }) {
 
   const smallRecipeItems = Array(9).fill(null).map((_, index) => (
-    <SmallRecipeItem id="2" src="https://pinchofyum.com/wp-content/uploads/Chocolate-Chip-Cookies-183x183.jpg" title="The Best Soft Chocolate Chip Cookies" reviews="1658" rating="4.9" />
+    <SmallRecipeItem key={index} id="2" src="https://pinchofyum.com/wp-content/uploads/Chocolate-Chip-Cookies-183x183.jpg" title="The Best Soft Chocolate Chip Cookies" reviews="1658" rating="4.9" />
   ));
 
   return (

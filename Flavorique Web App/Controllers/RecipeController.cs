@@ -79,7 +79,6 @@ namespace Flavorique_Web_App.Controllers
 
             _logger.LogInformation(result.ToString());
 
-            // Return an object that includes both the paginated list and pagination information
             return Ok(new { data = result, pageIndex = result.PageIndex, totalPages = result.TotalPages, count = count });
         }
 
@@ -91,7 +90,8 @@ namespace Flavorique_Web_App.Controllers
             {
                 return NotFound();
             }
-            var recipe = await _db.Set<Recipe>().Where(r => r.Id == id).Include(r => r.Comments).FirstOrDefaultAsync();
+            var recipe = await _db.Recipes.FindAsync(id);
+            //var recipe = await _db.Set<Recipe>().Where(r => r.Id == id).Include(r => r.Comments).FirstOrDefaultAsync();
 
             if (recipe == null)
             {
