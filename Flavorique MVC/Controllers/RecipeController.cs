@@ -22,7 +22,7 @@ namespace Flavorique_MVC.Controllers
 
         public async Task<IActionResult> Index(string sortOrder, string searchString, int pageNumber)
         {
-            IEnumerable<Recipe> recipes = new List<Recipe>();
+            IEnumerable<ShortRecipe> recipes = new List<ShortRecipe>();
             int pageIndex = 1;
             int totalPages = 1;
             int count = 0;
@@ -32,7 +32,7 @@ namespace Flavorique_MVC.Controllers
                 {
                     string apiResponse = await response.Content.ReadAsStringAsync();
 
-                    var responseObject = JsonConvert.DeserializeAnonymousType(apiResponse, new { data = Enumerable.Empty<Recipe>(), pageIndex = 1, totalPages = 1, count = 0 });
+                    var responseObject = JsonConvert.DeserializeAnonymousType(apiResponse, new { data = Enumerable.Empty<ShortRecipe>(), pageIndex = 1, totalPages = 1, count = 0 });
 
                     recipes = responseObject.data;
                     pageIndex = responseObject.pageIndex;
@@ -56,7 +56,7 @@ namespace Flavorique_MVC.Controllers
 
             _logger.LogWarning(recipes.Count().ToString());
 
-            var paginatedList = new PaginatedList<Recipe>(recipes.ToList(), count, pageIndex, 5);
+            var paginatedList = new PaginatedList<ShortRecipe>(recipes.ToList(), count, pageIndex, 5);
 
             return View(paginatedList);
         }

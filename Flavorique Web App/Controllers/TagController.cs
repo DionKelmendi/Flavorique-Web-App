@@ -28,7 +28,7 @@ namespace Flavorique_Web_App.Controllers
             {
                 return NotFound();
             }
-            IEnumerable<Tag> tags = await _db.Tags.ToListAsync();
+            IEnumerable<Tag> tags = await _db.Tags.Include(t => t.Category).ToListAsync();
 
             if (!String.IsNullOrEmpty(searchString))
             {

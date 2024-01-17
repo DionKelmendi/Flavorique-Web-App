@@ -40,9 +40,6 @@
                 <a asp-action="Index" asp-route-sortOrder="@ViewData["NameSortParm"]" asp-route-searchString="@ViewData["CurrentFilter"]">Category Name</a>
             </th>
             <th>
-                <a asp-action="Index" asp-route-sortOrder="@ViewData["DisplaySortParm"]" asp-route-searchString="@ViewData["CurrentFilter"]">Display Order</a>
-            </th>
-            <th>
                 <a asp-action="Index" asp-route-sortOrder="@ViewData["DateSortParm"]" asp-route-searchString="@ViewData["CurrentFilter"]">Date Created</a>
             </th>
             <th colspan="2"></th>
@@ -54,7 +51,6 @@
             <tr>
                 <td>@obj.Id</td>
                 <td>@obj.Name</td>
-                <td>@obj.DisplayOrder</td>
                 <td>@obj.CreatedDateTime</td>
                 <td class="d-flex justify-content-evenly">
                     <a asp-controller="Category" asp-action="Edit" asp-route-id="@obj.Id" class="btn btn-warning"><i class="bi bi-pencil-square"></i> &nbsp; Edit Category</a>

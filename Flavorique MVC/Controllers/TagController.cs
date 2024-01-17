@@ -4,6 +4,7 @@ using Newtonsoft.Json;
 using System.Text;
 using System.Net;
 using Microsoft.Data.SqlClient;
+using Microsoft.EntityFrameworkCore;
 
 namespace Flavorique_MVC.Controllers
 {
@@ -58,9 +59,30 @@ namespace Flavorique_MVC.Controllers
         }
 
         //GET
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
-            return View();
+
+            IEnumerable<Category> categories = new List<Category>();
+
+            using (var client = new HttpClient())
+            {
+                using (var response = await client.GetAsync($"https://localhost:7147/api/Category"))
+                {
+                    string apiResponse = await response.Content.ReadAsStringAsync();
+
+                    var responseObject = JsonConvert.DeserializeAnonymousType(apiResponse, new { data = Enumerable.Empty<Category>()});
+
+                    categories = responseObject.data;
+                }
+            }
+
+            var model = new CreateTagViewModel
+            {
+                Tag = new Tag(),
+                Categories = categories
+            };
+
+            return View(model);
         }
 
         //POST
@@ -111,7 +133,14 @@ namespace Flavorique_MVC.Controllers
                     }
                 }
             }
-            return View(tag);
+
+            var model = new CreateTagViewModel
+            {
+                Tag = tag,
+                Categories = await GetCategories()
+            };
+
+            return View(model);
         }
         // POST
         [HttpPost]
@@ -121,12 +150,11 @@ namespace Flavorique_MVC.Controllers
             try
             {
                 var id = tag.Id;
-
                 using (var client = new HttpClient())
                 {
                     var response = await client.PutAsync($"https://localhost:7147/api/Tag/{id}",
                         new StringContent(JsonConvert.SerializeObject(tag), Encoding.UTF8, "application/json"));
-
+                    _logger.LogInformation("Handling Response");
                     return await HandleResponse(response, tag);
                 }
             }
@@ -140,12 +168,20 @@ namespace Flavorique_MVC.Controllers
 
         private async Task<IActionResult> HandleResponse(HttpResponseMessage response, Tag tag)
         {
+            _logger.LogInformation($"Response: {response.StatusCode}");
+
             if (response.IsSuccessStatusCode)
             {
                 return RedirectToAction("Index");
             }
 
             var result = await response.Content.ReadAsStringAsync();
+
+            var model = new CreateTagViewModel
+            {
+                Tag = tag,
+                Categories = await GetCategories()
+            };
 
             if (response.StatusCode == HttpStatusCode.BadRequest)
             {
@@ -160,12 +196,31 @@ namespace Flavorique_MVC.Controllers
                     }
                 }
 
-                return View(tag);
+
+                return View(model);
             }
 
             // Handle other non-success status codes
             ModelState.AddModelError(string.Empty, $"Error: {response.StatusCode}");
-            return View(tag);
+            return View(model);
+        }
+
+        private async Task<IEnumerable<Category>> GetCategories() {
+            IEnumerable<Category> categories = new List<Category>();
+
+            using (var client = new HttpClient())
+            {
+                using (var response = await client.GetAsync($"https://localhost:7147/api/Category"))
+                {
+                    string apiResponse = await response.Content.ReadAsStringAsync();
+
+                    var responseObject = JsonConvert.DeserializeAnonymousType(apiResponse, new { data = Enumerable.Empty<Category>() });
+
+                    categories = responseObject.data;
+                }
+            }
+
+            return categories;
         }
 
         // POST

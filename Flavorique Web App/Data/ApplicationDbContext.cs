@@ -33,6 +33,11 @@ namespace Flavorique_Web_App.Data
                 .WithMany(r => r.Comments)
                 .HasForeignKey(c => c.RecipeId);
 
+            builder.Entity<Tag>()
+                .HasOne(t => t.Category)
+                .WithMany()
+                .HasForeignKey(t => t.CategoryId);
+
         }
     }
 }

@@ -1,10 +1,8 @@
-﻿@model Tag
+﻿@model CreateTagViewModel
 @{
     ViewData["Title"] = "Create";
 }
-
 <form method="post">
-
 
     <div class="border p-3 mt-4">
         <div class="row pb-2">
@@ -12,9 +10,14 @@
             <hr />
         </div>
         <div class="mb-3">
-            <label asp-for="Name"></label>
-            <input asp-for="Name" class="form-control" />
-            <span asp-validation-for="Name" class="text-danger"></span>
+            <label asp-for="Tag.Name"></label>
+            <input asp-for="Tag.Name" class="form-control" />
+            <span asp-validation-for="Tag.Name" class="text-danger"></span>
+        </div>
+        <div class="mb-3">
+            <label asp-for="Tag.CategoryId">Select Category</label>
+            @Html.DropDownListFor(model => model.Tag.CategoryId, new SelectList(Model.Categories, "Id", "Name"), "Select a Category", new { @class = "form-control" })
+            <span asp-validation-for="Tag.CategoryId" class="text-danger"></span>
         </div>
         <button type="submit" class="btn btn-primary" style="width: 200px"> Create </button>
         <a asp-controller="Tag" asp-action="Index" class="btn btn-secondary" style="width: 200px">Go back</a>
