@@ -137,6 +137,414 @@
   border-bottom: 2px solid #e95420;
 }
 
+.dashboard {
+
+  background: #363636;
+  min-height: 100vh;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+
+.dashboard .containerMain {
+
+  display: flex;
+  justify-content: center;
+  align-items: start;
+  gap: 20px;
+  flex-wrap: wrap;
+
+  width: 1090px;
+  margin: auto;
+  /* outline: 1px solid lime; */
+}
+
+.dashboard .item {
+
+  background: white;
+  border-radius: 5px;
+
+  /* border: 1px solid lime; */
+}
+
+.dashboard .userWelcome {
+
+  width: 350px;
+  height: 350px;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  align-items: center;
+}
+
+.dashboard .userWelcome img {
+
+  width: 200px;
+  height: 200px;
+  border-radius: 100%;
+}
+
+.dashboard .welcomeMessage {
+
+  font-size: 20px;
+}
+
+.dashboard .userReviews button,
+.dashboard .userFavorites button,
+.dashboard .userWelcome button,
+.dashboard .changePassword .update,
+.dashboard .userInfo button,
+.dashboard .settingsForm button {
+  width: 202px;
+  height: 30px;
+  border-radius: 5px;
+  border: none;
+}
+
+.dashboard .userWelcome button {
+  color: black;
+  background: #d9d9d9;
+  transition: 0.3s all;
+}
+
+.dashboard .userWelcome button:hover {
+
+  background: #c5c5c5;
+  cursor: pointer;
+}
+
+.dashboard .userInfo {
+  width: 720px;
+  height: 350px;
+  font-weight: bold;
+  padding: 30px;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+}
+
+.dashboard .userInfo span {
+
+  float: right;
+  font-weight: 400;
+}
+
+.dashboard .userReviews button,
+.dashboard .userFavorites button,
+.dashboard .changePassword .update,
+.dashboard .userInfo button {
+
+  color: white;
+  background: #e95420;
+  border-radius: 5px;
+  transform: translateY(24px);
+  transition: 0.3s all;
+}
+
+.dashboard .userReviews button:hover,
+.dashboard .userFavorites button:hover,
+.dashboard .changePassword .update:hover,
+.dashboard .userInfo button:hover,
+.dashboard .settingsForm button:hover {
+
+  background: rgb(255, 132, 50);
+  cursor: pointer;
+}
+
+.dashboard .userReviews,
+.dashboard .changePassword,
+.dashboard .userFavorites {
+
+  width: 350px;
+  height: 425px;
+  padding: 20px;
+}
+
+.dashboard .changePassword .container {
+
+  width: 100%;
+  height: 100%;
+}
+
+.dashboard .changePassword form {
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-evenly;
+
+  height: 100%;
+}
+
+.dashboard .changePassword a {
+  padding: 8px;
+  border-bottom: 1px solid black;
+}
+
+.changePassword .errorP,
+.changePassword .successP {
+  margin-top: 0;
+  width: auto;
+
+  position: absolute;
+  width: 250px;
+}
+
+.dashboard .changePassword form div {
+
+  width: 85%;
+}
+
+.dashboard .userFavorites h1,
+.dashboard .userReviews h1,
+.dashboard .changePassword h1 {
+  font-size: 20px;
+  font-weight: 400;
+}
+
+.dashboard .changePassword form div input {
+
+  width: 85%;
+  border: none;
+  border-bottom: 1px solid black;
+  height: 32px;
+  margin-top: 5px;
+}
+
+.dashboard .changePassword form div input:focus {
+  outline: none;
+}
+
+.dashboard .changePassword i {
+  width: 20px;
+  height: 20px;
+}
+
+.dashboard .userFavorites img {
+
+  width: 75px;
+  height: 75px;
+}
+
+.dashboard .userFavorites .favoriteItem {
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  width: 95%;
+  margin: auto;
+  background-color: #d9d9d9;
+  border-radius: 5px;
+  padding: 10px;
+  margin-top: 20px;
+}
+
+.dashboard .userFavorites .favoriteItem {
+
+  color: black;
+}
+
+.dashboard a {
+
+  text-decoration: none;
+}
+
+.dashboard .userFavorites .favoriteItem:hover {
+
+  opacity: 70%;
+}
+
+.dashboard .userFavorites .favoriteItem:active {
+
+  color: orange;
+}
+
+.dashboard .userFavorites button {
+  margin: auto;
+  margin-left: calc(50% - 101px);
+}
+
+.dashboard .userReviews {
+
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.dashboard .reviewRating {
+
+  display: flex;
+  justify-content: space-between;
+  color: black;
+}
+
+.dashboard .userReviews h1 {
+  align-self: flex-start;
+}
+
+.dashboard .reviewContent {
+
+  background: #e6e6e6;
+  padding: 15px;
+  border-radius: 5px;
+  color: black;
+  height: 100%;
+}
+
+.dashboard .reviewContent i {
+
+  color: #f3da35;
+}
+
+
+.dashboard .reviewRating>div {
+
+  background: white;
+  padding: 2px;
+  border-radius: 5px;
+}
+
+.dashboard .reviewContent>* {
+
+  padding: 5px;
+}
+
+.dashboard .reviewContent:hover {
+
+  opacity: 70%;
+}
+
+.dashboard .comment {
+
+  background: white;
+  border-radius: 5px;
+  padding: 15px;
+  word-wrap: break-word;
+  max-width: 310px;
+  min-height: 100px;
+  text-align: justify;
+}
+
+.dashboard .readMore {
+  color: gray;
+  text-decoration: underline;
+}
+
+.dashboard .readMore:hover {
+  color: black;
+}
+
+.dashboard .userReviews button {
+
+  transform: translateY(5px);
+}
+
+.dashboard .reviewLink {
+  width: 100%;
+  height: 100%;
+  padding: 15px 0px;
+}
+
+.dashboard .reviewRating {
+  padding-left: 0;
+}
+
+.dashboard .hide {
+
+  display: none;
+}
+
+.dashboard .show {
+
+  display: block;
+}
+
+.dashboard .settingsForm,
+.removeWindow {
+
+  width: 500px;
+  height: 750px;
+  position: absolute;
+  top: calc(50% - 375px);
+  left: calc(50% - 250px);
+  z-index: 99999;
+  background-color: white;
+  border-radius: 5px;
+  box-shadow: 0 0px 20px 15px rgba(0, 0, 0, 0.5);
+  -webkit-box-shadow: 0 0px 20px 5px rgba(0, 0, 0, 0.5);
+  -moz-box-shadow: 0 0px 20px 15px rgba(0, 0, 0, 0.5);
+
+}
+
+.dashboard .settingsForm form {
+
+  display: flex;
+  justify-content: space-evenly;
+  align-items: flex-start;
+  flex-direction: column;
+
+  width: 80%;
+  height: 100%;
+  margin: auto;
+}
+
+.dashboard .settingsForm .close {
+  position: absolute;
+  right: 0;
+  margin: 10px;
+  border-radius: 100%;
+  background: none;
+  width: 30px;
+  border: 2px solid orange;
+  color: orange;
+  font-weight: 700;
+  text-align: center;
+  transition: 0.3s all;
+}
+
+.dashboard .settingsForm button {
+  transition: 0.3s all;
+  align-self: center;
+}
+
+.dashboard .settingsForm button:hover {
+  color: white;
+  background: orange;
+}
+
+.dashboard .settingsForm form div {
+
+  width: 100%;
+}
+
+.dashboard .errorP {
+  width: auto;
+  position: absolute;
+}
+
+.dashboard .settingsForm form input[type="text"] {
+
+  width: 100%;
+  padding: 10px;
+}
+
+.dashboard .settingsForm label {
+
+  font-size: 12px;
+}
+
+.dashboard .settingsForm hr {
+  width: 106%;
+  transform: translateX(-3%);
+  border: 1px solid #aaa;
+}
+
 @media (max-width: 1000px) {
   .row-to-column {
     flex-direction: column;

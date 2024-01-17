@@ -1,8 +1,7 @@
 import { React, useState, useEffect } from 'react'
 import { Link } from 'react-router-dom';
 
-export default function SmallRecipeItem({ id, src, title, reviews, rating }) {
-
+export default function CommentItem({ id, rating, body }) {
   const fullStars = Math.round(rating * 2) / 2;
   const hasHalfStar = fullStars % 1 !== 0;
 
@@ -22,19 +21,20 @@ export default function SmallRecipeItem({ id, src, title, reviews, rating }) {
   }
 
   return (
-    <Link to={"/Recipes/Detail/" + id} className='text-decoration-none hoverable' style={{ width: "33%", color: "black" }}>
+    <Link to={"/Recipes/Detail/" + id} className='text-decoration-none hoverable' style={{ width: "100%", color: "black", background: "#f7f7f7" }}>
       <div className='d-flex m-3 overflow-hidden'>
-        <img height={100} width={100} src={src} className='me-3' />
-        <div className='d-flex flex-column justify-content-between'>
-          <h5>{title}</h5>
+        <div className='d-flex flex-column justify-content-between w-100'>
           <div>
-            <div className='starContainer text-warning'>
-              {renderStars()}
+            <div className='d-flex justify-content-between w-100'>
+              <p className="me-3" style={{ color: "black !important" }}>Recipe name</p>
+              <div className='starContainer text-warning d-flex'>
+                {renderStars()}
+              </div>
             </div>
-            <p className='m-0 text-secondary'> {reviews} reviews / {rating} average </p>
+            <p className='m-0'> {body} </p>
           </div>
         </div>
       </div>
-    </Link>
-  )
+    </Link >
+  );
 }

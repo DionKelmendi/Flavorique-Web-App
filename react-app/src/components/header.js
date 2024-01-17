@@ -5,7 +5,7 @@ export default function Header({ userData }) {
 
   return (
     <header>
-      <nav className="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-primary border-bottom box-shadow py-3">
+      <nav className="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-primary box-shadow py-3">
         <div className="container-fluid w-60 p-0">
           <Link to="/" className='navbar-brand text-light' style={{ fontSize: "32px" }}>
             <img height={75} src="https://localhost:7147/logo" className="me-2" style={{ filter: "grayscale(30%)" }} />

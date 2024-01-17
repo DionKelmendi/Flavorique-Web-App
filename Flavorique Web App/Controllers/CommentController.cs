@@ -60,12 +60,27 @@ public class CommentController : ControllerBase
         {
             return NotFound("There are no comments");
         }
-        var comment = await _db.Set<Comment>().Where(x => x.RecipeId == id).FirstOrDefaultAsync();
-        if (comment == null)
+        var comments = await _db.Set<Comment>().Where(x => x.RecipeId == id).ToListAsync();
+        if (comments == null)
         {
             return NotFound("Comment not found");
         }
-        return Ok(comment);
+        return Ok(comments);
+    }
+
+    [HttpGet("{id}")]
+    public async Task<IActionResult> GetCommentsByUser(string id, int amount = 3)
+    {
+        if (_db.Set<Comment>().ToList().Count == 0)
+        {
+            return NotFound("There are no comments");
+        }
+        var comments = await _db.Set<Comment>().Where(x => x.AuthorId == id).OrderByDescending(j => j.CreatedDateTime).Take(amount).ToListAsync();
+        if (comments == null)
+        {
+            return NotFound("Comment not found");
+        }
+        return Ok(comments);
     }
 
     [HttpPut]

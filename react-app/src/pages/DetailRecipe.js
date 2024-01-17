@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
-import SmallRecipeItem from '../components/recipeComponents.js/SmallRecipeItem';
+import RecipeItem from '../components/homeComponents.js/RecipeItem';
+import SmallRecipeList from '../components/homeComponents.js/SmallRecipeList';
 
 export default function DetailRecipe() {
   const [recipeData, setRecipeData] = useState([]);
@@ -69,23 +70,9 @@ export default function DetailRecipe() {
             <h1 className='py-5'>{recipeData.title}</h1>
             <a href="#ingredients" className="w-100 d-block bg-light text-center p-3 mb-5 text-decoration-none" style={{ fontSize: "20px" }}><i className="bi bi-arrow-down"></i> Jump to recipe</a>
             <div dangerouslySetInnerHTML={{ __html: recipeData.body }} />
-
-            <section className="d-flex flex-column align-items-center justify-content-evenly text-center mt-5">
-              <h1 className="align-self-start mt-5">Similar Recipes</h1>
-              <div className="w-100 d-flex flex-column align-items-center justify-content-center">
-                <div className="border-bottom rounded d-flex align-items-center p-4" style={{ height: "250px" }}>
-                  <img className=" h-100" style={{ aspectRatio: "1 / 1" }} />
-                  <div className="p-5" style={{ textAlign: "left" }}>
-                    <p className="text-secondary">November 14, 2023</p>
-                    <h3 className="fw-bolder">Title</h3>
-                    <p style={{ textAlign: "justify" }}>This shredded beef Texas chili is rich and hearty, made with 8 simple ingredients! Just saucy chunks of tender beef that shreds apart with the lightest pull of a fork. YUM.</p>
-                    <a asp-controller="Recipe" asp-action="Details" asp-route-id="1" style={{ fontSize: "18px", letterSpacing: "1px" }}>Continue Reading <i className="bi bi-arrow-right"></i></a>
-                  </div>
-                </div>
-              </div>
-            </section>
-            <SmallRecipeItem id="2" src="https://pinchofyum.com/wp-content/uploads/Chocolate-Chip-Cookies-183x183.jpg" title="The Best Soft Chocolate Chip Cookies" reviews="1658" rating="4.9" />
           </div>
+
+          <SmallRecipeList id={id} />
         </>
         :
         <p>Recipe does not exist</p>

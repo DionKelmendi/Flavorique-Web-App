@@ -386,11 +386,11 @@ namespace Flavorique_Web_App.Controllers
 			if (result.Succeeded)
 			{
 				await _signInManager.RefreshSignInAsync(user);
-				return Ok("Password changed successfully");
+				return Ok(new { message = "Password changed successfully" });
 			}
 
-			return BadRequest("Failed to change password");
-		}
+			return BadRequest(new { error = "Failed to change password" });
+        }
 
 		[HttpDelete("user-delete")]
 		public async Task<IActionResult> DeleteAccount(string password)

@@ -14,6 +14,7 @@ import DetailRecipe from './pages/DetailRecipe';
 import PrintRecipe from './pages/PrintRecipe';
 import CreateRecipe from './pages/CreateRecipe';
 import Tags from './pages/Tags';
+import Dashboard from './pages/Dashboard';
 
 
 function App() {
@@ -55,6 +56,7 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/Categories" element={<Categories />} />
         <Route path="/Tags" element={<Tags />} />
+        <Route path="/User" element={<Dashboard userData={userData} />} />
         <Route path="/Recipes" element={<Recipes userData={userData} />} />
         <Route path="/Recipes/All" element={<AllRecipes />} />
         <Route path="/Recipes/Create" element={<CreateRecipe />} />

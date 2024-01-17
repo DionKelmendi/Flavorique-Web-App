@@ -11,7 +11,7 @@ export default function RecipeItem({ id, date, title, description, src }) {
           <p className="text-secondary m-0">{date}</p>
           <h3 className="fw-bolder m-0">{title}</h3>
           <p>{description}</p>
-          <Link to={"/recipe/" + id} className="text-primary text-decoration-none" style={{ fontSize: "18px", letterSpacing: "1px", margin: 0 }}> Continue Reading <i className="bi bi-arrow-right"></i></Link>
+          <Link to={"/Recipes/Detail/" + id} className="text-primary text-decoration-none" style={{ fontSize: "18px", letterSpacing: "1px", margin: 0 }}> Continue Reading <i className="bi bi-arrow-right"></i></Link>
         </div>
       </div>
     </>

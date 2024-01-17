@@ -37,18 +37,27 @@ namespace Flavorique_Web_App.Controllers
 
         // GET: api/Recipe
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Recipe>>> GetRecipes(string? sortOrder, string? searchString, int? pageNumber)
+        public async Task<ActionResult<IEnumerable<ShortRecipe>>> GetRecipes(string? sortOrder, string? searchString, int? pageNumber, int pageSize = 5)
         {
             if (_db.Recipes == null)
             {
                 return NotFound();
             }
-            IEnumerable<Recipe> recipes = await _db.Recipes.ToListAsync();
+            IEnumerable<ShortRecipe> recipes = await _db.Recipes.Select(i => new ShortRecipe
+            {
+                Id = i.Id,
+                AuthorId = i.AuthorId,
+                AuthorName = _userManager.FindByIdAsync(i.AuthorId).Result.UserName,
+                Title = i.Title,
+                CreatedDateTime = i.CreatedDateTime,
+                Body = StripHtmlTags(i.Body).Length > 200 ? StripHtmlTags(i.Body).Substring(0, 200) : StripHtmlTags(i.Body),
+                Image = GetImageFromHtml(i.Body)
+            }).ToListAsync();
 
             if (!String.IsNullOrEmpty(searchString))
             {
                 recipes = recipes.Where(r => r.Title.ToLower().Contains(searchString.ToLower()) 
-                                        || _userManager.Users.Any(u => u.Id == r.AuthorId && u.UserName.ToLower().Contains(searchString.ToLower())));
+                                            || _userManager.Users.Any(u => u.Id == r.AuthorId && u.UserName.ToLower().Contains(searchString.ToLower())));
             }
             int count = recipes.Count();
 
@@ -74,8 +83,7 @@ namespace Flavorique_Web_App.Controllers
                     break;
             }
 
-            int pageSize = 5;
-            PaginatedList<Recipe> result = await PaginatedList<Recipe>.CreateAsync(recipes, pageNumber ?? 1, pageSize);
+            PaginatedList<ShortRecipe> result = await PaginatedList<ShortRecipe>.CreateAsync(recipes, pageNumber ?? 1, pageSize);
 
             _logger.LogInformation(result.ToString());
 

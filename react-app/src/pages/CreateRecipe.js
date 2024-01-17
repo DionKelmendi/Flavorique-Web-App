@@ -4,6 +4,8 @@ import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 
 export default function CreateRecipe() {
   const [bodyData, setBodyData] = useState('');
+  const [titleData, setTitleData] = useState('');
+  const [error, setError] = useState([]);
   const [x, setX] = useState(0);
   const rotatorRef = useRef(null);
 
@@ -39,6 +41,10 @@ export default function CreateRecipe() {
     setBodyData(data);
   };
 
+  const handleTitleChange = (e) => {
+    setTitleData(e.target.value);
+  };
+
   const handleFormSubmit = (e) => {
     e.preventDefault();
 
@@ -46,7 +52,7 @@ export default function CreateRecipe() {
 
     const jsonData = {
       "id": 0,
-      "title": "hi",
+      "title": titleData,
       "body": bodyData,
       "createdDateTime": currentDate.toISOString(),
       "authorId": null,
@@ -73,6 +79,7 @@ export default function CreateRecipe() {
       })
       .catch(error => {
         console.error('Error:', error);
+        setError(error.message);
       });
 
     console.log(bodyData);
@@ -83,8 +90,10 @@ export default function CreateRecipe() {
       <section>
         <div className='w-60 m-auto pt-5 overflow-hidden'>
           <div className='rotator d-flex overflow-hidden' style={{ width: "300%", transition: "0.3s all ease-in" }}>
-            <div className='rotatingItem border' style={{ width: "33.3%" }}></div>
             <div className='rotatingItem' style={{ width: "33.3%" }}>
+              <div>
+                <input type="text" placeholder='Title' className="form-control rounded me-2" value={titleData} onChange={handleTitleChange} />
+              </div>
               <div id="editor" />
             </div>
             <div className='rotatingItem border' style={{ width: "33.3%" }}></div>
@@ -92,11 +101,11 @@ export default function CreateRecipe() {
           <button onClick={() => move('left')} className={`btn btn-primary mt-3 ${x === 0 ? 'd-none' : ''}`} style={{ float: "left" }}>
             <i className="bi bi-arrow-left"></i> Back
           </button>
-          <button onClick={() => move('right')} className={`btn btn-primary mt-3 ${x === 2 ? 'd-none' : ''}`} style={{ float: "right" }}>
+          <button onClick={() => move('right')} className={`btn btn-primary mt-3 ${x === 1 ? 'd-none' : ''}`} style={{ float: "right" }}>
             Next <i className="bi bi-arrow-right"></i>
           </button>
           <form onSubmit={handleFormSubmit}>
-            <button type='submit' className={`btn btn-primary mt-3 ${x !== 2 ? 'd-none' : ''}`} style={{ float: "right" }}>
+            <button type='submit' className={`btn btn-primary mt-3 ${x !== 1 ? 'd-none' : ''}`} style={{ float: "right" }}>
               Submit Recipe <i className="bi bi-plus-square"></i>
             </button>
           </form>
