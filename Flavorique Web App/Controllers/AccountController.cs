@@ -138,7 +138,19 @@ namespace Flavorique_Web_App.Controllers
 			return Ok(userInfo);
 		}
 
-		[HttpGet("name/{name}")]
+        [HttpGet("name-from-id/{id}")]
+        public async Task<IActionResult> GetUserNameById(string id)
+        {
+            var user = await _userManager.FindByIdAsync(id);
+
+            if (user == null)
+            {
+                return NotFound("User not found");
+            }
+            return Ok(user.UserName);
+        }
+
+        [HttpGet("name/{name}")]
 		public async Task<IActionResult> GetUserByName(string name)
 		{
 			var user = await _userManager.FindByNameAsync(name);

@@ -11,10 +11,6 @@ namespace Flavorique_MVC.Models
         public string? Title { get; set; }
         [Required]
         public string? Body { get; set; }
-        //[Required]
-        //public string Ingredients { get; set; }
-        //[Required]
-        //public string Instructions { get; set; }
         public DateTime CreatedDateTime { get; set; } = DateTime.Now;
         public string? AuthorId { get; set; }
         public ApplicationUser? Author { get; set; }

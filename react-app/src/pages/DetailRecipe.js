@@ -3,6 +3,8 @@ import { Link, useParams } from 'react-router-dom';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import RecipeItem from '../components/homeComponents.js/RecipeItem';
 import SmallRecipeList from '../components/homeComponents.js/SmallRecipeList';
+import CreateComent from '../components/recipeComponents.js/CreateComment';
+import CommentList from '../components/recipeComponents.js/CommentList';
 
 export default function DetailRecipe() {
   const [recipeData, setRecipeData] = useState([]);
@@ -73,6 +75,10 @@ export default function DetailRecipe() {
           </div>
 
           <SmallRecipeList id={id} />
+
+          <CreateComent />
+
+          <CommentList recipeId={id} />
         </>
         :
         <p>Recipe does not exist</p>
