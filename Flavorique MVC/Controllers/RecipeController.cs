@@ -81,7 +81,10 @@ namespace Flavorique_MVC.Controllers
                 using (var response = await client.GetAsync($"https://localhost:7147/api/Comment/GetCommentsByRecipe/{id}"))
                 {
                     string apiResponse = await response.Content.ReadAsStringAsync();
-                    comments = JsonConvert.DeserializeObject<List<Comment>>(apiResponse);
+                    if (!apiResponse.Contains("There are no comments"))
+                    {
+                        comments = JsonConvert.DeserializeObject<List<Comment>>(apiResponse);
+                    }
                 }
             }
 
