@@ -5,7 +5,6 @@ import './App.css';
 import React, { useState, useEffect } from 'react';
 import { Route, Routes, Navigate, useLocation } from "react-router-dom";
 import Header from './components/Header';
-import Home from './pages/Home';
 import Footer from './components/Footer';
 import Categories from './pages/Categories';
 import Recipes from './pages/Recipes';
@@ -15,7 +14,7 @@ import PrintRecipe from './pages/PrintRecipe';
 import CreateRecipe from './pages/CreateRecipe';
 import Tags from './pages/Tags';
 import Dashboard from './pages/Dashboard';
-
+import Home from './pages/Home';
 
 function App() {
 

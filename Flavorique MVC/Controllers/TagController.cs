@@ -43,6 +43,7 @@ namespace Flavorique_MVC.Controllers
 
             ViewData["IdSortParm"] = String.IsNullOrEmpty(sortOrder) ? "idDesc" : "";
             ViewData["NameSortParm"] = sortOrder == "name" ? "nameDesc" : "name";
+            ViewData["CategorySortParm"] = sortOrder == "category" ? "categoryDesc" : "category";
             ViewData["CurrentFilter"] = searchString;
             ViewData["CurrentSort"] = sortOrder;
 

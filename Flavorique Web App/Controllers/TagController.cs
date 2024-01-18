@@ -32,7 +32,7 @@ namespace Flavorique_Web_App.Controllers
 
             if (!String.IsNullOrEmpty(searchString))
             {
-                tags = tags.Where(t => t.Name.ToLower().Contains(searchString.ToLower()));
+                tags = tags.Where(t => t.Name.ToLower().Contains(searchString.ToLower()) || t.Category.Name.ToLower().Contains(searchString.ToLower()));
             }
             int count = tags.Count();
 
@@ -43,6 +43,12 @@ namespace Flavorique_Web_App.Controllers
                     break;
                 case "nameDesc":
                     tags = tags.OrderByDescending(t => t.Name);
+                    break;
+                case "category":
+                    tags = tags.OrderBy(t => t.Category?.Name);
+                    break;
+                case "categoryDesc":
+                    tags = tags.OrderByDescending(t => t.Category?.Name);
                     break;
                 case "idDesc":
                     tags = tags.OrderByDescending(t => t.Id);

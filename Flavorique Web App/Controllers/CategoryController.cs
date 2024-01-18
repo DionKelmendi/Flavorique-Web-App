@@ -172,6 +172,22 @@ namespace Flavorique_Web_App.Controllers
             return NoContent();
         }
 
+        [HttpGet("tags")]
+        public async Task<IActionResult> GetCategoriesWithTags()
+        {
+            var categoriesWithTags = _db.Categories
+            .Select(category => new CategoryViewModel
+            {
+                Category = category,
+                Tags = _db.Tags
+                    .Where(tag => tag.CategoryId == category.Id)
+                    .ToList()
+            })
+            .ToList();
+
+            return Ok(categoriesWithTags);
+        }
+
         private bool Exists(int id)
         {
             return (_db.Categories?.Any(e => e.Id == id)).GetValueOrDefault();

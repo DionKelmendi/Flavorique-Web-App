@@ -39,7 +39,7 @@
                 <a asp-action="Index" asp-route-sortOrder="@ViewData["NameSortParm"]" asp-route-searchString="@ViewData["CurrentFilter"]">Tag Name</a>
             </th>
             <th>
-                <a asp-action="Index" asp-route-searchString="@ViewData["CurrentFilter"]">Category</a>
+                <a asp-action="Index" asp-route-sortOrder="@ViewData["CategorySortParm"]" asp-route-searchString="@ViewData["CurrentFilter"]">Category</a>
             </th>
             <th colspan="1"></th>
         </tr>
