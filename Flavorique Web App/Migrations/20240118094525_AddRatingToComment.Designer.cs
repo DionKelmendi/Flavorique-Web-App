@@ -4,6 +4,7 @@ using Flavorique_Web_App.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Flavorique_Web_App.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240118094525_AddRatingToComment")]
+    partial class AddRatingToComment
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -116,7 +118,7 @@ namespace Flavorique_Web_App.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
                     b.Property<string>("AuthorId")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Body")
                         .IsRequired()
@@ -135,6 +137,8 @@ namespace Flavorique_Web_App.Migrations
                         .HasColumnType("datetime2");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("AuthorId");
 
                     b.HasIndex("RecipeId");
 
@@ -355,11 +359,17 @@ namespace Flavorique_Web_App.Migrations
 
             modelBuilder.Entity("Flavorique_Web_App.Models.Comment", b =>
                 {
-                    b.HasOne("Flavorique_Web_App.Models.Recipe", "Recipe")
+                    b.HasOne("Flavorique_Web_App.Models.ApplicationUser", "Author")
                         .WithMany()
+                        .HasForeignKey("AuthorId");
+
+                    b.HasOne("Flavorique_Web_App.Models.Recipe", "Recipe")
+                        .WithMany("Comments")
                         .HasForeignKey("RecipeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Author");
 
                     b.Navigation("Recipe");
                 });
@@ -451,6 +461,11 @@ namespace Flavorique_Web_App.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("Flavorique_Web_App.Models.Recipe", b =>
+                {
+                    b.Navigation("Comments");
                 });
 #pragma warning restore 612, 618
         }

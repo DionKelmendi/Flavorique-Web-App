@@ -74,7 +74,22 @@ namespace Flavorique_MVC.Controllers
                     recipe  = JsonConvert.DeserializeObject<Recipe>(apiResponse);
                 }
             }
-            return View(recipe);
+
+            var comments = new List<Comment>();
+            using (var client = new HttpClient())
+            {
+                using (var response = await client.GetAsync($"https://localhost:7147/api/Comment/GetCommentsByRecipe/{id}"))
+                {
+                    string apiResponse = await response.Content.ReadAsStringAsync();
+                    comments = JsonConvert.DeserializeObject<List<Comment>>(apiResponse);
+                }
+            }
+
+            var model = new DetailRecipeViewModel {
+                Recipe = recipe,
+                Comments = comments
+            };
+            return View(model);
         }
 
         //GET

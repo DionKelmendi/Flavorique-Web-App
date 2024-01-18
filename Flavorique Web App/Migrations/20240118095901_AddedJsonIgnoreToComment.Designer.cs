@@ -4,6 +4,7 @@ using Flavorique_Web_App.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Flavorique_Web_App.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240118095901_AddedJsonIgnoreToComment")]
+    partial class AddedJsonIgnoreToComment
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -131,12 +133,17 @@ namespace Flavorique_Web_App.Migrations
                     b.Property<int>("RecipeId")
                         .HasColumnType("int");
 
+                    b.Property<int?>("RecipeId1")
+                        .HasColumnType("int");
+
                     b.Property<DateTime>("UpdatedDateTime")
                         .HasColumnType("datetime2");
 
                     b.HasKey("Id");
 
                     b.HasIndex("RecipeId");
+
+                    b.HasIndex("RecipeId1");
 
                     b.ToTable("Comments");
                 });
@@ -361,6 +368,10 @@ namespace Flavorique_Web_App.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("Flavorique_Web_App.Models.Recipe", null)
+                        .WithMany("Comments")
+                        .HasForeignKey("RecipeId1");
+
                     b.Navigation("Recipe");
                 });
 
@@ -451,6 +462,11 @@ namespace Flavorique_Web_App.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("Flavorique_Web_App.Models.Recipe", b =>
+                {
+                    b.Navigation("Comments");
                 });
 #pragma warning restore 612, 618
         }

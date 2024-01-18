@@ -13,13 +13,8 @@ namespace Flavorique_Web_App.Models
         public string? Title { get; set; }
         [Required]
         public string? Body { get; set; }
-        //[Required]
-        //public string Ingredients { get; set; }
-        //[Required]
-        //public string Instructions { get; set; }
         public DateTime CreatedDateTime { get; set; } = DateTime.Now;
         public string? AuthorId { get; set; }
-        public List<Comment>? Comments { get; set; }
         public ApplicationUser? Author { get; set; }
     }
 }

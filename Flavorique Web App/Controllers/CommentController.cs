@@ -65,6 +65,7 @@ public class CommentController : ControllerBase
         {
             return NotFound("Comment not found");
         }
+
         return Ok(comments);
     }
 
@@ -112,6 +113,7 @@ public class CommentController : ControllerBase
 
 
         commentExists.Body = comment.Body;
+        commentExists.Rating = comment.Rating;
         commentExists.UpdatedDateTime = DateTime.Now;
 
         var updateComment = _db.Set<Comment>().Update(commentExists);
@@ -127,18 +129,19 @@ public class CommentController : ControllerBase
 
         _logger.LogInformation("Comment has been updated");
 
-        var commentResponse = await _db.Set<Comment>().Where(x => x.Id == comment.Id).Include(x => x.Recipe).FirstOrDefaultAsync();
+        var commentResponse = await _db.Set<Comment>().Where(x => x.Id == comment.Id).FirstOrDefaultAsync();
 
         return Ok(commentResponse);
     }
 
     [HttpPost]
-    public async Task<IActionResult> InsertComment(CreateCommentDto commentToInsert)
+    public async Task<ActionResult<Comment>> PostComment(CreateCommentDto commentDto)
     {
-        if (commentToInsert == null)
+        if (_db.Comments == null)
         {
-            return BadRequest("Comment cannot be null");
+            return Problem("Entity set 'db.Categories' is null.");
         }
+        if (commentDto == null) { return NotFound(); }
 
         var user = await _userManager.GetUserAsync(User);
 
@@ -146,30 +149,23 @@ public class CommentController : ControllerBase
         {
             return Unauthorized("User not found");
         }
-
         var comment = new Comment
         {
-            Body = commentToInsert.Body,
-            RecipeId = commentToInsert.RecipeId,
+            Body = commentDto.Body,
+            RecipeId = commentDto.RecipeId,
+            Rating = commentDto.Rating,
             AuthorId = user?.Id,
             CreatedDateTime = DateTime.UtcNow,
         };
 
-        var insertedComment = await _db.Set<Comment>().AddAsync(comment);
-        
-        _logger.LogInformation("Comment is being insterted");
-
-        if (insertedComment == null)
-        {
-            return BadRequest("Comment cannot be inserted");
-        }
+        _db.Comments.Add(comment);
         await _db.SaveChangesAsync();
 
         _logger.LogInformation("Comment has been successfully inserted");
 
-        return Ok(insertedComment);
+        return Ok(comment);
     }
-    
+
 
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteComment(int id)
@@ -196,21 +192,13 @@ public class CommentController : ControllerBase
             return Unauthorized("This comment does not belong to the user");
         }
 
-        var deletedComment = _db.Set<Comment>().Remove(comment);
-
         _logger.LogInformation("Comment is being removed");
 
-        if (deletedComment == null)
-        {
-            return BadRequest("Comment cannot be deleted");
-        }
+        _db.Comments.Remove(comment);
         await _db.SaveChangesAsync();
 
         _logger.LogInformation("Comment has been successfully removed");
 
-        return Ok(deletedComment);
+        return NoContent();
     }
-
-
-
 }

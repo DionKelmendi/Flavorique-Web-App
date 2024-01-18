@@ -30,7 +30,7 @@ namespace Flavorique_Web_App.Data
 
             builder.Entity<Comment>()
                 .HasOne(c => c.Recipe)
-                .WithMany(r => r.Comments)
+                .WithMany()
                 .HasForeignKey(c => c.RecipeId);
 
             builder.Entity<Tag>()
