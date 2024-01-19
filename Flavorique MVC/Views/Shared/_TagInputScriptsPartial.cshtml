@@ -1,0 +1,69 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+<script>
+    function createTagSpan(value, text) {
+        const tagSpan = document.createElement('span');
+        tagSpan.classList.add('btn', 'btn-primary', 'me-2');
+        tagSpan.textContent = text; 
+        tagSpan.setAttribute('data-value', value);
+        tagSpan.addEventListener('click', () => removeTag(tagSpan));
+
+        return tagSpan;
+    }
+
+    function initializeSpans() {
+        const selectedTagsDiv = document.getElementById('selectedTags');
+        const selectedTagsInput = document.getElementById('selectedTagsInput');
+
+        const inputValues = selectedTagsInput.value.trim();
+
+        if (inputValues !== '') {
+            const valuesArray = inputValues.split(',').map(value => value.trim());
+
+            valuesArray.forEach(value => {
+
+                const option = Array.from(tagSelect.options).find(option => option.value === value);
+                const tagSpan = createTagSpan(value, option.text);
+                selectedTagsDiv.appendChild(tagSpan);
+            });
+        }
+    }
+
+    function addTag() {
+        const tagSelect = document.getElementById('tagSelect');
+        const selectedTagsDiv = document.getElementById('selectedTags');
+
+        Array.from(tagSelect.selectedOptions).forEach(option => {
+            if (!tagExists(selectedTagsDiv, option.value)) {
+                const tagSpan = createTagSpan(option.value, option.text);
+                selectedTagsDiv.appendChild(tagSpan);
+            }
+        });
+
+        tagSelect.selectedIndex = 0;
+        updateSelectedTagsInput();
+    }
+
+    function tagExists(selectedTagsDiv, value) {
+        return Array.from(selectedTagsDiv.children).some(span => span.getAttribute('data-value') === value);
+    }
+
+    function removeTag(tagSpan) {
+        const selectedTagsDiv = document.getElementById('selectedTags');
+        selectedTagsDiv.removeChild(tagSpan);
+        updateSelectedTagsInput();
+    }
+
+    function updateSelectedTagsInput() {
+        const selectedTagsDiv = document.getElementById('selectedTags');
+        const selectedTagsInput = document.getElementById('selectedTagsInput');
+
+        const valuesArray = Array.from(selectedTagsDiv.children).map(span => span.getAttribute('data-value'));
+        selectedTagsInput.value = valuesArray.join(', ');
+    }
+
+    initializeSpans();
+</script>

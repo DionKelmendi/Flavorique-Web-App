@@ -1,4 +1,4 @@
-﻿namespace Flavorique_Web_App.Models
+﻿namespace Flavorique_MVC.Models
 {
     public class RecipeTag
     {

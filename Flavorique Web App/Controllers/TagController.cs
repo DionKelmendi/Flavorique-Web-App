@@ -22,7 +22,7 @@ namespace Flavorique_Web_App.Controllers
 
         // GET: api/Tag
         [HttpGet]
-        public async Task<ActionResult<PaginatedList<Tag>>> GetTags(string? sortOrder, string? searchString, int? pageNumber)
+        public async Task<ActionResult<PaginatedList<Tag>>> GetTags(string? sortOrder, string? searchString, int? pageNumber, int pageSize = 5)
         {
             if (_db.Tags == null)
             {
@@ -58,7 +58,6 @@ namespace Flavorique_Web_App.Controllers
                     break;
             }
 
-            int pageSize = 5;
             PaginatedList<Tag> result = await PaginatedList<Tag>.CreateAsync(tags, pageNumber ?? 1, pageSize);
 
             _logger.LogInformation(result.ToString());

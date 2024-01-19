@@ -1,6 +1,5 @@
-﻿@model Recipe
+﻿@model EditRecipeViewModel
 @{
-    var tokenUrl = "https://localhost:7147/api/CKBox/token";
     ViewData["Title"] = "Edit";
 }
 <form onsubmit="setValues()" method="post">
@@ -10,20 +9,43 @@
             <h2 class="text-primary"> Edit Recipe </h2>
             <hr />
         </div>
+        <input asp-for="Recipe.Id" type="hidden" value="@Model.Recipe.Id" />
         <div class="mb-3">
-            <label asp-for="Title"></label>
-            <input asp-for="Title" class="form-control" />
-            <span asp-validation-for="Title" class="text-danger"></span>
+            <label asp-for="Recipe.Title"></label>
+            <input asp-for="Recipe.Title" class="form-control" />
+            <span asp-validation-for="Recipe.Title" class="text-danger"></span>
         </div>
         <div id="bodyData" class="mb-3 d-none">
-            <label asp-for="Body"></label>
-            <input asp-for="Body" class="form-control body-input" />
-            <span asp-validation-for="Body" class="text-danger"></span>
+            <label asp-for="Recipe.Body"></label>
+            <input asp-for="Recipe.Body" class="form-control body-input" />
+            <span asp-validation-for="Recipe.Body" class="text-danger"></span>
         </div>
 
         <div id="editor">
             <div class="d-flex align-items-center justify-content-center" style="height: 200px;">
                 <div class="spinner-border text-primary" style="width: 3rem; height: 3rem;" role="status"></div>
+            </div>
+        </div>
+
+        <div class="mb-2 mt-3">
+            <label>Select Tags</label>
+            <select onchange="addTag()" id="tagSelect" class="form-control">
+                <option value="">Select a Tag</option>
+                @foreach (var category in Model.TagList)
+                {
+                    <optgroup label="@category.Category.Name">
+                        @foreach (var tag in category.Tags)
+                        {
+                            <option value="@tag.Id">@tag.Name</option>
+                        }
+                    </optgroup>
+                }
+            </select>
+
+            <div class="mt-3">
+                <label>Selected Tags:</label>
+                <div class="mt-2" id="selectedTags"></div>
+                <input type="text" id="selectedTagsInput" name="SelectedTags" value="@Model.TagString"/>
             </div>
         </div>
 
@@ -36,6 +58,7 @@
 
 @section Scripts{
     @{
+        <partial name="_TagInputScriptsPartial.cshtml" />
         <partial name="_ValidationScriptsPartial" />
         <partial name="_CKEditorScriptsPartial" />
     }

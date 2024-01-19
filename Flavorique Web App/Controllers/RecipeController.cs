@@ -12,6 +12,8 @@ using System.Text.Json;
 using System.Xml.Linq;
 using Newtonsoft.Json;
 using TXTextControl;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Primitives;
 
 namespace Flavorique_Web_App.Controllers
 {
@@ -189,7 +191,12 @@ namespace Flavorique_Web_App.Controllers
 
                 if (notUpdatedRecipe?.AuthorId != user.Id)
                 {
-                    return Unauthorized();
+                    _logger.LogInformation($"User ID: {user.Id}");
+                    _logger.LogInformation($"Param id: {id}");
+                    _logger.LogInformation($"notUpdatedRecipe Author ID: {notUpdatedRecipe?.AuthorId}");
+                    _logger.LogCritical($"Recipe Param id: {recipe.Id}");
+
+                    return Unauthorized("Author Id did not match user Id");
                 }
 
                 if (id != recipe.Id)
@@ -224,8 +231,7 @@ namespace Flavorique_Web_App.Controllers
                     throw;
                 }
             }
-
-            return NoContent();
+            return CreatedAtAction(nameof(GetRecipes), new { id = recipe.Id }, recipe);
         }
 
         // POST: api/Recipe
@@ -249,7 +255,7 @@ namespace Flavorique_Web_App.Controllers
             if (user == null)
             {
                 _logger.LogInformation("User is null. Unauthorized access.");
-                return Unauthorized(); 
+                return Unauthorized("User not found. Unauthorized access."); 
             }
 
             if (!ModelState.IsValid)
@@ -345,8 +351,6 @@ namespace Flavorique_Web_App.Controllers
             {
                 return BadRequest(ex.Message);
             }
-
-            return NoContent();
         }
 
         [HttpGet("PrintPDF")]
@@ -365,6 +369,97 @@ namespace Flavorique_Web_App.Controllers
 
 			return File(pdfBytes, "application/pdf", printViewModel.Title);
 		}
+
+        [HttpGet("RecipeTag")]
+        public async Task<IActionResult> GetRecipeTagTable(int recipeId)
+        {
+            var model = await _db.RecipeTags.Where(m => m.RecipeId == recipeId).Include(m => m.Tag).ToListAsync();
+
+            return Ok(model);
+        }
+
+        [HttpGet("RecipeTag/String")]
+        public async Task<IActionResult> GetRecipeTagTableAsString(int recipeId)
+        {
+            var model = await _db.RecipeTags.Where(m => m.RecipeId == recipeId).Select(m => m.TagId.ToString()).ToListAsync();
+            var resultString = string.Join(", ", model);
+            return Ok(resultString);
+        }
+
+        [HttpPost("RecipeTag")]
+        public async Task<IActionResult> PostRecipeTagTable([FromBody] FillRecipeTagTableModel model)
+        {
+            try
+            {
+
+                var recipe = await _db.Recipes.FindAsync(model.RecipeId);
+                if (recipe == null)
+                {
+                    return NotFound();
+                }
+
+                var tagsArray = model.TagIds.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries).Select(tag => tag.Trim()).ToArray();
+
+                foreach (var tag in tagsArray)
+                {
+                    var requestModel = new RecipeTag { 
+                        RecipeId = model.RecipeId,
+                        TagId = int.Parse(tag)
+                    };
+
+                    _db.RecipeTags.Add(requestModel);
+                    await _db.SaveChangesAsync();
+
+                    _logger.LogWarning($"Tag Value: {tag}");
+                }
+
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpPost("RecipeTag/Update")]
+        public async Task<IActionResult> UpdateRecipeTagTable([FromBody] FillRecipeTagTableModel model)
+        {
+            try
+            {
+                var recipe = await _db.Recipes.FindAsync(model.RecipeId);
+                if (recipe == null)
+                {
+                    return NotFound();
+                }
+
+                var previousTable = await _db.RecipeTags.Where(m => m.RecipeId == model.RecipeId).ToListAsync();
+
+                _db.RecipeTags.RemoveRange(previousTable);
+                await _db.SaveChangesAsync();
+
+                var tagsArray = model.TagIds.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries).Select(tag => tag.Trim()).ToArray();
+
+                foreach (var tag in tagsArray)
+                {
+                    var requestModel = new RecipeTag
+                    {
+                        RecipeId = model.RecipeId,
+                        TagId = int.Parse(tag)
+                    };
+
+                    _db.RecipeTags.Add(requestModel);
+                    await _db.SaveChangesAsync();
+
+                    _logger.LogWarning($"Tag Value: {tag}");
+                }
+
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
 
         private static string GetImageFromHtml(string htmlContent)
         {

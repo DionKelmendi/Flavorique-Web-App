@@ -4,6 +4,7 @@ using Flavorique_MVC.Models;
 using Newtonsoft.Json;
 using System.Text;
 using System.Net;
+using Microsoft.Data.SqlClient;
 
 namespace Flavorique_MVC.Controllers
 {
@@ -38,9 +39,6 @@ namespace Flavorique_MVC.Controllers
                     pageIndex = responseObject.pageIndex;
                     totalPages = responseObject.totalPages;
                     count = responseObject.count;
-
-                    _logger.LogCritical(responseObject.pageIndex.ToString());
-                    _logger.LogCritical(pageIndex.ToString());
                 }
             }
             ViewData["IdSortParm"] = String.IsNullOrEmpty(sortOrder) ? "idDesc" : "";
@@ -53,8 +51,6 @@ namespace Flavorique_MVC.Controllers
             {
                 pageIndex = 1;
             }
-
-            _logger.LogWarning(recipes.Count().ToString());
 
             var paginatedList = new PaginatedList<ShortRecipe>(recipes.ToList(), count, pageIndex, 5);
 
@@ -88,19 +84,53 @@ namespace Flavorique_MVC.Controllers
                 }
             }
 
+            var tags = new List<RecipeTag>();
+            using (var client = new HttpClient())
+            {
+                using (var response = await client.GetAsync($"https://localhost:7147/api/Recipe/RecipeTag?recipeId={id}"))
+                {
+                    string apiResponse = await response.Content.ReadAsStringAsync();
+                    if (!apiResponse.Contains("There are no comments"))
+                    {
+                        tags = JsonConvert.DeserializeObject<List<RecipeTag>>(apiResponse);
+                    }
+                }
+            }
+
             var model = new DetailRecipeViewModel {
                 Recipe = recipe,
+                Tags = tags,
                 Comments = comments
             };
             return View(model);
         }
 
         //GET
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
             if (userSignedIn())
             {
-                return View();
+                IEnumerable<CategoryViewModel> tags = new List<CategoryViewModel>();
+
+                using (var client = new HttpClient())
+                {
+                    using (var response = await client.GetAsync($"https://localhost:7147/api/Category/tags"))
+                    {
+                        string apiResponse = await response.Content.ReadAsStringAsync();
+
+                        var responseObject = JsonConvert.DeserializeObject<List<CategoryViewModel>>(apiResponse);
+
+                        tags = responseObject;
+
+                    }
+                }
+
+                var model = new CreateRecipeViewModel { 
+                    Recipe = new Recipe(),
+                    TagList = tags
+                };
+
+                return View(model);
             }
             return RedirectToAction("Index");
         }
@@ -108,7 +138,7 @@ namespace Flavorique_MVC.Controllers
         //POST
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(Recipe recipe)
+        public async Task<IActionResult> Create(Recipe recipe, [FromForm] string selectedTags)
         {
             try
             {
@@ -125,7 +155,7 @@ namespace Flavorique_MVC.Controllers
 
                         var response = await client.PostAsync("https://localhost:7147/api/Recipe", jsonContent);
 
-                        return await HandleResponse(response, recipe);
+                        return await HandleResponse(response, recipe, selectedTags, "create");
                     }
                 }
             }
@@ -151,8 +181,6 @@ namespace Flavorique_MVC.Controllers
                 return NotFound();
             }
 
-            _logger.LogInformation("Starting recipe fetch");
-
             var recipe = new Recipe();
 
             using (var client = new HttpClient())
@@ -161,24 +189,51 @@ namespace Flavorique_MVC.Controllers
                 {
                     string apiResponse = await response.Content.ReadAsStringAsync();
                     recipe = JsonConvert.DeserializeObject<Recipe>(apiResponse);
-                    _logger.LogInformation(apiResponse);
 
                 }
             }
-
-            _logger.LogWarning("Ended recipe fetch");
 
             if (recipe == null)
             {
                 return NotFound();
             }
-            return View(recipe);
+
+            IEnumerable<CategoryViewModel> tags = new List<CategoryViewModel>();
+            using (var client = new HttpClient())
+            {
+                using (var response = await client.GetAsync($"https://localhost:7147/api/Category/tags"))
+                {
+                    string apiResponse = await response.Content.ReadAsStringAsync();
+
+                    var responseObject = JsonConvert.DeserializeObject<List<CategoryViewModel>>(apiResponse);
+
+                    tags = responseObject;
+                }
+            }
+
+            string tagString = string.Empty;
+            using (var client = new HttpClient())
+            {
+                using (var response = await client.GetAsync($"https://localhost:7147/api/Recipe/RecipeTag/String?recipeId={id}"))
+                {
+                    string apiResponse = await response.Content.ReadAsStringAsync();
+                    tagString = apiResponse;
+                }
+            }
+
+            var model = new EditRecipeViewModel
+            {
+                Recipe = recipe,
+                TagList = tags,
+                TagString = tagString
+            };
+            return View(model);
         }
 
         //POST
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(Recipe recipe)
+        public async Task<IActionResult> Edit(Recipe recipe, [FromForm] string selectedTags)
         {
             try
             {
@@ -194,29 +249,76 @@ namespace Flavorique_MVC.Controllers
                         var jsonContent = new StringContent(JsonConvert.SerializeObject(recipe), Encoding.UTF8, "application/json");
                         var response = await client.PutAsync($"https://localhost:7147/api/Recipe/{recipe.Id}", jsonContent);
 
-                        return await HandleResponse(response, recipe);
+                        return await HandleResponse(response, recipe, selectedTags, "edit");
                     }
                 }
             }
             catch (Exception ex)
             {
-                // Log or handle unexpected exceptions
+                IEnumerable<CategoryViewModel> tags = new List<CategoryViewModel>();
+                using (var client = new HttpClient())
+                {
+                    using (var tagListResponse = await client.GetAsync($"https://localhost:7147/api/Category/tags"))
+                    {
+                        string apiResponse = await tagListResponse.Content.ReadAsStringAsync();
+                        var responseObject = JsonConvert.DeserializeObject<List<CategoryViewModel>>(apiResponse);
+                        tags = responseObject;
+                    }
+                }
+
                 ModelState.AddModelError(string.Empty, $"An error occurred: {ex.Message}");
-                return View(recipe);
+                var returnModel = new EditRecipeViewModel
+                {
+                    Recipe = recipe,
+                    TagList = tags,
+                    TagString = selectedTags
+                };
+                return View(returnModel);
             }
         }
 
-        private async Task<IActionResult> HandleResponse(HttpResponseMessage response, Recipe recipe)
+        private async Task<IActionResult> HandleResponse(HttpResponseMessage response, Recipe recipe, string? selectedTags, string requestType)
         {
+            _logger.LogInformation("Starting handleResponse");
+
             if (response.IsSuccessStatusCode)
             {
+                _logger.LogInformation($"Response was successful {selectedTags}");
+
+                var responseBody = await response.Content.ReadAsStringAsync();
+                
+                _logger.LogInformation($"Response Body: {responseBody}");
+
+                var responseObject = JsonConvert.DeserializeObject<Recipe>(responseBody);
+                var recipeId = responseObject.Id;
+
+
+                if (!string.IsNullOrEmpty(selectedTags))
+                {
+                    _logger.LogInformation("Starting selectedTags thingy");
+
+                    var model = new FillRecipeTableModel { 
+                        RecipeId = recipeId,
+                        TagIds = selectedTags
+                    };
+
+                    using (var client = new HttpClient())
+                    {
+                        var recipeTagresponse = await client.PostAsync("https://localhost:7147/api/Recipe/RecipeTag/Update",
+                            new StringContent(JsonConvert.SerializeObject(model), Encoding.UTF8, "application/json"));
+                    }
+                }
+
                 return RedirectToAction("Index");
             }
 
             var result = await response.Content.ReadAsStringAsync();
+            _logger.LogWarning("Response was NOT successful");
 
             if (response.StatusCode == HttpStatusCode.BadRequest)
             {
+                _logger.LogCritical("Response was BadRequest");
+
                 // Handle validation errors from the API
                 var validationErrors = JsonConvert.DeserializeObject<Dictionary<string, List<string>>>(result);
 
@@ -228,12 +330,46 @@ namespace Flavorique_MVC.Controllers
                     }
                 }
 
-                return View(recipe);
+                IEnumerable<CategoryViewModel> tags = new List<CategoryViewModel>();
+                using (var client = new HttpClient())
+                {
+                    using (var tagListResponse = await client.GetAsync($"https://localhost:7147/api/Category/tags"))
+                    {
+                        string apiResponse = await tagListResponse.Content.ReadAsStringAsync();
+
+                        var responseObject = JsonConvert.DeserializeObject<List<CategoryViewModel>>(apiResponse);
+
+                        tags = responseObject;
+                    }
+                }
+
+                if (requestType == "edit")
+                {
+                    var returnModel = new EditRecipeViewModel
+                    {
+                        Recipe = recipe,
+                        TagList = tags,
+                        TagString = selectedTags
+                    };
+                    return View(returnModel);
+
+                }
+                if (requestType == "create")
+                {
+                    var returnModel = new CreateRecipeViewModel
+                    {
+                        Recipe = recipe,
+                        TagList = tags
+                    };
+                    return View(returnModel);
+
+                }
+
+                return RedirectToAction("Index");
+
             }
 
-            // Handle other non-success status codes
-            ModelState.AddModelError(string.Empty, $"Error: {response.StatusCode}");
-            return View(recipe);
+            return RedirectToAction("Index");
         }
 
         // POST

@@ -25,11 +25,18 @@
 
     <section class="tag-container d-flex align-items-center mt-5">
         <h4 class="me-3">Tags:</h4>
-
-        @for (var i = 10; i < 21; i++)
+        @if (Model.Tags.Count() == 0)
         {
-            <a href="#" class="tag-item p-2 bg-primary text-light rounded">Line @i</a>
+            <a href="#" class="tag-item p-2 bg-primary rounded" style="color: white !important">No tags</a>
         }
+        else
+        {
+            @foreach (var obj in Model.Tags)
+            {
+                <a href="#" class="tag-item p-2 bg-primary rounded" style="color: white !important">@obj.Tag.Name</a>
+            }
+        }
+
     </section>
 
         <section class="create-comment-container mt-5 p-5 bg-light rounded">

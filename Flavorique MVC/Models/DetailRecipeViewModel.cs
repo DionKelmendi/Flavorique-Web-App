@@ -3,6 +3,7 @@
     public class DetailRecipeViewModel
     {
         public Recipe Recipe{ get; set; }
+        public IEnumerable<RecipeTag> Tags { get; set; }
         public IEnumerable<Comment> Comments { get; set; }
     }
 }
