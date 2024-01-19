@@ -15,6 +15,7 @@ namespace Flavorique_Web_App.Data
         public DbSet<Category> Categories { get; set; }
         public DbSet<Recipe> Recipes { get; set; }
         public DbSet<Tag> Tags { get; set; }
+        public DbSet<RecipeTag> RecipeTags { get; set; }
         public DbSet<Comment> Comments { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
@@ -36,13 +37,6 @@ namespace Flavorique_Web_App.Data
                 .HasOne(t => t.Category)
                 .WithMany()
                 .HasForeignKey(t => t.CategoryId);
-
-            
-            builder.Entity<Tag>()
-                .HasMany(t => t.Recipes)
-                .WithMany(r => r.Tags)
-                .UsingEntity(j => j.ToTable("RecipeTag"));
-
 
         }
     }
