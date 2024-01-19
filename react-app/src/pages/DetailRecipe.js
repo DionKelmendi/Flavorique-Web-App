@@ -6,7 +6,7 @@ import SmallRecipeList from '../components/homeComponents.js/SmallRecipeList';
 import CreateComent from '../components/recipeComponents.js/CreateComment';
 import CommentList from '../components/recipeComponents.js/CommentList';
 
-export default function DetailRecipe() {
+export default function DetailRecipe({ userData }) {
   const [recipeData, setRecipeData] = useState([]);
   const [tagData, setTagData] = useState([]);
   const [error, setError] = useState([]);
@@ -55,7 +55,6 @@ export default function DetailRecipe() {
         })
         .then(data => {
           setTagData(data);
-          console.log(data);
         })
         .catch(error => {
           setError(error.message);
@@ -69,8 +68,6 @@ export default function DetailRecipe() {
       {tag.tag.name}
     </Link>
   ));
-
-  console.log(tags.length);
 
   return (id ?
     <>
@@ -97,9 +94,15 @@ export default function DetailRecipe() {
             }
           </section>
 
-          <CreateComent />
+          {
+            userData
+              ?
+              <CreateComent recipeId={id} />
+              :
+              <></>
+          }
 
-          <CommentList recipeId={id} />
+          <CommentList userData={userData} recipeId={id} />
         </>
         :
         <p>Recipe does not exist</p>

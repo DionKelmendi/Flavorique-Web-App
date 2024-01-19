@@ -11,8 +11,6 @@ export default function SearchRecipes() {
 
   const handleFormSubmit = (e) => {
     e.preventDefault();
-    console.log('Search value:', searchValue);
-
     navigate('/Recipes/All', { state: { data: searchValue } })
   };
   return (

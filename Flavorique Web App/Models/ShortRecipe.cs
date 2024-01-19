@@ -9,5 +9,6 @@
         public DateTime CreatedDateTime { get; set; }
         public string Body { get; set; }
         public string Image { get; set; }
+        public RatingViewModel Rating { get; set; }
     }
 }

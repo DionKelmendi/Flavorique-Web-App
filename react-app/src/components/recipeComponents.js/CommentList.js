@@ -1,7 +1,7 @@
 import { React, useState, useEffect, useRef } from 'react'
 import CommentItem from './CommentItem';
 
-export default function CommentList({ recipeId }) {
+export default function CommentList({ recipeId, userData }) {
 
   const [commentData, setCommentData] = useState([]);
   const [error, setError] = useState([]);
@@ -11,9 +11,6 @@ export default function CommentList({ recipeId }) {
   useEffect(() => {
     containerRef.current = document.querySelector(".comment-container");
     toggleRef.current = document.querySelector(".commentToggler");
-
-    console.log(containerRef.current);
-    console.log(toggleRef.current);
 
     fetch(`https://localhost:7147/api/Comment/GetCommentsByRecipe/${recipeId}`, {
       method: 'GET',
@@ -27,7 +24,6 @@ export default function CommentList({ recipeId }) {
       })
       .then(data => {
         setCommentData(data);
-        console.log(data);
       })
       .catch(error => {
         setError(error.message);
@@ -38,6 +34,7 @@ export default function CommentList({ recipeId }) {
   const comments = commentData.map(comment => (
     <CommentItem
       key={comment.id}
+      userData={userData}
       id={comment.id}
       body={comment.body}
       rating={comment.rating}

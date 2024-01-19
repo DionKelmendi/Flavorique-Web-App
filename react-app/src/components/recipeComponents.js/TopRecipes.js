@@ -4,8 +4,31 @@ import SmallRecipeItem from './SmallRecipeItem';
 
 export default function TopRecipes({ }) {
 
-  const smallRecipeItems = Array(9).fill(null).map((_, index) => (
-    <SmallRecipeItem key={index} id="2" src="https://pinchofyum.com/wp-content/uploads/Chocolate-Chip-Cookies-183x183.jpg" title="The Best Soft Chocolate Chip Cookies" reviews="1658" rating="4.9" />
+  const [recipeData, setRecipeData] = useState([]);
+  const [error, setError] = useState([])
+
+  useEffect(() => {
+    fetch('https://localhost:7147/api/Recipe?sortOrder=rating&pageSize=9', {
+      method: 'GET',
+      credentials: 'include'
+    })
+      .then(response => {
+        if (!response.ok) {
+          throw new Error(`Error! Status: ${response.status}`);
+        }
+        return response.json();
+      })
+      .then(data => {
+        setRecipeData(data.data);
+      })
+      .catch(error => {
+        setError(error.message);
+        console.log(error);
+      });
+  }, []);
+
+  const smallRecipeItems = recipeData.map(recipe => (
+    <SmallRecipeItem key={recipe.id} id={recipe.id} src={recipe.image} title={recipe.title} reviews={recipe.rating.count} rating={recipe.rating.rating} />
   ));
 
   return (

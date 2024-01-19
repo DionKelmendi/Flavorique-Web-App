@@ -28,7 +28,6 @@ export default function Dashboard({ userData }) {
         })
         .then(data => {
           setRecipeData(data);
-          console.log(data);
         })
         .catch(error => {
           setError(error.message);
@@ -47,7 +46,6 @@ export default function Dashboard({ userData }) {
         })
         .then(data => {
           setCommentData(data);
-          console.log(data);
         })
         .catch(error => {
           setError(error.message);
@@ -88,14 +86,13 @@ export default function Dashboard({ userData }) {
 
   const handlePasswordChange = (e) => {
     e.preventDefault();
+
     const jsonData = {
       "oldPassword": oldPassword,
       "newPassword": newPassword,
       "confirmPassword": confirmPassword,
     };
 
-    console.log(JSON.stringify(jsonData));
-    console.log(userData.id);
     fetch(`https://localhost:7147/api/Account/change-password/${userData.id}`, {
       method: 'POST',
       headers: {
@@ -111,7 +108,6 @@ export default function Dashboard({ userData }) {
         return response.json();
       })
       .then(data => {
-        console.log('Success:', data);
       })
       .catch(error => {
         console.log(error.message);

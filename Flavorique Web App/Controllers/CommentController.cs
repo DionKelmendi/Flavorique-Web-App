@@ -60,7 +60,7 @@ public class CommentController : ControllerBase
         {
             return NotFound("There are no comments");
         }
-        var comments = await _db.Set<Comment>().Where(x => x.RecipeId == id).ToListAsync();
+        var comments = await _db.Set<Comment>().Where(x => x.RecipeId == id).OrderByDescending(x => x.CreatedDateTime).ToListAsync();
         if (comments == null)
         {
             return NotFound("Comment not found");

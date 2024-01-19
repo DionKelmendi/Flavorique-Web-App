@@ -54,8 +54,6 @@ export default function RecipeList({ }) {
   };
   const handleSortChange = (e) => {
     setSortOrder(e.target.value);
-
-    console.log(e.target.value);
   };
 
   const page = (direction) => {

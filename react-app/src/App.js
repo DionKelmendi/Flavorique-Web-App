@@ -59,7 +59,7 @@ function App() {
         <Route path="/Recipes" element={<Recipes userData={userData} />} />
         <Route path="/Recipes/All" element={<AllRecipes />} />
         <Route path="/Recipes/Create" element={<CreateRecipe />} />
-        <Route path="/Recipes/Detail/:id?" element={<DetailRecipe />} />
+        <Route path="/Recipes/Detail/:id?" element={<DetailRecipe userData={userData} />} />
         <Route path="/Recipes/Print/:id?" element={<PrintRecipe />} />
       </Routes>
       {ShowHeaderFooter() && <Footer userData={userData} />}

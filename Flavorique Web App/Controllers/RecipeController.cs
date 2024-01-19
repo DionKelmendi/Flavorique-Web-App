@@ -40,55 +40,81 @@ namespace Flavorique_Web_App.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<ShortRecipe>>> GetRecipes(string? sortOrder, string? searchString, int? pageNumber, int pageSize = 5)
         {
-            if (_db.Recipes == null)
+            try
             {
-                return NotFound();
+                var query = _db.Recipes.Select(i => new ShortRecipe
+                {
+                    Id = i.Id,
+                    AuthorId = i.AuthorId,
+                    Title = i.Title,
+                    CreatedDateTime = i.CreatedDateTime,
+                    Body = StripHtmlTags(i.Body).Length > 200 ? StripHtmlTags(i.Body).Substring(0, 200) : StripHtmlTags(i.Body),
+                    Image = GetImageFromHtml(i.Body),
+                });
+
+                var resultTasks = query.ToList().Select(async r => new ShortRecipe
+                {
+                    Id = r.Id,
+                    AuthorId = r.AuthorId,
+                    Title = r.Title,
+                    CreatedDateTime = r.CreatedDateTime,
+                    Body = r.Body,
+                    Image = r.Image,
+                    Rating = await GetRecipeRating(r.Id)
+                });
+
+                var recipeResult = await Task.WhenAll(resultTasks);
+
+                IEnumerable<ShortRecipe> recipes = recipeResult;
+
+                if (!String.IsNullOrEmpty(searchString))
+                {
+                    searchString = searchString.ToLower();
+                    recipes = recipes.Where(r => r.Title.ToLower().Contains(searchString) ||
+                                                  _userManager.Users.Any(u => u.Id == r.AuthorId && u.UserName.ToLower().Contains(searchString)));
+                }
+
+                int count = recipes.Count();
+
+                switch (sortOrder)
+                {
+                    case "title":
+                        recipes = recipes.OrderBy(r => r.Title);
+                        break;
+                    case "titleDesc":
+                        recipes = recipes.OrderByDescending(r => r.Title);
+                        break;
+                    case "date":
+                        recipes = recipes.OrderBy(r => r.CreatedDateTime);
+                        break;
+                    case "dateDesc":
+                        recipes = recipes.OrderByDescending(r => r.CreatedDateTime);
+                        break;
+                    case "rating":
+                        recipes = recipes.OrderByDescending(r => r.Rating.Rating);
+                        break;
+                    case "ratingDesc":
+                        recipes = recipes.OrderBy(r => r.Rating.Rating);
+                        break;
+                    case "idDesc":
+                        recipes = recipes.OrderByDescending(r => r.Id);
+                        break;
+                    default:
+                        recipes = recipes.OrderBy(r => r.Id);
+                        break;
+                }
+
+                PaginatedList<ShortRecipe> result = await PaginatedList<ShortRecipe>.CreateAsync(recipes, pageNumber ?? 1, pageSize);
+
+                _logger.LogInformation(result.ToString());
+
+                return Ok(new { data = result, pageIndex = result.PageIndex, totalPages = result.TotalPages, count = count });
             }
-            IEnumerable<ShortRecipe> recipes = await _db.Recipes.Select(i => new ShortRecipe
+            catch (Exception ex)
             {
-                Id = i.Id,
-                AuthorId = i.AuthorId,
-                AuthorName = _userManager.FindByIdAsync(i.AuthorId).Result.UserName,
-                Title = i.Title,
-                CreatedDateTime = i.CreatedDateTime,
-                Body = StripHtmlTags(i.Body).Length > 200 ? StripHtmlTags(i.Body).Substring(0, 200) : StripHtmlTags(i.Body),
-                Image = GetImageFromHtml(i.Body)
-            }).ToListAsync();
-
-            if (!String.IsNullOrEmpty(searchString))
-            {
-                recipes = recipes.Where(r => r.Title.ToLower().Contains(searchString.ToLower()) 
-                                            || _userManager.Users.Any(u => u.Id == r.AuthorId && u.UserName.ToLower().Contains(searchString.ToLower())));
+                _logger.LogError($"An error occurred: {ex}");
+                return StatusCode(500, "Internal server error");
             }
-            int count = recipes.Count();
-
-            switch (sortOrder)
-            {
-                case "title":
-                    recipes = recipes.OrderBy(r => r.Title);
-                    break;
-                case "titleDesc":
-                    recipes = recipes.OrderByDescending(r => r.Title);
-                    break;
-                case "date":
-                    recipes = recipes.OrderBy(r => r.CreatedDateTime);
-                    break;
-                case "dateDesc":
-                    recipes = recipes.OrderByDescending(r => r.CreatedDateTime);
-                    break;
-                case "idDesc":
-                    recipes = recipes.OrderByDescending(r => r.Id);
-                    break;
-                default:
-                    recipes = recipes.OrderBy(r => r.Id);
-                    break;
-            }
-
-            PaginatedList<ShortRecipe> result = await PaginatedList<ShortRecipe>.CreateAsync(recipes, pageNumber ?? 1, pageSize);
-
-            _logger.LogInformation(result.ToString());
-
-            return Ok(new { data = result, pageIndex = result.PageIndex, totalPages = result.TotalPages, count = count });
         }
 
         // GET: api/Recipe/5
@@ -100,7 +126,6 @@ namespace Flavorique_Web_App.Controllers
                 return NotFound();
             }
             var recipe = await _db.Recipes.FindAsync(id);
-            //var recipe = await _db.Set<Recipe>().Where(r => r.Id == id).Include(r => r.Comments).FirstOrDefaultAsync();
 
             if (recipe == null)
             {
@@ -125,19 +150,23 @@ namespace Flavorique_Web_App.Controllers
 				return NotFound($"User with username {username} not found.");
 			}
 
-            var result = _db.Recipes
+            var recipes = await _db.Recipes
                 .Where(recipe => recipe.AuthorId == user.Id)
-                .Select(i => new ShortRecipe
-                {
-                    Id = i.Id,
-                    Title = i.Title,
-                    CreatedDateTime = i.CreatedDateTime,
-                    Body = StripHtmlTags(i.Body).Length > 200 ? StripHtmlTags(i.Body).Substring(0, 200) : StripHtmlTags(i.Body),
-                    Image = GetImageFromHtml(i.Body)
-                })
-                .OrderByDescending(j => j.CreatedDateTime)
+                .OrderByDescending(recipe => recipe.CreatedDateTime)
                 .Take(3)
-                .ToList();
+                .ToListAsync();
+
+            var result = recipes.Select(async i => new ShortRecipe
+            {
+                Id = i.Id,
+                Title = i.Title,
+                CreatedDateTime = i.CreatedDateTime,
+                Body = StripHtmlTags(i.Body).Length > 200 ? StripHtmlTags(i.Body).Substring(0, 200) : StripHtmlTags(i.Body),
+                Image = GetImageFromHtml(i.Body),
+                Rating = await GetRecipeRating(i.Id)
+            })
+            .ToList();
+            
             _logger.LogInformation($"Result count: {result.Count}");
 
 			return Ok(result);
@@ -458,6 +487,61 @@ namespace Flavorique_Web_App.Controllers
             catch (Exception ex)
             {
                 return BadRequest(ex.Message);
+            }
+        }
+
+        private async Task<RatingViewModel> GetRecipeRating(int id)
+        {
+            try
+            {
+                if (_db.Set<Comment>().ToList().Count == 0)
+                {
+                    var noneModel = new RatingViewModel
+                    {
+                        Count = 0,
+                        Rating = 0
+                    };
+
+                    return noneModel;
+                }
+                var ratingArray = await _db.Set<Comment>().Where(x => x.RecipeId == id).Select(x => x.Rating).ToListAsync();
+
+                var count = ratingArray.Count;
+                var rating = 0;
+
+                foreach (var item in ratingArray)
+                {
+                    rating += item;
+                }
+
+                if (count == 0 || rating == 0) {
+
+                    var noneModel = new RatingViewModel
+                    {
+                        Count = 0,
+                        Rating = 0
+                    };
+
+                    return noneModel;
+                }
+
+                var model = new RatingViewModel { 
+                
+                    Count = count,
+                    Rating = (float)rating / count
+                };
+
+                return model;
+            }
+            catch (Exception ex)
+            {
+                var model = new RatingViewModel
+                {
+                    Count = 0,
+                    Rating = 0
+                };
+
+                return model;
             }
         }
 

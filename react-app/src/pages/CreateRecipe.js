@@ -38,7 +38,6 @@ export default function CreateRecipe() {
       })
       .then(data => {
         setTagData(data);
-        console.log(data);
       })
       .catch(error => {
         setError(error.message);
@@ -169,12 +168,10 @@ export default function CreateRecipe() {
         return response.json();
       })
       .then(data => {
-        console.log(data.id);
         setRecipeId(data.id);
 
-        // Now that the recipeId is updated, proceed with the next steps
         const recipeTagJsonData = {
-          "recipeId": data.id, // Use data.id instead of recipeId
+          "recipeId": data.id,
           "tagIds": tagString
         };
 

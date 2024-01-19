@@ -31,7 +31,7 @@ export default function SmallRecipeItem({ id, src, title, reviews, rating }) {
             <div className='starContainer text-warning'>
               {renderStars()}
             </div>
-            <p className='m-0 text-secondary'> {reviews} reviews / {rating} average </p>
+            <p className='m-0 text-secondary'> {reviews} reviews / {rating.toFixed(2)} average </p>
           </div>
         </div>
       </div>

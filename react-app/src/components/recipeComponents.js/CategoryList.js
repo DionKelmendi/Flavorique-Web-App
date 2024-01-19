@@ -39,7 +39,6 @@ export default function CategoryList({ amount, searchData }) {
         })
         .then(data => {
           setResultData(data.data);
-          console.log(data.data);
         })
         .catch(error => {
           setError(error.message);
