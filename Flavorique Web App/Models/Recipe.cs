@@ -11,10 +11,13 @@ namespace Flavorique_Web_App.Models
         [Required]
         [StringLength(100)]
         public string? Title { get; set; }
+        public double Rating { get; set; }
         [Required]
         public string? Body { get; set; }
         public DateTime CreatedDateTime { get; set; } = DateTime.Now;
         public string? AuthorId { get; set; }
         public ApplicationUser? Author { get; set; }
+        [JsonIgnore]
+        public List<Tag> Tags { get; set; } = new List<Tag>();
     }
 }
