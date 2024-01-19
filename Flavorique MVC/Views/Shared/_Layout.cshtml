@@ -1,4 +1,11 @@
-﻿<!DOCTYPE html>
+﻿@functions {
+    private bool IsCurrentPage(string page)
+    {
+        var currentUrl = Context.Request.Path;
+        return currentUrl.Equals(page, StringComparison.OrdinalIgnoreCase);
+    }
+}
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -12,80 +19,80 @@
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-primary box-shadow">
             <div class="container-fluid">
-                <a class="navbar-brand text-light" asp-area="" asp-controller="Home" asp-action="Index">
-                    <img height="35px" src="https://localhost:7147/logo" alt="Flavorique Logo" />
-                    Flavorique
-                </a>
-                <button class="navbar-toggler text-light" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <a class="navbar-brand text-light" asp-area="" asp-controller="Home" asp-action="Index"><img height="35px" src="https://localhost:7147/logo" /> Flavorique</a>
+                <button class="navbar-toggler text-light" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                        aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon text-light"></span>
                 </button>
-                <partial name="_LoginPartial" />
+                <div class="navbar-collapse collapse d-sm-flex justify-content-end">
+                    <partial name="_LoginPartial" />
+                </div>
             </div>
         </nav>
     </header>
 
-    <div class="container-fluid">
-        <div class="row">
-            <div id="mySidebar" class="sidebar collapse d-flex flex-column flex-shrink-0 p-3 text-white bg-dark col-md-2" style="height: calc(100% - 20px)">
-                <div class="mt-auto">
+    <div class="d-flex flex-column flex-shrink-0 text-white bg-dark position-absolute overflow-hidden sidebar" style="width: 280px; height: calc(100% - 61px); padding: 1rem; transition: 0.2s all ease-in;">
+        <div class="d-flex">
+        <a href="/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-white text-decoration-none">
+            <span class="fs-4">Navigate</span>
+        </a>
+            <button onClick="closeSidebar()" class="btn btn-danger p-0" style="width: 25px; height: 25px; align-self: flex-start;"><i class="bi bi-x"></i></button>
 
-                <ul class="nav flex-column mb-auto">
-                    <li class="nav-item">
-                        <a class="nav-link text-light" asp-area="" asp-controller="Home" asp-action="Index">
-                            <svg class="bi me-2" width="16" height="16"></svg>
-                            Home
-                        </a>
-                    </li>
-                    <li>
-                        <a class="nav-link text-light" asp-area="" asp-controller="Account" asp-action="Index">
-                            <svg class="bi me-2" width="16" height="16"></svg>
-                            Users
-                        </a>
-                    </li>
-                    <li>
-                        <a class="nav-link text-light" asp-area="" asp-controller="Category" asp-action="Index">
-                            <svg class="bi me-2" width="16" height="16"></svg>
-                            Categories
-                        </a>
-                    </li>
-                    <li>
-                        <a class="nav-link text-light" asp-area="" asp-controller="Recipe" asp-action="Index">
-                            <svg class="bi me-2" width="16" height="16"></svg>
-                            Recipes
-                        </a>
-                    </li>
-                    <li>
-                        <a class="nav-link text-light" asp-area="" asp-controller="Tag" asp-action="Index">
-                            <svg class="bi me-2" width="16" height="16"></svg>
-                            Tags
-                        </a>
-                    </li>
-                </ul>
         </div>
-            </div>
-
-            <div id="main" class="col-md-9">
-               
-                <div class="container">
-                    <main role="main" class="pb-3">
-                        @RenderBody()
-                    </main>
-                </div>
-
-                <footer class="border-top footer text-muted">
-                    <div class="container">
-                        &copy; 2023 - Flavorique - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                    </div>
-                </footer>
-            </div>
-        </div>
+        <hr>
+        <ul class="nav nav-pills flex-column mb-auto">
+            <li class="nav-item">
+                <a class="nav-link text-light @(IsCurrentPage("/") ? "bg-primary" : "")" asp-area="" asp-controller="Home" asp-action="Index">
+                    Home
+                </a>
+            </li>
+            <li>
+                <a class="nav-link text-light @(IsCurrentPage("/Account") ? "bg-primary" : "")" asp-area="" asp-controller="Account" asp-action="Index">Users</a>
+            </li>
+            <li>
+                <a class="nav-link text-light @(IsCurrentPage("/Category") ? "bg-primary" : "")" asp-area="" asp-controller="Category" asp-action="Index">Categories</a>
+            </li>
+            <li>
+                <a class="nav-link text-light @(IsCurrentPage("/Recipe") ? "bg-primary" : "")" asp-area="" asp-controller="Recipe" asp-action="Index">Recipes</a>
+            </li>
+            <li>
+                <a class="nav-link text-light @(IsCurrentPage("/Tag") ? "bg-primary" : "")" asp-area="" asp-controller="Tag" asp-action="Index">Tags</a>
+            </li>
+        </ul>
     </div>
+
+
+    <div class="container">
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+    </div>
+    <footer class="border-top footer text-muted">
+        <div class="container">
+            &copy; 2023 - Flavorique - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+        </div>
+    </footer>
+    <script>
+
+        function closeSidebar() { 
+            let sidebar = document.querySelector(".sidebar");
+            sidebar.style.width = "0px";
+            sidebar.style.padding = "0px";
+        }
+
+        document.addEventListener('mousemove', function (event) {
+            var mouseX = event.clientX;
+            if (mouseX <= 20) {
+                let sidebar = document.querySelector(".sidebar");
+                sidebar.style.width = "280px";
+                sidebar.style.padding = "1rem";
+            } 
+        });
+    </script>
 
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
-
-    
 </body>
 </html>
