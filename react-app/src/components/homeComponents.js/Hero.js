@@ -29,6 +29,18 @@ export default function Hero({ }) {
       });
   }, []);
 
+  let imageArray = [
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    ""
+  ];
+
   const bigTagItems = tagData.slice(0, 4).map(tag => (
     <BigTagItem key={tag.id} id={tag.id} name={tag.name.toUpperCase()} src="https://pinchofyum.com/wp-content/uploads/cropped-Tofu-and-Brown-Rice-Lettuce-Wraps-Square.png" />
   ));

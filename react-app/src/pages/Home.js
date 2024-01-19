@@ -10,8 +10,7 @@ export default function Home() {
 
   return (
     <section className='homeContainer'>
-      <section style={{ height: "90px" }}>
-      </section>
+      <section style={{ height: "90px" }}></section>
       <Hero />
       <SmallRecipeList />
       <Follow />

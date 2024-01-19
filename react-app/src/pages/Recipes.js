@@ -14,6 +14,7 @@ export default function Recipes({ userData }) {
 
     return (
         <section className='recipeMainContainer'>
+            <section style={{ height: "90px" }}></section>
             <Hero userData={userData} />
             <TopRecipes />
             <CategoryList amount={5} />

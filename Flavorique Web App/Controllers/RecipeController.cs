@@ -134,6 +134,60 @@ namespace Flavorique_Web_App.Controllers
             return recipe;
         }
 
+        [HttpGet("category/{id}")]
+        public async Task<ActionResult> GetRecipesByCategory(int id)
+        {
+            if (_db.Recipes == null)
+            {
+                return NotFound();
+            }
+
+            var tags = await _db.Tags.Where(t => t.CategoryId == id).Select(t => t.Id).ToListAsync();
+
+            var result = await _db.RecipeTags.Include(m => m.Recipe).Where(t => tags.Contains(t.TagId)).Select(t => t.Recipe).Distinct().ToListAsync();
+
+            var recipeTasks = result.ToList().Select(async i => new ShortRecipe
+            {
+                Id = i.Id,
+                AuthorId = i.AuthorId,
+                Title = i.Title,
+                CreatedDateTime = i.CreatedDateTime,
+                Body = StripHtmlTags(i.Body).Length > 200 ? StripHtmlTags(i.Body).Substring(0, 200) : StripHtmlTags(i.Body),
+                Image = GetImageFromHtml(i.Body),
+                Rating = await GetRecipeRating(i.Id)
+            });
+
+            var recipes = await Task.WhenAll(recipeTasks);
+
+            return Ok(recipes);
+        }
+
+        [HttpGet("tag/{id}")]
+        public async Task<ActionResult> GetRecipesByTags(int id)
+        {
+            if (_db.Recipes == null)
+            {
+                return NotFound();
+            }
+
+            var result = await _db.RecipeTags.Include(m => m.Recipe).Where(t => t.TagId == id).Select(t => t.Recipe).ToListAsync();
+
+            var recipeTasks = result.ToList().Select(async i => new ShortRecipe
+            {
+                Id = i.Id,
+                AuthorId = i.AuthorId,
+                Title = i.Title,
+                CreatedDateTime = i.CreatedDateTime,
+                Body = StripHtmlTags(i.Body).Length > 200 ? StripHtmlTags(i.Body).Substring(0, 200) : StripHtmlTags(i.Body),
+                Image = GetImageFromHtml(i.Body),
+                Rating = await GetRecipeRating(i.Id)
+            });
+
+            var recipes = await Task.WhenAll(recipeTasks);
+
+            return Ok(recipes);
+        }
+
         // GET: api/Recipe
         [HttpGet("user/{username}")]
         public async Task<ActionResult> GetRecipesByUserName(string username)

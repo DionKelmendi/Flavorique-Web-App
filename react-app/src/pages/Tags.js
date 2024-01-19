@@ -14,6 +14,8 @@ export default function Tags({ }) {
   return (
     <>
       <section className='tagContainer'>
+        <section style={{ height: "90px", background: "#f7f7f7" }}></section>
+
         <section className='heroContainer' style={{ background: "white" }}>
           <div className="m-auto text-center p-5 pb-3 w-60">
             <h1 className="mb-5" style={{ fontSize: "50px" }}>Tags</h1>

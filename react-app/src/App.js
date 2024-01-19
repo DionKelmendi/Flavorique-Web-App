@@ -6,16 +6,17 @@ import React, { useState, useEffect } from 'react';
 import { Route, Routes, Navigate, useLocation } from "react-router-dom";
 import Header from './components/Header';
 import Footer from './components/Footer';
-import Categories from './pages/Categories';
 import Recipes from './pages/Recipes';
 import AllRecipes from './pages/AllRecipes';
 import DetailRecipe from './pages/DetailRecipe';
 import PrintRecipe from './pages/PrintRecipe';
 import CreateRecipe from './pages/CreateRecipe';
+import Tag from './pages/Tag';
 import Tags from './pages/Tags';
 import Dashboard from './pages/Dashboard';
 import Home from './pages/Home';
 import EditRecipe from './pages/EditRecipe';
+import Category from './pages/Category';
 
 function App() {
 
@@ -54,7 +55,8 @@ function App() {
       {ShowHeaderFooter() && <Header userData={userData} />}
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/Categories" element={<Categories />} />
+        <Route path="/Category/:id?" element={<Category />} />
+        <Route path="/Tag/:id?" element={<Tag />} />
         <Route path="/Tags" element={<Tags />} />
         <Route path="/User" element={<Dashboard userData={userData} />} />
         <Route path="/Recipes" element={<Recipes userData={userData} />} />

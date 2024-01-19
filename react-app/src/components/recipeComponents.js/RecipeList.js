@@ -42,7 +42,7 @@ export default function RecipeList({ }) {
   }, [sortOrder, searchString, pageNumber]);
 
   const recipeListItems = recipeData.map(recipe => (
-    <RecipeListItem key={recipe.id} id={recipe.id} src={recipe.image} title={recipe.title} author={recipe.authorName} reviews="1658" rating="4.5" />
+    <RecipeListItem key={recipe.id} id={recipe.id} src={recipe.image} title={recipe.title} author={recipe.authorName} reviews={recipe.rating.count} rating={recipe.rating.rating} />
   ));
 
   const paginationButtons = Array(totalPages).fill(null).map((_, index) => (

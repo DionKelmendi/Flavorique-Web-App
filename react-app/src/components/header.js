@@ -3,6 +3,29 @@ import { Link } from 'react-router-dom';
 
 export default function Header({ userData }) {
 
+  const [role, setRole] = useState([]);
+  const [error, setError] = useState([]);
+
+  useEffect(() => {
+    fetch('https://localhost:7147/api/Account/user/role', {
+      method: 'GET',
+      credentials: 'include'
+    })
+      .then(response => {
+        if (!response.ok) {
+          throw new Error(`Error! Status: ${response.status}`);
+        }
+        return response.text();
+      })
+      .then(data => {
+        setRole(data);
+      })
+      .catch(error => {
+        setError(error.message);
+        console.log(error);
+      });
+  }, [role]);
+
   return (
     <header>
       <nav className="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-primary box-shadow py-3">
@@ -39,6 +62,15 @@ export default function Header({ userData }) {
             <ul className="navbar-nav">
               {userData ? (
                 <>
+                  {role == "Admin"
+                    ?
+                    <li className="nav-item">
+                      <a href="https://localhost:7122/" className='nav-link text-light'>
+                        Admin Page
+                      </a>
+                    </li>
+                    :
+                    <></>}
                   <li className="nav-item">
                     <Link className='nav-link text-light' to="/user">
                       {userData.userName || 'Username'}
