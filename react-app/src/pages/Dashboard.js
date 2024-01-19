@@ -77,7 +77,7 @@ export default function Dashboard({ userData }) {
   const commentItems = commentData.map(comment => (
     <CommentItem
       key={comment.id}
-      id={comment.id}
+      id={comment.recipeId}
       body={comment.body}
       date={new Date(comment.createdDateTime).toLocaleDateString('en-US', {
         year: 'numeric',
@@ -218,19 +218,13 @@ export default function Dashboard({ userData }) {
             </section>
 
             <div className='userFavorites item'>
-              <h1>Most Recent Recipes</h1>
+              <h1 className='mb-5'>Most Recent Recipes</h1>
               {smallRecipeItems.length > 0 ? smallRecipeItems : <p>No recipes found.</p>}
-              <Link className="mb-3" to={"Recipes/" + userData.id}>
-                <button>See all Recipes</button>
-              </Link>
             </div>
 
             <div className='userReviews item'>
               <h1>Most Recent Comments</h1>
               {commentItems.length > 0 ? commentItems : <p>No comments found.</p>}
-              <Link className="mb-3" to={"Comments/" + userData.id}>
-                <button>See all Comments</button>
-              </Link>
             </div>
 
           </div>

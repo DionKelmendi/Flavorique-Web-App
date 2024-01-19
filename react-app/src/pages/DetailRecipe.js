@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import RecipeItem from '../components/homeComponents.js/RecipeItem';
@@ -10,8 +10,31 @@ export default function DetailRecipe({ userData }) {
   const [recipeData, setRecipeData] = useState([]);
   const [tagData, setTagData] = useState([]);
   const [error, setError] = useState([]);
-
+  const ingredients = useRef(null);
   const { id } = useParams();
+
+  useEffect(() => {
+    ingredients.current = document.getElementById("ingredients");
+
+    if (ingredients.current != null) {
+      let printBtn = document.createElement("a");
+
+      let i = document.createElement("i");
+      i.classList.add("bi");
+      i.classList.add("bi-printer");
+
+      printBtn.appendChild(document.createTextNode("Print Recipe "));
+      printBtn.appendChild(i);
+      printBtn.classList.add("btn");
+      printBtn.classList.add("btn-light");
+      printBtn.style.float = "right";
+
+      printBtn.href = `../Print/${id}`;
+
+      ingredients.current.appendChild(printBtn);
+      console.log("setting recipe data");
+    }
+  }, [recipeData]);
 
   useEffect(() => {
     if (id) {
@@ -24,23 +47,6 @@ export default function DetailRecipe({ userData }) {
         })
         .then(data => {
           setRecipeData(data);
-
-          let ingredients = document.getElementById("ingredients");
-          let printBtn = document.createElement("a");
-
-          let i = document.createElement("i");
-          i.classList.add("bi");
-          i.classList.add("bi-printer");
-
-          printBtn.appendChild(document.createTextNode("Print Recipe "));
-          printBtn.appendChild(i);
-          printBtn.classList.add("btn");
-          printBtn.classList.add("btn-light");
-          printBtn.style.float = "right";
-
-          printBtn.href = `../Print/${id}`;
-
-          ingredients.appendChild(printBtn);
         })
         .catch(error => {
           setError(error.message);
