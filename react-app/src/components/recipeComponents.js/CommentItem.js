@@ -67,8 +67,8 @@ export default function CommentItem({ id, body, rating, authorId, date, userData
           <p className="text-primary m-0">
             {date}
           </p>
-          <a class="btn btn-danger">
-            <i class="bi bi-trash"></i> &nbsp; Delete Comment
+          <a className="btn btn-danger">
+            <i className="bi bi-trash"></i> &nbsp; Delete Comment
           </a>
         </div>
       </div>

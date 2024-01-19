@@ -5,6 +5,28 @@ export default function Footer({ userData }) {
 
   const [nameValue, setNameValue] = useState('');
   const [emailValue, setEmailValue] = useState('');
+  const [tagData, setTagData] = useState([]);
+  const [error, setError] = useState([]);
+
+  useEffect(() => {
+    fetch('https://localhost:7147/api/Tag?pageSize=7', {
+      method: 'GET',
+      credentials: 'include'
+    })
+      .then(response => {
+        if (!response.ok) {
+          throw new Error(`Error! Status: ${response.status}`);
+        }
+        return response.json();
+      })
+      .then(data => {
+        setTagData(data.data);
+      })
+      .catch(error => {
+        setError(error.message);
+        console.log(error);
+      });
+  }, []);
 
   const handleNameChange = (e) => {
     setNameValue(e.target.value);
@@ -22,6 +44,12 @@ export default function Footer({ userData }) {
     console.log('Email value:', emailValue);
   };
 
+  const tags = tagData.map(tag => (
+    <li key={tag.id}>
+      <Link to={"/Tag/" + tag.id} className='text-secondary-emphasis text-decoration-none' style={{ letterSpacing: "1px" }}>{tag.name}</Link>
+    </li>
+  ));
+
   return (
     <footer className='p-5 pb-4' style={{ background: "white" }}>
       <div className='m-auto d-flex justify-content-between' style={{ width: "calc(60% + 64px)", color: "black" }}>
@@ -32,43 +60,23 @@ export default function Footer({ userData }) {
               <Link to="/" className='text-secondary-emphasis text-decoration-none' style={{ letterSpacing: "1px" }}>Home</Link>
             </li>
             <li>
-              <Link to="/about" className='text-secondary-emphasis text-decoration-none' style={{ letterSpacing: "1px" }}>About Us</Link>
+              <Link to="/About" className='text-secondary-emphasis text-decoration-none' style={{ letterSpacing: "1px" }}>About Us</Link>
             </li>
             <li>
-              <Link to="/Recipes" className='text-secondary-emphasis text-decoration-none' style={{ letterSpacing: "1px" }}>Recipes</Link>
+              <Link to="/Recipes/All" className='text-secondary-emphasis text-decoration-none' style={{ letterSpacing: "1px" }}>Recipes</Link>
             </li>
             <li>
-              <Link to="/Recipes" className='text-secondary-emphasis text-decoration-none' style={{ letterSpacing: "1px" }}>Tags</Link>
+              <Link to="/Tags" className='text-secondary-emphasis text-decoration-none' style={{ letterSpacing: "1px" }}>Tags</Link>
             </li>
             <li>
-              <Link to="/Recipes/top" className='text-secondary-emphasis text-decoration-none' style={{ letterSpacing: "1px" }}>Our Top Recipes</Link>
+              <Link to="/Recipes" className='text-secondary-emphasis text-decoration-none' style={{ letterSpacing: "1px" }}>Our Top Recipes</Link>
             </li>
           </ul>
         </div>
         <div>
           <h5 style={{ paddingLeft: "32px" }}>Food & Recipes</h5>
           <ul style={{ listStyleType: "none" }}>
-            <li>
-              <Link to="/" className='text-secondary-emphasis text-decoration-none' style={{ letterSpacing: "1px" }}>Tag Name</Link>
-            </li>
-            <li>
-              <Link to="/" className='text-secondary-emphasis text-decoration-none' style={{ letterSpacing: "1px" }}>Tag Name</Link>
-            </li>
-            <li>
-              <Link to="/" className='text-secondary-emphasis text-decoration-none' style={{ letterSpacing: "1px" }}>Tag Name</Link>
-            </li>
-            <li>
-              <Link to="/" className='text-secondary-emphasis text-decoration-none' style={{ letterSpacing: "1px" }}>Tag Name</Link>
-            </li>
-            <li>
-              <Link to="/" className='text-secondary-emphasis text-decoration-none' style={{ letterSpacing: "1px" }}>Tag Name</Link>
-            </li>
-            <li>
-              <Link to="/" className='text-secondary-emphasis text-decoration-none' style={{ letterSpacing: "1px" }}>Tag Name</Link>
-            </li>
-            <li>
-              <Link to="/" className='text-secondary-emphasis text-decoration-none' style={{ letterSpacing: "1px" }}>Tag Name</Link>
-            </li>
+            {tags}
           </ul>
         </div>
         <div className='bg-primary p-4 text-center d-flex flex-column justify-content-center align-items-center' style={{ color: "white", height: "200px", gap: "20px" }}>
@@ -118,8 +126,8 @@ export default function Footer({ userData }) {
         </div>
       </div>
       <div className="m-auto mt-4 d-flex justify-content-center w-60" style={{ gap: "20px" }}>
-        <Link to="privacy" className='text-secondary-emphasis text-decoration-none' style={{ fontSize: "14px" }}>Privacy Policy</Link>
-        <Link to="terms" className='text-secondary-emphasis text-decoration-none' style={{ fontSize: "14px" }}>Terms of Service</Link>
+        <Link to="/Privacy" className='text-secondary-emphasis text-decoration-none' style={{ fontSize: "14px" }}>Privacy Policy</Link>
+        <Link to="/Terms" className='text-secondary-emphasis text-decoration-none' style={{ fontSize: "14px" }}>Terms of Service</Link>
       </div>
     </footer>
   )

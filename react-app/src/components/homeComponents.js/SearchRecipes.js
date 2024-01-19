@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 export default function SearchRecipes() {
   const [searchValue, setSearchValue] = useState('');
+  const navigate = useNavigate();
 
   const handleInputChange = (e) => {
     setSearchValue(e.target.value);
@@ -11,16 +12,17 @@ export default function SearchRecipes() {
   const handleFormSubmit = (e) => {
     e.preventDefault();
     console.log('Search value:', searchValue);
-  };
 
+    navigate('/Recipes/All', { state: { data: searchValue } })
+  };
   return (
     <>
       <form onSubmit={handleFormSubmit}>
         <div className="form-group">
           <div className="input-group">
-            <span className="input-group-text">
+            <Link className='input-group-text' to="/Recipes/All" state={{ data: searchValue }}>
               <i className="bi bi-search"></i>
-            </span>
+            </Link>
             <input type="text" placeholder='Search our recipes' className="form-control form-control-lg" value={searchValue} onChange={handleInputChange} />
           </div>
         </div>

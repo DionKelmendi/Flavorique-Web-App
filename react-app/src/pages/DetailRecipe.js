@@ -8,7 +8,7 @@ import CommentList from '../components/recipeComponents.js/CommentList';
 
 export default function DetailRecipe() {
   const [recipeData, setRecipeData] = useState([]);
-  const [commentData, setCommentData] = useState([]);
+  const [tagData, setTagData] = useState([]);
   const [error, setError] = useState([]);
 
   const { id } = useParams();
@@ -46,7 +46,7 @@ export default function DetailRecipe() {
           setError(error.message);
         });
 
-      fetch(`https://localhost:7147/api/Comment/GetCommentsByRecipe/${id}`)
+      fetch(`https://localhost:7147/api/Recipe/RecipeTag?recipeId=${id}`)
         .then(response => {
           if (!response.ok) {
             throw new Error(`Comments not found! Status: ${response.status}`);
@@ -54,7 +54,7 @@ export default function DetailRecipe() {
           return response.json();
         })
         .then(data => {
-          setCommentData(data);
+          setTagData(data);
           console.log(data);
         })
         .catch(error => {
@@ -63,6 +63,14 @@ export default function DetailRecipe() {
     }
 
   }, [id]);
+
+  const tags = tagData.map(tag => (
+    <Link key={tag.id} to={"/Tag/" + tag.tagId} className='tag-item p-2 bg-primary rounded' style={{ letterSpacing: "1px", color: "white" }}>
+      {tag.tag.name}
+    </Link>
+  ));
+
+  console.log(tags.length);
 
   return (id ?
     <>
@@ -75,6 +83,19 @@ export default function DetailRecipe() {
           </div>
 
           <SmallRecipeList id={id} />
+
+          <section className="tag-container d-flex align-items-center mt-5 w-60 m-auto">
+            <h4 className="me-3">Tags:</h4>
+            {tags.length != 0 ?
+              <>
+                {tags}
+              </>
+              :
+              <Link className='tag-item p-2 bg-primary rounded' style={{ letterSpacing: "1px", color: "white" }}>
+                No Tags
+              </Link>
+            }
+          </section>
 
           <CreateComent />
 

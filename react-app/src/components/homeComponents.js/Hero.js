@@ -6,12 +6,35 @@ import { Link } from 'react-router-dom';
 
 export default function Hero({ }) {
 
-  const bigTagItems = Array(4).fill(null).map((_, index) => (
-    <BigTagItem key={index} id="2" name="DINNER" src="https://pinchofyum.com/wp-content/uploads/cropped-Tofu-and-Brown-Rice-Lettuce-Wraps-Square.png" />
+  const [tagData, setTagData] = useState([]);
+  const [error, setError] = useState([]);
+
+  useEffect(() => {
+    fetch('https://localhost:7147/api/Tag?pageSize=13', {
+      method: 'GET',
+      credentials: 'include'
+    })
+      .then(response => {
+        if (!response.ok) {
+          throw new Error(`Error! Status: ${response.status}`);
+        }
+        return response.json();
+      })
+      .then(data => {
+        setTagData(data.data);
+      })
+      .catch(error => {
+        setError(error.message);
+        console.log(error);
+      });
+  }, []);
+
+  const bigTagItems = tagData.slice(0, 4).map(tag => (
+    <BigTagItem key={tag.id} id={tag.id} name={tag.name.toUpperCase()} src="https://pinchofyum.com/wp-content/uploads/cropped-Tofu-and-Brown-Rice-Lettuce-Wraps-Square.png" />
   ));
 
-  const smallTagItems = Array(9).fill(null).map((_, index) => (
-    <SmallTagItem key={index} id="2" name="DINNER" src="https://pinchofyum.com/wp-content/uploads/cropped-Tofu-and-Brown-Rice-Lettuce-Wraps-Square.png" />
+  const smallTagItems = tagData.slice(4).map(tag => (
+    <SmallTagItem key={tag.id} id={tag.id} name={tag.name.toUpperCase()} src="https://pinchofyum.com/wp-content/uploads/cropped-Tofu-and-Brown-Rice-Lettuce-Wraps-Square.png" />
   ));
 
   return (
@@ -21,7 +44,7 @@ export default function Hero({ }) {
           <div className='d-flex w-100 justify-content-center p-5' style={{ gap: "15px" }}>
             {bigTagItems}
           </div>
-          <div className='d-flex w-100 justify-content-center' style={{ gap: "30px" }}>
+          <div className='d-flex w-100 justify-content-center' style={{ gap: "20px" }}>
             {smallTagItems}
           </div>
           <div className='d-flex w-100 justify-content-center align-items-center mt-3' style={{ gap: "20px" }}>

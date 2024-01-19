@@ -1,8 +1,10 @@
 import { React, useState, useEffect } from 'react'
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import RecipeListItem from './RecipeListItem';
 
 export default function RecipeList({ }) {
+
+  const location = useLocation();
 
   const [recipeData, setRecipeData] = useState([])
   const [sortOrder, setSortOrder] = useState("")
@@ -10,6 +12,12 @@ export default function RecipeList({ }) {
   const [pageNumber, setPageNumber] = useState(1)
   const [totalPages, setTotalPages] = useState(1)
   const [error, setError] = useState([])
+
+  useEffect(() => {
+    if (location.state && location.state.data !== null) {
+      setSearchString(location.state.data);
+    }
+  }, [location.state]);
 
   useEffect(() => {
     fetch(`https://localhost:7147/api/Recipe?sortOrder=${sortOrder}&searchString=${searchString}&pageNumber=${pageNumber}&pageSize=12`, {
@@ -65,7 +73,8 @@ export default function RecipeList({ }) {
   return (
     <>
       <section>
-        <div className="mt-5 " style={{ background: "#f7f7f7" }}>
+        <section style={{ height: "90px" }}></section>
+        <div style={{ background: "#f7f7f7" }}>
           <div className='m-auto text-center w-60 py-5'>
             <h3 className='text-primary mb-5'><i className="bi bi-journal-text text-warning"></i> &nbsp; All Recipes &nbsp; <i className="bi bi-journal-text text-warning"></i></h3>
             <div className='w-75 my-3' style={{ textAlign: "left" }}>
