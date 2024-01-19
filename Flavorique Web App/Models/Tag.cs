@@ -12,8 +12,6 @@ namespace Flavorique_Web_App.Models
         public string Name { get; set; }
         public int? CategoryId { get; set; }
         public Category? Category { get; set; }
-        [JsonIgnore]
-        public List<Recipe> Recipes { get; set; } = new List<Recipe>();
     }
 }
 
