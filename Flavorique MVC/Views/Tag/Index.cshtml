@@ -5,12 +5,12 @@
     var prevDisabled = Model.PageIndex == 1 ? "disabled" : "";
     var nextDisabled = Model.PageIndex == Model.TotalPages ? "disabled" : "";
 }
-<h1> Tags</h1>
+
 
 <div class="container p-3">
     <div class=" row pt-4">
         <div class=" col-6 ">
-            <h2 class=" text=primary"> Tag List</h2>
+            <h2 class=" text-primary"> Tag List</h2>
         </div>
         <div class=" col-6 text-end " style=" padding:0">
             <a asp-controller="Tag" asp-action="Create" class=" btn btn-primary"><i class="bi bi-plus-circle"></i> &nbsp; Create New Tag</a>

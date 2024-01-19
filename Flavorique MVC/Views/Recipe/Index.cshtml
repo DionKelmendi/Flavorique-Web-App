@@ -7,7 +7,7 @@
     var prevDisabled = Model.PageIndex == 1 ? "disabled" : "";
     var nextDisabled = Model.PageIndex == Model.TotalPages ? "disabled" : "";
 }
-<h1>Recipes</h1>
+
 
 <div class="container p-3">
     <div class="row pt-4">
@@ -37,7 +37,9 @@
             <th>
                 <a asp-action="Index" asp-route-sortOrder="@ViewData["IdSortParm"]" asp-route-searchString="@ViewData["CurrentFilter"]">Id</a>
             </th>
-            <th>Author</th>
+            <th>
+                <a asp-action="Index" asp-route-sortOrder="@ViewData["AuthorSortParm"]" asp-route-searchString="@ViewData["CurrentFilter"]">Author</a>
+            </th>
             <th>
                 <a asp-action="Index" asp-route-sortOrder="@ViewData["TitleSortParm"]" asp-route-searchString="@ViewData["CurrentFilter"]">Title</a>
             </th>
