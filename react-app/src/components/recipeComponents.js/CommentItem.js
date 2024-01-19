@@ -43,6 +43,34 @@ export default function CommentItem({ id, body, rating, authorId, date, userData
       });
   }, []);
 
+  const handleFormSubmit = (e) => {
+    e.preventDefault();
+
+    const url = `https://localhost:7147/api/Comment/DeleteComment/${id}`;
+
+    fetch(url, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      credentials: 'include'
+    }).then(response => {
+      if (!response.ok) {
+        throw new Error(`Error! Status: ${response.status}`);
+      }
+      return response.json();
+    })
+      .then(data => {
+      })
+      .catch(error => {
+        setError(error.message);
+      });
+  }
+
+  const deleteButton = (e) => {
+    e.target.parentNode.parentNode.parentNode.style.display = "none";
+  }
+
   return (
     <>
       <div className="comment-item mb-5 p-4 rounded bg-light" style={{ background: "white" }}>
@@ -72,9 +100,11 @@ export default function CommentItem({ id, body, rating, authorId, date, userData
             userData.id == authorId
               ?
               <>
-                <a className="btn btn-danger">
-                  <i className="bi bi-trash"></i> &nbsp; Delete Comment
-                </a>
+                <form onSubmit={handleFormSubmit}>
+                  <button type='submit' onClick={deleteButton} className="btn btn-danger">
+                    <i className="bi bi-trash"></i> &nbsp; Delete Comment
+                  </button>
+                </form>
               </>
               :
               <></>

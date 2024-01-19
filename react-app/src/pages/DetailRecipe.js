@@ -60,6 +60,7 @@ export default function DetailRecipe({ userData }) {
           setError(error.message);
         });
     }
+    window.scrollTo(0, 0);
 
   }, [id]);
 
@@ -74,7 +75,24 @@ export default function DetailRecipe({ userData }) {
       {recipeData.length != 0 ?
         <>
           <div className='m-auto w-60 ck-content'>
-            <h1 className='py-5'>{recipeData.title}</h1>
+            <div className='d-flex justify-content-between align-items-center'>
+              <h1 className='py-5'>{recipeData.title}</h1>
+              {
+                userData
+                  ?
+                  userData.id == recipeData.authorId
+                    ?
+                    <>
+                      <Link to={"/Recipes/Edit/" + recipeData.id}>
+                        <button className='btn btn-warning'>Edit Recipe</button>
+                      </Link>
+                    </>
+                    :
+                    <></>
+                  :
+                  <></>
+              }
+            </div>
             <a href="#ingredients" className="w-100 d-block bg-light text-center p-3 mb-5 text-decoration-none" style={{ fontSize: "20px" }}><i className="bi bi-arrow-down"></i> Jump to recipe</a>
             <div dangerouslySetInnerHTML={{ __html: recipeData.body }} />
           </div>

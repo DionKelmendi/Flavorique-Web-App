@@ -28,6 +28,7 @@ export default function Dashboard({ userData }) {
         })
         .then(data => {
           setRecipeData(data);
+          console.log(data);
         })
         .catch(error => {
           setError(error.message);
@@ -46,6 +47,7 @@ export default function Dashboard({ userData }) {
         })
         .then(data => {
           setCommentData(data);
+          console.log(data);
         })
         .catch(error => {
           setError(error.message);
@@ -57,16 +59,18 @@ export default function Dashboard({ userData }) {
 
   const smallRecipeItems = recipeData.map(recipe => (
     <SmallRecipeItem
-      key={recipe.id}
-      id={recipe.id}
-      date={new Date(recipe.createdDateTime).toLocaleDateString('en-US', {
+      key={recipe.result.id}
+      id={recipe.result.id}
+      date={new Date(recipe.result.createdDateTime).toLocaleDateString('en-US', {
         year: 'numeric',
         month: 'long',
         day: 'numeric',
       })}
-      title={recipe.title}
-      description={recipe.body}
-      src={recipe.image}
+      title={recipe.result.title}
+      description={recipe.result.body}
+      src={recipe.result.image}
+      reviews={recipe.result.rating.count}
+      rating={recipe.result.rating.rating}
     />
   ));
 
@@ -86,13 +90,14 @@ export default function Dashboard({ userData }) {
 
   const handlePasswordChange = (e) => {
     e.preventDefault();
-
     const jsonData = {
       "oldPassword": oldPassword,
       "newPassword": newPassword,
       "confirmPassword": confirmPassword,
     };
 
+    console.log(JSON.stringify(jsonData));
+    console.log(userData.id);
     fetch(`https://localhost:7147/api/Account/change-password/${userData.id}`, {
       method: 'POST',
       headers: {
@@ -108,6 +113,7 @@ export default function Dashboard({ userData }) {
         return response.json();
       })
       .then(data => {
+        console.log('Success:', data);
       })
       .catch(error => {
         console.log(error.message);
@@ -135,7 +141,9 @@ export default function Dashboard({ userData }) {
             <div className='userWelcome item'>
               <img src={"https://localhost:7147/logo"}></img>
               <p className='welcomeMessage'>Welcome back, <b>{userData.userName}</b>!</p>
-              <button type='submit'>Logout</button>
+              <a href="https://localhost:7147/Identity/Account/Logout/">
+                <button>Logout</button>
+              </a>
             </div>
             <div className='userInfo item'>
               <p>Username <span>{userData.userName}</span></p>

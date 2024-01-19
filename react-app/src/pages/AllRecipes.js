@@ -6,6 +6,10 @@ import RecipeList from '../components/recipeComponents.js/RecipeList';
 
 export default function AllRecipes({ }) {
 
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [])
+
   return (
     <>
       <section className='recipeListContainer'>

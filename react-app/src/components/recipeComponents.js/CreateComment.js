@@ -17,6 +17,8 @@ export default function CreateComent({ recipeId }) {
   const handleFormSubmit = (e) => {
     e.preventDefault();
 
+    console.log(ratingData);
+
     fetch(`https://localhost:7147/api/Comment/PostComment?Body=${commentData}&Rating=${ratingData}&RecipeId=${recipeId}`, {
       method: 'POST',
       headers: {
@@ -55,11 +57,11 @@ export default function CreateComent({ recipeId }) {
             <div className="mb-3 star-container">
               <label className="me-3">Recipe rating</label>
               <fieldset onChange={handleRatingValue} className="star-rating">
-                <input id="star-1" type="radio" name="rating" value="1" />
+                <input id="star-1" type="radio" name="rating" value="5" />
                 <label htmlFor="star-1">
                   <i className="bi bi-star-fill"></i>
                 </label>
-                <input id="star-2" type="radio" name="rating" value="2" />
+                <input id="star-2" type="radio" name="rating" value="4" />
                 <label htmlFor="star-2">
                   <i className="bi bi-star-fill"></i>
                 </label>
@@ -67,11 +69,11 @@ export default function CreateComent({ recipeId }) {
                 <label htmlFor="star-3">
                   <i className="bi bi-star-fill"></i>
                 </label>
-                <input id="star-4" type="radio" name="rating" value="4" />
+                <input id="star-4" type="radio" name="rating" value="2" />
                 <label htmlFor="star-4">
                   <i className="bi bi-star-fill"></i>
                 </label>
-                <input id="star-5" type="radio" name="rating" value="5" />
+                <input id="star-5" type="radio" name="rating" value="1" />
                 <label htmlFor="star-5">
                   <i className="bi bi-star-fill"></i>
                 </label>

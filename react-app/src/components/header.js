@@ -51,7 +51,7 @@ export default function Header({ userData }) {
               ) : (
                 <>
                   <li className="nav-item">
-                    <a className="nav-link text-light" asp-area="Identity" asp-page="/Account/Register">Register</a>
+                    <a href="https://localhost:7147/Identity/Account/Register/" className="nav-link text-light" asp-area="Identity" asp-page="/Account/Login">Register</a>
                   </li>
                   <li className="nav-item">
                     <a href="https://localhost:7147/Identity/Account/Login/" className="nav-link text-light" asp-area="Identity" asp-page="/Account/Login">Login</a>

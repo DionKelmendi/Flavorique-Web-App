@@ -8,6 +8,10 @@ import CategoryList from '../components/recipeComponents.js/CategoryList';
 
 export default function Recipes({ userData }) {
 
+    useEffect(() => {
+        window.scrollTo(0, 0);
+    }, [])
+
     return (
         <section className='recipeMainContainer'>
             <Hero userData={userData} />

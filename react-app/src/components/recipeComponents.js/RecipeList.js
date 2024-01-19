@@ -66,6 +66,7 @@ export default function RecipeList({ }) {
     else {
       setPageNumber(direction);
     }
+    window.scrollTo(0, 0);
   }
 
   return (
