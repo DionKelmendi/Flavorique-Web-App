@@ -14,6 +14,7 @@ using Newtonsoft.Json;
 using TXTextControl;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Primitives;
+using Flavorique_Web_App.DTOs;
 
 namespace Flavorique_Web_App.Controllers
 {
@@ -109,6 +110,21 @@ namespace Flavorique_Web_App.Controllers
             return recipe;
         }
 
+
+	      // GET: api/Recipe/Rating/id
+        [HttpGet("rating/{id}")]
+        public async Task<IActionResult> GetRecipeRating(int id)
+        {
+            var ratings = await _db.Set<Comment>().Where(c => c.RecipeId == id).Select(c => c.Rating).ToListAsync();
+
+            if (!ratings.Any())
+            {
+                return NotFound("This recipe has no rating!");
+            }
+
+            return Ok(ratings.Average());
+        }
+	
         // GET: api/Recipe
         [HttpGet("user/{username}")]
         public async Task<ActionResult> GetRecipesByUserName(string username)
@@ -237,15 +253,14 @@ namespace Flavorique_Web_App.Controllers
         // POST: api/Recipe
         // JSON should have "author" : null to avoid headaches
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPost]
-        public async Task<ActionResult<Recipe>> PostRecipe(Recipe recipe)
+      public async Task<ActionResult<Recipe>> PostRecipe(CreateRecipeDto recipeDto)
         {
             if (_db == null || _db.Recipes == null)
             {
                 return Problem("Entity set 'db.Recipes' is null.");
             }
 
-            if (recipe == null)
+            if (recipeDto == null)
             {
                 return BadRequest("Recipe object is null.");
             }
@@ -255,7 +270,7 @@ namespace Flavorique_Web_App.Controllers
             if (user == null)
             {
                 _logger.LogInformation("User is null. Unauthorized access.");
-                return Unauthorized("User not found. Unauthorized access."); 
+                return Unauthorized(); 
             }
 
             if (!ModelState.IsValid)
@@ -264,7 +279,7 @@ namespace Flavorique_Web_App.Controllers
                 return BadRequest(ModelState);
             }
 
-            var content = recipe.Body.Replace("&nbsp; ", "");
+            var content = recipeDto.Body.Replace("&nbsp; ", "");
 
             if (content.Length < 100)
             {
@@ -272,22 +287,34 @@ namespace Flavorique_Web_App.Controllers
                 return BadRequest(ModelState);
             }
 
-            recipe.Body = recipe.Body.Replace("<p>Ingredients", "<p id=\"ingredients\">Ingredients");
-            recipe.Body = recipe.Body.Replace("<p>Instructions", "<p id=\"instructions\">Instructions");
+            recipeDto.Body = recipeDto.Body.Replace("<p>Ingredients", "<p id=\"ingredients\">Ingredients");
+            recipeDto.Body = recipeDto.Body.Replace("<p>Instructions", "<p id=\"instructions\">Instructions");
 
-            recipe.AuthorId = user.Id;
-            recipe.Author = user;
+
+
+			string fillerString = "image widget. Press Enter to type after or press Shift + Enter to type before the widget";
+            recipeDto.Body = recipeDto.Body.Replace(fillerString, "");
+             
+            var tags = _db.Set<Tag>().Where(t => recipeDto.TagIds.Contains(t.Id)).ToList();
+
+            var recipe = new Recipe
+            {
+                Title = recipeDto.Title,
+                Body = recipeDto.Body,
+                Tags = tags,
+                CreatedDateTime = DateTime.Now,
+                AuthorId = user.Id,
+                Author = user,
+            };
 
             _logger.LogInformation(recipe.AuthorId);
             _logger.LogInformation(user.Id);
 
-			string fillerString = "image widget. Press Enter to type after or press Shift + Enter to type before the widget";
-            recipe.Body = recipe.Body.Replace(fillerString, "");
-
-			_db.Recipes.Add(recipe);
+            var result = _db.Recipes.Add(recipe);
 			await _db.SaveChangesAsync();
 
-            return CreatedAtAction(nameof(GetRecipes), new { id = recipe.Id }, recipe);
+            return Ok(result.Entity);
+            
         }
 
 
