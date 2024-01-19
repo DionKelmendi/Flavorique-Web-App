@@ -354,5 +354,32 @@ namespace Flavorique_MVC.Controllers
                 return View();
             }
         }
+
+        // POST
+        public async Task<IActionResult> ToggleRole(string? id)
+        {
+            try
+            {
+                if (id == null)
+                {
+                    return NotFound();
+                }
+
+                using (var client = new HttpClient())
+                {
+                    using (var response = await client.PostAsync($"https://localhost:7147/api/Account/toggle-role/{id}", null))
+                    {
+                        string apiResponse = await response.Content.ReadAsStringAsync();
+                    }
+                }
+
+                return RedirectToAction("Index");
+            }
+            catch (Exception ex)
+            {
+                ModelState.AddModelError(string.Empty, $"An error occurred: {ex.Message}");
+                return View();
+            }
+        }
     }
 }

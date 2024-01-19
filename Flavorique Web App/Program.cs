@@ -42,6 +42,7 @@ builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
 // Sets Default Identity Model.
 builder.Services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = true)
+    .AddRoles<IdentityRole>()
     .AddEntityFrameworkStores<ApplicationDbContext>();
 
 // Cookie Services for Identity

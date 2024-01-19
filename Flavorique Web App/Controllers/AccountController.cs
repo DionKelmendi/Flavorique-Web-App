@@ -20,14 +20,16 @@ namespace Flavorique_Web_App.Controllers
 		private readonly ILogger<AccountController> _logger;
 		private readonly UserManager<ApplicationUser> _userManager;
 		private readonly SignInManager<ApplicationUser> _signInManager;
+		private readonly RoleManager<IdentityRole> _roleManager;
 		private readonly IEmailSender _emailSender;
 		private readonly RazorViewToStringRenderer _razorViewToStringRenderer;
 
-		public AccountController(ILogger<AccountController> logger, UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, IEmailSender emailSender, RazorViewToStringRenderer razorViewToStringRenderer)
+		public AccountController(ILogger<AccountController> logger, UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, IEmailSender emailSender, RazorViewToStringRenderer razorViewToStringRenderer, RoleManager<IdentityRole> roleManager)
 		{
 			_logger = logger;
 			_userManager = userManager;
 			_signInManager = signInManager;
+            _roleManager = roleManager;
 			_emailSender = emailSender;
 			_razorViewToStringRenderer = razorViewToStringRenderer;
 		}
@@ -195,8 +197,9 @@ namespace Flavorique_Web_App.Controllers
 				if (result.Succeeded)
 				{
 					_logger.LogInformation("User created a new account with password.");
+                    await _userManager.AddToRoleAsync(user, "User");
 
-					var userId = await _userManager.GetUserIdAsync(user);
+                    var userId = await _userManager.GetUserIdAsync(user);
 					var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
 					code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
 					var callbackUrl = Url.Page(
@@ -383,7 +386,53 @@ namespace Flavorique_Web_App.Controllers
 			return BadRequest("Failed to toggle confirm email");
 		}
 
-		[HttpPost("change-password/{id}")]
+		[HttpGet("user/role")]
+		public async Task<IActionResult> GetUserRole()
+        {
+            var user = await _userManager.GetUserAsync(User);
+			var userRoles = await _userManager.GetRolesAsync(user);
+            string userRole = userRoles.FirstOrDefault();
+
+            return Ok(userRole);
+		}
+
+        [HttpPost("toggle-role/{id}")]
+        public async Task<IActionResult> ToggleUserRole(string id)
+        {
+            var user = await _userManager.FindByIdAsync(id);
+
+            if (user == null)
+            {
+                return NotFound("User not found");
+            }
+
+            var isInUserRole = await _userManager.IsInRoleAsync(user, "User");
+
+            if (isInUserRole)
+            {
+                var resultRemove = await _userManager.RemoveFromRoleAsync(user, "User");
+                var resultAdd = await _userManager.AddToRoleAsync(user, "Admin");
+
+                if (resultRemove.Succeeded && resultAdd.Succeeded)
+                {
+                    return Ok("User's role has been toggled to Admin");
+                }
+			}
+			else
+			{
+                var resultRemove = await _userManager.RemoveFromRoleAsync(user, "Admin");
+                var resultAdd = await _userManager.AddToRoleAsync(user, "User");
+
+                if (resultRemove.Succeeded && resultAdd.Succeeded)
+                {
+                    return Ok("User's role has been toggled to User");
+                }
+            }
+
+            return BadRequest("Failed to toggle role");
+        }
+
+        [HttpPost("change-password/{id}")]
 		public async Task<IActionResult> ChangePassword([FromBody] APIChangePasswordModel model, string id) 
 		{
 			var user = await _userManager.FindByIdAsync(id);

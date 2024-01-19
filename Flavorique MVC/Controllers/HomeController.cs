@@ -1,7 +1,10 @@
 ﻿using System.Diagnostics;
+using System.Net;
 using Flavorique_MVC.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 
 namespace Flavorique_MVC.Controllers
 {
@@ -16,9 +19,18 @@ namespace Flavorique_MVC.Controllers
             _emailSender = emailSender;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            return View();
+            var userRole = await GetUserRole();
+
+            if (userRole.Equals("Admin")) {
+                return View();
+            }
+            else
+            {
+                return Redirect("https://localhost:7147/Identity/Account/Login?from=r");
+            }
+
         }
 
         public IActionResult Mail()
@@ -37,15 +49,33 @@ namespace Flavorique_MVC.Controllers
             return RedirectToAction("Index");
         }
 
-        public IActionResult Privacy()
-        {
-            return View();
-        }
-
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+        }
+
+        public async Task<string> GetUserRole() {
+
+            var role = "User";
+
+            using (var handler = new HttpClientHandler())
+            {
+                var cookieContainer = new CookieContainer();
+                cookieContainer.Add(new Uri("https://localhost:7147"), new Cookie(".AspNetCore.Identity.Application", Request.Cookies[".AspNetCore.Identity.Application"]));
+
+                handler.CookieContainer = cookieContainer;
+
+                using (var client = new HttpClient(handler))
+                {
+                    {
+                        var response = await client.GetAsync("https://localhost:7147/api/Account/user/role");
+                        string apiResponse = await response.Content.ReadAsStringAsync();
+                        role = apiResponse;
+                    }
+                }
+            }
+            return role;
         }
     }
 }
