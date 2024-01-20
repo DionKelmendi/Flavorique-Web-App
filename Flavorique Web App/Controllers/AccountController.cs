@@ -389,11 +389,17 @@ namespace Flavorique_Web_App.Controllers
 		[HttpGet("user/role")]
 		public async Task<IActionResult> GetUserRole()
         {
-            var user = await _userManager.GetUserAsync(User);
-			var userRoles = await _userManager.GetRolesAsync(user);
-            string userRole = userRoles.FirstOrDefault();
+			try
+			{
+                var user = await _userManager.GetUserAsync(User);
+                var userRoles = await _userManager.GetRolesAsync(user);
+                string userRole = userRoles.FirstOrDefault();
 
-            return Ok(userRole);
+                return Ok(userRole);
+            } catch (Exception ex)
+			{
+				return BadRequest(ex.Message);
+			}
 		}
 
 

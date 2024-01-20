@@ -68,7 +68,6 @@ namespace Flavorique_Web_App.Controllers
 
             _logger.LogInformation(result.ToString());
 
-            // Return an object that includes both the paginated list and pagination information
             return Ok(new { data = result, pageIndex = result.PageIndex, totalPages = result.TotalPages, count = count });
         }
 
@@ -98,7 +97,7 @@ namespace Flavorique_Web_App.Controllers
                 return NotFound();
             }
 
-            var result = _db.Categories.Select(i => i.Name).OrderBy(j => j).ToList(); // Convert the result to a list of strings
+            var result = _db.Categories.Select(i => i.Name).OrderBy(j => j).ToList(); 
 
             return result;
         }
@@ -120,11 +119,11 @@ namespace Flavorique_Web_App.Controllers
             {
                 await _db.SaveChangesAsync();
             }
-            catch (DbUpdateConcurrencyException)
+            catch (Exception ex)
             {
                 if (!Exists(id))
                 {
-                    return NotFound();
+                    return NotFound(ex.Message);
                 }
                 else
                 {

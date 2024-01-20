@@ -49,10 +49,6 @@ export default function Header({ userData }) {
               <li className="nav-item">
                 <Link className='nav-link text-light' to="/Tags"> Tags </Link>
               </li>
-              <li className="nav-item">
-                <Link className='nav-link text-light' to="/Contact"> Contact </Link>
-              </li>
-
             </ul>
             <ul className="navbar-nav">
               {userData ? (

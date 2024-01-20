@@ -33,11 +33,6 @@ export default function Tags({ }) {
           </div>
         </section>
         <CategoryList amount={5} searchData={searchValue} />
-        <div className="d-grid m-auto pb-5" style={{ background: "#f7f7f7" }}>
-          <Link to="/Categories" className='btn btn-lg btn-primary w-25 m-auto'>
-            <b>VIEW ALL CATEGORIES</b>
-          </Link>
-        </div>
       </section>
     </>
   )

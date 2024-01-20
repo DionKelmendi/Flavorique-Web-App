@@ -154,8 +154,6 @@ export default function Dashboard({ userData }) {
 
               <p>Phone <span>{userData.phoneNumber}</span></p>
               <hr />
-
-              <button>Edit Settings</button>
             </div>
 
             <div className="settingsForm d-none">
@@ -218,7 +216,7 @@ export default function Dashboard({ userData }) {
             </section>
 
             <div className='userFavorites item'>
-              <h1 className='mb-5'>Most Recent Recipes</h1>
+              <h1 className=''>Most Recent Recipes</h1>
               {smallRecipeItems.length > 0 ? smallRecipeItems : <p>No recipes found.</p>}
             </div>
 
