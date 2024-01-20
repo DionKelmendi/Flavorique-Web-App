@@ -396,6 +396,16 @@ namespace Flavorique_Web_App.Controllers
             return Ok(userRole);
 		}
 
+
+		[HttpPost("create-role")]
+        public async Task<IActionResult> CreateRole(string name)
+		{
+            var result = await _roleManager.CreateAsync(new IdentityRole(name));
+
+            return Ok($"The role {name} was created!");
+		}
+
+
         [HttpPost("toggle-role/{id}")]
         public async Task<IActionResult> ToggleUserRole(string id)
         {
