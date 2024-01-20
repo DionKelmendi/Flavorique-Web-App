@@ -93,6 +93,8 @@ export default function RecipeList({ }) {
                 <option value="titleDesc">Title Descending</option>
                 <option value="date">Oldest Recipes</option>
                 <option value="dateDesc">Most Recent Recipes</option>
+                <option value="rating">Best Recipes</option>
+                <option value="ratingDesc">Worst Recipes</option>
               </select>
             </div>
           </div>

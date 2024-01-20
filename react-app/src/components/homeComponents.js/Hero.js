@@ -30,23 +30,27 @@ export default function Hero({ }) {
   }, []);
 
   let imageArray = [
-    "",
-    "",
-    "",
-    "",
-    "",
-    "",
-    "",
-    "",
-    ""
+    "https://ckbox.cloud/nCX3ISMpdWvIZzPqyw4h/assets/mv6qWubeoYd6/images/680.webp",
+    "https://ckbox.cloud/nCX3ISMpdWvIZzPqyw4h/assets/krvPN00Fvp9H/images/680.webp",
+    "https://ckbox.cloud/nCX3ISMpdWvIZzPqyw4h/assets/zByxZ5IE7wxG/images/680.webp",
+    "https://ckbox.cloud/nCX3ISMpdWvIZzPqyw4h/assets/liq9puvy8Q5z/images/680.webp",
+    "https://ckbox.cloud/nCX3ISMpdWvIZzPqyw4h/assets/ZDUD-NTfcj8A/images/680.webp",
+    "https://ckbox.cloud/nCX3ISMpdWvIZzPqyw4h/assets/TxFl2a69d4LN/images/1200.webp",
+    "https://ckbox.cloud/nCX3ISMpdWvIZzPqyw4h/assets/m-STdm_Joqzk/images/680.webp",
+    "https://ckbox.cloud/nCX3ISMpdWvIZzPqyw4h/assets/ISgD0IP7WTSI/images/680.webp",
+    "https://ckbox.cloud/nCX3ISMpdWvIZzPqyw4h/assets/M9ihXcrtknTl/images/680.webp",
+    "https://ckbox.cloud/nCX3ISMpdWvIZzPqyw4h/assets/p79KVMLl_PZb/images/680.webp",
+    "https://ckbox.cloud/nCX3ISMpdWvIZzPqyw4h/assets/GnIckvxAB6L1/images/680.webp",
+    "https://ckbox.cloud/nCX3ISMpdWvIZzPqyw4h/assets/BFd36bA5aAf9/images/680.webp",
+    "https://ckbox.cloud/nCX3ISMpdWvIZzPqyw4h/assets/DcxqGfRU5fDZ/images/680.webp"
   ];
 
-  const bigTagItems = tagData.slice(0, 4).map(tag => (
-    <BigTagItem key={tag.id} id={tag.id} name={tag.name.toUpperCase()} src="https://pinchofyum.com/wp-content/uploads/cropped-Tofu-and-Brown-Rice-Lettuce-Wraps-Square.png" />
+  const bigTagItems = tagData.slice(0, 4).map((tag, index) => (
+    <BigTagItem key={tag.id} id={tag.id} name={tag.name.toUpperCase()} src={imageArray[index]} index={index} />
   ));
 
-  const smallTagItems = tagData.slice(4).map(tag => (
-    <SmallTagItem key={tag.id} id={tag.id} name={tag.name.toUpperCase()} src="https://pinchofyum.com/wp-content/uploads/cropped-Tofu-and-Brown-Rice-Lettuce-Wraps-Square.png" />
+  const smallTagItems = tagData.slice(4).map((tag, index) => (
+    <SmallTagItem key={tag.id} id={tag.id} name={tag.name.toUpperCase()} src={imageArray[index + 4]} />
   ));
 
   return (
