@@ -20,7 +20,7 @@ export default function RecipeList({ }) {
   }, [location.state]);
 
   useEffect(() => {
-    fetch(`https://localhost:7147/api/Recipe?sortOrder=${sortOrder}&searchString=${searchString}&pageNumber=${pageNumber}&pageSize=12`, {
+    fetch(`https://localhost:7147/api/Recipe?sortOrder=${sortOrder}&searchString=${searchString}&pageNumber=${pageNumber}&pageSize=8`, {
       method: 'GET',
       credentials: 'include'
     })
@@ -34,6 +34,8 @@ export default function RecipeList({ }) {
         setRecipeData(data.data);
         setPageNumber(data.pageIndex);
         setTotalPages(data.totalPages);
+
+        console.log(recipeData);
       })
       .catch(error => {
         setError(error.message);

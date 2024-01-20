@@ -20,6 +20,8 @@ export default function TopRecipes({ }) {
       })
       .then(data => {
         setRecipeData(data.data);
+
+        console.log(recipeData);
       })
       .catch(error => {
         setError(error.message);

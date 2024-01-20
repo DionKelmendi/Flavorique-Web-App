@@ -56,11 +56,12 @@ namespace Flavorique_Web_App.Controllers
                 {
                     Id = r.Id,
                     AuthorId = r.AuthorId,
+                    AuthorName = _userManager.FindByIdAsync(r.AuthorId).Result.UserName,
                     Title = r.Title,
                     CreatedDateTime = r.CreatedDateTime,
                     Body = r.Body,
                     Image = r.Image,
-                    Rating = await GetRecipeRating(r.Id)
+                    Rating = GetRecipeRating(r.Id)
                 });
 
                 var recipeResult = await Task.WhenAll(resultTasks);
@@ -154,7 +155,7 @@ namespace Flavorique_Web_App.Controllers
                 CreatedDateTime = i.CreatedDateTime,
                 Body = StripHtmlTags(i.Body).Length > 200 ? StripHtmlTags(i.Body).Substring(0, 200) : StripHtmlTags(i.Body),
                 Image = GetImageFromHtml(i.Body),
-                Rating = await GetRecipeRating(i.Id)
+                Rating = GetRecipeRating(i.Id)
             });
 
             var recipes = await Task.WhenAll(recipeTasks);
@@ -180,7 +181,7 @@ namespace Flavorique_Web_App.Controllers
                 CreatedDateTime = i.CreatedDateTime,
                 Body = StripHtmlTags(i.Body).Length > 200 ? StripHtmlTags(i.Body).Substring(0, 200) : StripHtmlTags(i.Body),
                 Image = GetImageFromHtml(i.Body),
-                Rating = await GetRecipeRating(i.Id)
+                Rating = GetRecipeRating(i.Id)
             });
 
             var recipes = await Task.WhenAll(recipeTasks);
@@ -217,7 +218,7 @@ namespace Flavorique_Web_App.Controllers
                 CreatedDateTime = i.CreatedDateTime,
                 Body = StripHtmlTags(i.Body).Length > 200 ? StripHtmlTags(i.Body).Substring(0, 200) : StripHtmlTags(i.Body),
                 Image = GetImageFromHtml(i.Body),
-                Rating = await GetRecipeRating(i.Id)
+                Rating = GetRecipeRating(i.Id)
             })
             .ToList();
             
@@ -544,7 +545,7 @@ namespace Flavorique_Web_App.Controllers
             }
         }
 
-        private async Task<RatingViewModel> GetRecipeRating(int id)
+        private RatingViewModel GetRecipeRating(int id)
         {
             try
             {
@@ -558,7 +559,7 @@ namespace Flavorique_Web_App.Controllers
 
                     return noneModel;
                 }
-                var ratingArray = await _db.Set<Comment>().Where(x => x.RecipeId == id).Select(x => x.Rating).ToListAsync();
+                var ratingArray = _db.Set<Comment>().Where(x => x.RecipeId == id).Select(x => x.Rating).ToList();
 
                 var count = ratingArray.Count;
                 var rating = 0;
@@ -589,6 +590,8 @@ namespace Flavorique_Web_App.Controllers
             }
             catch (Exception ex)
             {
+                _logger.LogError(ex.Message);
+
                 var model = new RatingViewModel
                 {
                     Count = 0,
