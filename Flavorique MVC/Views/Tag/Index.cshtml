@@ -71,7 +71,9 @@
                 <td>@obj.Id</td>
                 <td>@obj.Name</td>
                 <td>
+                    <a asp-controller="Category" asp-action="Details" asp-route-id="@obj.Category?.Id" style="text-decoration: none">
                     @obj.Category?.Name
+                    </a>
                 </td>
                 <td class="d-flex justify-content-evenly">
                     <a asp-action="Details" asp-route-id="@obj.Id" class="btn btn-info"><i class="bi bi-search"></i> &nbsp; Detail View</a>

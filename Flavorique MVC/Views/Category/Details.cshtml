@@ -1,0 +1,19 @@
+﻿@model CategoryDetailViewModel
+@{
+	ViewData["Title"] = "Details";
+}
+
+<h1 class="my-5">Tags that are in @Model.Category.Name:</h1>
+
+<div class="d-flex justify-content-between align-items-center flex-wrap mb-5" style="gap:50px">
+	@foreach(var obj in Model.Tags)
+	{
+		<a asp-controller="Tag" asp-action="Details" asp-route-id="@obj.Id" class="d-flex border rounded p-5 align-items-center justify-content-center fw-bolder" style="text-decoration: none; width: 30%">
+			<div class="">
+				<p class="m-0">
+					@obj.Name
+				</p>
+			</div>
+		</a>
+	}
+</div>

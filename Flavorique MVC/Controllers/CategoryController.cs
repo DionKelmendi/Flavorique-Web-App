@@ -4,6 +4,7 @@ using Newtonsoft.Json;
 using System.Text;
 using System.Net;
 using Microsoft.AspNetCore.Identity;
+using System.Collections.Generic;
 
 namespace Flavorique_MVC.Controllers
 {
@@ -59,8 +60,49 @@ namespace Flavorique_MVC.Controllers
             return View(paginatedList);
         }
 
-        //GET
-        public IActionResult Create()
+        public async Task<IActionResult> Details(int? id)
+        {
+            try
+            {
+
+				IEnumerable<CategoryDetailViewModel> responseObject = new List<CategoryDetailViewModel>();
+
+                using (var client = new HttpClient())
+                {
+                    using (var response = await client.GetAsync($"https://localhost:7147/api/Category/tags"))
+                    {
+                        if (response.IsSuccessStatusCode)
+                        {
+                            string apiResponse = await response.Content.ReadAsStringAsync();
+                            _logger.LogWarning(apiResponse);
+                            responseObject = JsonConvert.DeserializeObject<IEnumerable<CategoryDetailViewModel>>(apiResponse);
+                        }
+                    }
+                }
+
+                foreach (var obj in responseObject) {
+                    _logger.LogWarning(obj.Category.Name);
+
+                    foreach (var tag in obj.Tags)
+                    {
+						_logger.LogWarning(tag.Name);
+					}
+				}
+
+                var model = responseObject.Where(r => r.Category.Id == id).FirstOrDefault();
+
+                return View(model);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                return RedirectToAction("Index");
+            }
+        }
+
+
+    //GET
+    public IActionResult Create()
         {
             return View();
         }
