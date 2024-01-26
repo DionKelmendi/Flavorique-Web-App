@@ -33,7 +33,7 @@
         {
             @foreach (var obj in Model.Tags)
             {
-                <a href="#" class="tag-item p-2 bg-primary rounded" style="color: white !important">@obj.Tag.Name</a>
+                <a asp-controller="Tag" asp-action="Details" asp-route-id="@obj.Tag.Id" class="tag-item p-2 bg-primary rounded" style="color: white !important">@obj.Tag.Name</a>
             }
         }
 

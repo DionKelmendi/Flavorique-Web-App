@@ -16,7 +16,7 @@ namespace Flavorique_MVC.Controllers
         {
             _logger = logger;
         }
-        public async Task<IActionResult> Index(string sortOrder, string searchString, int pageNumber)
+        public async Task<IActionResult> Index(string sortOrder, string searchString, int pageNumber, string categoryFilter)
         {
             IEnumerable<Tag> tags = new List<Tag>();
             int pageIndex = 1;
@@ -25,7 +25,7 @@ namespace Flavorique_MVC.Controllers
 
             using (var client = new HttpClient())
             {
-                using (var response = await client.GetAsync($"https://localhost:7147/api/Tag?sortOrder={sortOrder}&searchString={searchString}&pageNumber={pageNumber}"))
+                using (var response = await client.GetAsync($"https://localhost:7147/api/Tag?sortOrder={sortOrder}&searchString={searchString}&pageNumber={pageNumber}&category={categoryFilter}"))
                 {
                     string apiResponse = await response.Content.ReadAsStringAsync();
 
@@ -44,6 +44,7 @@ namespace Flavorique_MVC.Controllers
             ViewData["IdSortParm"] = String.IsNullOrEmpty(sortOrder) ? "idDesc" : "";
             ViewData["NameSortParm"] = sortOrder == "name" ? "nameDesc" : "name";
             ViewData["CategorySortParm"] = sortOrder == "category" ? "categoryDesc" : "category";
+            ViewData["CategoryFilterParm"] = categoryFilter;
             ViewData["CurrentFilter"] = searchString;
             ViewData["CurrentSort"] = sortOrder;
 
@@ -56,8 +57,79 @@ namespace Flavorique_MVC.Controllers
 
             var paginatedList = new PaginatedList<Tag>(tags.ToList(), count, pageIndex, 5);
 
-            return View(paginatedList);
+            IEnumerable<Category> categories = new List<Category>();
+
+            using (var client = new HttpClient())
+            {
+                using (var response = await client.GetAsync($"https://localhost:7147/api/Category"))
+                {
+                    string apiResponse = await response.Content.ReadAsStringAsync();
+
+                    var responseObject = JsonConvert.DeserializeAnonymousType(apiResponse, new { data = Enumerable.Empty<Category>() });
+
+                    categories = responseObject.data;
+                }
+            }
+
+            var model = new TagIndexViewModel{ 
+                PaginatedList = paginatedList,
+                Categories = categories
+            };
+
+            return View(model);
         }
+
+        public async Task<IActionResult> Details(int? id)
+        {
+            try
+            {
+                var tag = new Tag();
+
+                using (var client = new HttpClient())
+                {
+                    using (var response = await client.GetAsync($"https://localhost:7147/api/Tag/{id}"))
+                    {
+                        if (response.IsSuccessStatusCode)
+                        {
+                            string result = await response.Content.ReadAsStringAsync();
+                            tag = JsonConvert.DeserializeObject<Tag>(result);
+                        }
+                        else
+                        {
+                            return RedirectToAction("Index");
+                        }
+                    }
+                }
+
+                IEnumerable<ShortRecipe> recipes = new List<ShortRecipe>();
+
+                using (var client = new HttpClient())
+                {
+                    using (var response = await client.GetAsync($"https://localhost:7147/api/Recipe/tag/{id}"))
+                    {
+                        if (response.IsSuccessStatusCode)
+                        {
+                            string apiResponse = await response.Content.ReadAsStringAsync();
+                            recipes = JsonConvert.DeserializeObject<List<ShortRecipe>>(apiResponse);
+                        }
+                    }
+                }
+
+                var model = new DetailTagViewModel
+                {
+                    Tag = tag,
+                    Recipes = recipes
+                };
+
+                return View(model);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                return RedirectToAction("Index");
+            }
+        }
+
 
         //GET
         public async Task<IActionResult> Create()

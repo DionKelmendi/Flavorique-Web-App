@@ -1,0 +1,50 @@
+﻿@model DetailTagViewModel
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h1 class="my-5">Recipes that contain the tag @Model.Tag.Name:</h1>
+
+@foreach (var obj in Model.Recipes)
+{
+    <a asp-controller="Recipe" asp-action="Details" asp-route-id="@obj.Id" style="text-decoration: none; color: black">
+        <div class="border rounded p-3 mb-2 d-flex">
+            <img src="@obj.Image" height="125" style="object-fit: cover; object-position: center center; aspect-ratio: 1 / 1"/>
+            <div class="ms-4">    
+                <h5 class="fw-bolder m-0">@obj.Title</h5>
+                <p class="m-0">@obj.Body</p>
+                <p class="m-0">@obj.CreatedDateTime.ToString("MMMM d, yyyy")</p>
+
+                @{
+                    double fullStars = Math.Round(obj.Rating.Rating * 2) / 2;
+                    bool hasHalfStar = fullStars % 1 != 0;
+
+                    List<string> starArray = new List<string>();
+
+                    for (int i = 1; i <= 5; i++)
+                    {
+                        if (i <= fullStars)
+                        {
+                            starArray.Add($"<i key={i} class=\"bi bi-star-fill text-warning\"></i>");
+                        }
+                        else if (hasHalfStar && i == Math.Ceiling(fullStars))
+                        {
+                            starArray.Add($"<i key={i} class=\"bi bi-star-half text-warning\"></i>");
+                        }
+                        else
+                        {
+                            starArray.Add($"<i key={i} class=\"bi bi-star text-warning\"></i>");
+                        }
+                    }
+
+                }
+                <p class="m-0">
+                    @foreach(var star in starArray)
+                    {
+                        @Html.Raw(star);
+                    }
+                </p>
+            </div>
+        </div>
+    </a>
+}

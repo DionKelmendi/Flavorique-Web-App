@@ -1,9 +1,9 @@
-﻿@model PaginatedList<Tag>
+﻿@model TagIndexViewModel
 @{
     ViewData["Title"] = "Index";
     string sortValue = Context.Request.Query["sortOrder"].ToString();
-    var prevDisabled = Model.PageIndex == 1 ? "disabled" : "";
-    var nextDisabled = Model.PageIndex == Model.TotalPages ? "disabled" : "";
+    var prevDisabled = Model.PaginatedList.PageIndex == 1 ? "disabled" : "";
+    var nextDisabled = Model.PaginatedList.PageIndex == Model.PaginatedList.TotalPages ? "disabled" : "";
 }
 
 
@@ -23,7 +23,27 @@
         <p>
             Find by name: <input type="text" name="SearchString" value="@ViewData["CurrentFilter"]" />
             <input type="submit" value="Search" class="btn btn-primary" />
+
+            <div class="btn-group">
+                <a class="btn btn-secondary" class="dropdown-item" asp-action="Index" asp-route-sortOrder="@ViewData["CurrentSort"]" asp-route-searchString="@ViewData["CurrentFilter"]" asp-route-categoryFilter="" asp-route-emailFilter="" style="color: white; text-decoration: none;">
+                    @((string.IsNullOrEmpty(ViewData["CategoryFilterParm"]?.ToString()) ? "Select Category" : char.ToUpper(ViewData["CategoryFilterParm"].ToString()[0]) + ViewData["CategoryFilterParm"].ToString().Substring(1)))
+                </a>
+                <button type="button" class="btn btn-secondary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                </button>
+                <div class="dropdown-menu">
+
+                    @foreach (var obj in Model.Categories)
+                    {
+                        <a class="dropdown-item" asp-action="Index" asp-route-sortOrder="@ViewData["CurrentSort"]" asp-route-searchString="@ViewData["CurrentFilter"]" asp-route-categoryFilter="@obj.Name.ToLower()" asp-route-emailFilter="" style="color: black; text-decoration: none;">
+                            @obj.Name
+                        </a>
+                        <div class="dropdown-divider"></div>
+                    }
+                </div>
+            </div>
         </p>
+
+
         <a asp-action="Index">Back to Full List</a>
 
     </div>
@@ -33,19 +53,19 @@
     <thead>
         <tr class="table-primary">
             <th>
-                <a asp-action="Index" asp-route-sortOrder="@ViewData["IdSortParm"]" asp-route-searchString="@ViewData["CurrentFilter"]">Id</a>
+                <a asp-action="Index" asp-route-sortOrder="@ViewData["IdSortParm"]" asp-route-categoryFilter="@ViewData["CategoryFilterParm"]" asp-route-searchString="@ViewData["CurrentFilter"]">Id</a>
             </th>
             <th>
-                <a asp-action="Index" asp-route-sortOrder="@ViewData["NameSortParm"]" asp-route-searchString="@ViewData["CurrentFilter"]">Tag Name</a>
+                <a asp-action="Index" asp-route-sortOrder="@ViewData["NameSortParm"]" asp-route-categoryFilter="@ViewData["CategoryFilterParm"]" asp-route-searchString="@ViewData["CurrentFilter"]">Tag Name</a>
             </th>
             <th>
-                <a asp-action="Index" asp-route-sortOrder="@ViewData["CategorySortParm"]" asp-route-searchString="@ViewData["CurrentFilter"]">Category</a>
+                <a asp-action="Index" asp-route-sortOrder="@ViewData["CategorySortParm"]" asp-route-categoryFilter="@ViewData["CategoryFilterParm"]" asp-route-searchString="@ViewData["CurrentFilter"]">Category</a>
             </th>
             <th colspan="1"></th>
         </tr>
     </thead>
     <tbody>
-        @foreach (var obj in Model)
+        @foreach (var obj in Model.PaginatedList)
         {
             <tr>
                 <td>@obj.Id</td>
@@ -54,6 +74,8 @@
                     @obj.Category?.Name
                 </td>
                 <td class="d-flex justify-content-evenly">
+                    <a asp-action="Details" asp-route-id="@obj.Id" class="btn btn-info"><i class="bi bi-search"></i> &nbsp; Detail View</a>
+
                     <a asp-controller="Tag" asp-action="Edit" asp-route-id="@obj.Id" class="btn btn-warning"><i class="bi bi-pencil-square"></i> &nbsp; Edit Tag</a>
                     <button type="button" onclick="addModalInfo" class="btn btn-danger modalButton" data-bs-toggle="modal" data-bs-target="#deleteModal">
                         <i class="bi bi-trash"></i> &nbsp; Delete Tag
@@ -66,27 +88,30 @@
 
 <a asp-action="Index"
    asp-route-sortOrder="@ViewData["CurrentSort"]"
-   asp-route-pageNumber="@(Model.PageIndex - 1)"
+   asp-route-pageNumber="@(Model.PaginatedList.PageIndex - 1)"
    asp-route-searchString="@ViewData["CurrentFilter"]"
+   asp-route-categoryFilter="@ViewData["CategoryFilterParm"]"
    class="btn btn-light @prevDisabled">
     Previous
 </a>
 
-@for (int i = 1; i <= Model.TotalPages; i++)
+@for (int i = 1; i <= Model.PaginatedList.TotalPages; i++)
 {
     <a asp-action="Index"
        asp-route-sortOrder="@ViewData["CurrentSort"]"
        asp-route-pageNumber="@i"
        asp-route-searchString="@ViewData["CurrentFilter"]"
-       class="btn @(Model.PageIndex == i ? "btn-primary" : "btn-light")">
+       asp-route-categoryFilter="@ViewData["CategoryFilterParm"]"
+       class="btn @(Model.PaginatedList.PageIndex == i ? "btn-primary" : "btn-light")">
         @i
     </a>
 }
 
 <a asp-action="Index"
    asp-route-sortOrder="@ViewData["CurrentSort"]"
-   asp-route-pageNumber="@(Model.PageIndex + 1)"
+   asp-route-pageNumber="@(Model.PaginatedList.PageIndex + 1)"
    asp-route-searchString="@ViewData["CurrentFilter"]"
+   asp-route-categoryFilter="@ViewData["CategoryFilterParm"]"
    class="btn btn-light @nextDisabled">
     Next
 </a>

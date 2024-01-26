@@ -22,7 +22,7 @@ namespace Flavorique_Web_App.Controllers
 
         // GET: api/Tag
         [HttpGet]
-        public async Task<ActionResult<PaginatedList<Tag>>> GetTags(string? sortOrder, string? searchString, int? pageNumber, int pageSize = 5)
+        public async Task<ActionResult<PaginatedList<Tag>>> GetTags(string? sortOrder, string? searchString, int? pageNumber, int pageSize = 5, string? category = "")
         {
             if (_db.Tags == null)
             {
@@ -30,10 +30,16 @@ namespace Flavorique_Web_App.Controllers
             }
             IEnumerable<Tag> tags = await _db.Tags.Include(t => t.Category).ToListAsync();
 
+            if (!String.IsNullOrEmpty(category))
+            {
+                tags = tags.Where(t => t.Category.Name.ToLower().Equals(category));
+            }
+
             if (!String.IsNullOrEmpty(searchString))
             {
                 tags = tags.Where(t => t.Name.ToLower().Contains(searchString.ToLower()) || t.Category.Name.ToLower().Contains(searchString.ToLower()));
             }
+
             int count = tags.Count();
 
             switch (sortOrder)
