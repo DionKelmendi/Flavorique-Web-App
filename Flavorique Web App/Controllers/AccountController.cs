@@ -35,24 +35,44 @@ namespace Flavorique_Web_App.Controllers
 		}
 
         [HttpGet]
-		public async Task<IActionResult> GetUsers(string? sortOrder, string? searchString, int? pageNumber)
+		public async Task<IActionResult> GetUsers(string? sortOrder, string? searchString, int? pageNumber, string? emailFilter, string? roleFilter)
 		{
-			IEnumerable<UserInfo> users = _userManager.Users
+			IEnumerable<ApplicationUser> userList = _userManager.Users.ToList();
+
+            switch (roleFilter)
+            {
+                case "user":
+                    userList = userList.Where(u => _userManager.IsInRoleAsync(u, "User").Result);
+                    break;
+                case "admin":
+                    userList = userList.Where(u => _userManager.IsInRoleAsync(u, "Admin").Result);
+                    break;
+                default:
+                    break;
+            }
+
+            IEnumerable<UserInfo> users = userList
 				.Select(user => new UserInfo
 				{
-					   Id = user.Id,
-					   Email = user.Email,
-					   UserName = user.UserName,
-					   PhoneNumber = user.PhoneNumber,
-					   EmailConfirmed = user.EmailConfirmed,
-					   TwoFactorEnabled = user.TwoFactorEnabled
+				    Id = user.Id,
+				    Email = user.Email,
+				    UserName = user.UserName,
+				    PhoneNumber = user.PhoneNumber,
+				    EmailConfirmed = user.EmailConfirmed,
+				    TwoFactorEnabled = user.TwoFactorEnabled
 				})
-				.ToList();
+                .ToList();
 
             if (!String.IsNullOrEmpty(searchString))
             {
                 users = users.Where(u => u.UserName.ToLower().Contains(searchString.ToLower()) || u.Email.ToLower().Contains(searchString.ToLower()));
             }
+
+			if (emailFilter == "confirmed")
+			{
+                users = users.Where(u => u.EmailConfirmed == true);
+            }
+
             int count = users.Count();
 
             switch (sortOrder)

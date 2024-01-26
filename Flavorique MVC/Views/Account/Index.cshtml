@@ -4,6 +4,7 @@
 @{
     ViewData["Title"] = "Index";
     string sortValue = Context.Request.Query["sortOrder"].ToString();
+    string oppositeEmailFilter = ViewData["EmailFilterParm"].ToString() == "confirmed" ? "" : "confirmed";
     var prevDisabled = Model.PageIndex == 1 ? "disabled" : "";
     var nextDisabled = Model.PageIndex == Model.TotalPages ? "disabled" : "";
 }
@@ -22,6 +23,34 @@
         <p>
             Find by username or email: <input type="text" name="SearchString" value="@ViewData["CurrentFilter"]" />
             <input type="submit" value="Search" class="btn btn-primary" />
+
+            <div class="btn-group">
+                <a class="btn btn-secondary" class="dropdown-item" asp-action="Index" asp-route-sortOrder="@ViewData["CurrentSort"]" asp-route-searchString="@ViewData["CurrentFilter"]" asp-route-roleFilter="" asp-route-emailFilter="" style="color: white; text-decoration: none;">
+                    @((string.IsNullOrEmpty(ViewData["RoleFilterParm"]?.ToString()) ? "Select Role" : char.ToUpper(ViewData["RoleFilterParm"].ToString()[0]) + ViewData["RoleFilterParm"].ToString().Substring(1)))
+                </a>
+                <button type="button" class="btn btn-secondary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                </button>
+                <div class="dropdown-menu">
+
+                    <a class="dropdown-item" asp-action="Index" asp-route-sortOrder="@ViewData["CurrentSort"]" asp-route-searchString="@ViewData["CurrentFilter"]" asp-route-roleFilter="admin" asp-route-emailFilter="" style="color: black; text-decoration: none;">
+                        Admin
+                    </a>
+                    <div class="dropdown-divider"></div>
+
+                    <a class="dropdown-item" asp-action="Index" asp-route-sortOrder="@ViewData["CurrentSort"]" asp-route-searchString="@ViewData["CurrentFilter"]" asp-route-roleFilter="user" asp-route-emailFilter="" style="color: black; text-decoration: none;">
+                        User
+                    </a>
+                </div>
+            </div>
+
+            <a asp-action="Index" asp-route-sortOrder="@ViewData["CurrentSort"]" asp-route-searchString="@ViewData["CurrentFilter"]" asp-route-emailFilter="@ViewData["EmailFilterParm"]" asp-route-roleFilter="@ViewData["RoleFilterParm"]" style="color: black; text-decoration: none; cursor: default">
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" name="emailFilter" @(oppositeEmailFilter.ToString() == "confirmed" ? "checked" : "")>
+                    <p class="form-check-label" style="user-select: none">
+                        Has confirmed Email
+                    </p>
+                </div>
+            </a>
         </p>
         <a asp-action="Index">Back to Full List</a>
 
@@ -35,16 +64,16 @@
                 User Id
             </th>
             <th>
-                <a asp-action="Index" asp-route-sortOrder="@ViewData["EmailSortParm"]" asp-route-searchString="@ViewData["CurrentFilter"]">Email</a>
+                <a asp-action="Index" asp-route-sortOrder="@ViewData["EmailSortParm"]" asp-route-emailFilter="@oppositeEmailFilter" asp-route-roleFilter="@ViewData["RoleFilterParm"]" asp-route-searchString="@ViewData["CurrentFilter"]">Email</a>
             </th>
             <th>
-                <a asp-action="Index" asp-route-sortOrder="@ViewData["UsernameSortParm"]" asp-route-searchString="@ViewData["CurrentFilter"]">Username</a>
+                <a asp-action="Index" asp-route-sortOrder="@ViewData["UsernameSortParm"]" asp-route-emailFilter="@oppositeEmailFilter" asp-route-roleFilter="@ViewData["RoleFilterParm"]" asp-route-searchString="@ViewData["CurrentFilter"]">Username</a>
             </th>
             <th style="width: 150px">
-                <a asp-action="Index" asp-route-sortOrder="@ViewData["PhoneSortParm"]" asp-route-searchString="@ViewData["CurrentFilter"]">Phone Number</a>
+                <a asp-action="Index" asp-route-sortOrder="@ViewData["PhoneSortParm"]" asp-route-emailFilter="@oppositeEmailFilter" asp-route-roleFilter="@ViewData["RoleFilterParm"]" asp-route-searchString="@ViewData["CurrentFilter"]">Phone Number</a>
             </th>
             <th style="width: 150px">
-                <a asp-action="Index" asp-route-sortOrder="@ViewData["EmailConfirmedSortParm"]" asp-route-searchString="@ViewData["CurrentFilter"]">Confirmed Email</a>
+                <a asp-action="Index" asp-route-sortOrder="@ViewData["EmailConfirmedSortParm"]" asp-route-emailFilter="@oppositeEmailFilter" asp-route-roleFilter="@ViewData["RoleFilterParm"]" asp-route-searchString="@ViewData["CurrentFilter"]">Confirmed Email</a>
             </th>
             <th>Role</th>
             <th colspan="3"></th>
@@ -54,7 +83,7 @@
         @foreach (var obj in Model)
         {
             <tr>
-                <td>@obj.Id</td>
+                <td style="word-break: break-word">@obj.Id</td>
                 <td>@obj.Email</td>
                 <td>@obj.UserName</td>
                 <td>
@@ -90,6 +119,9 @@
 
                 </td>
                 <td>
+                    <a asp-controller="Account" asp-action="Details" asp-route-id="@obj.Id" class="btn btn-info"><i class="bi bi-search"></i> &nbsp; Detail View</a>
+                </td>
+                <td>
                     <a asp-controller="Account" asp-action="Edit" asp-route-id="@obj.Id" asp-route-returnRoute="Index" class="btn btn-warning"><i class="bi bi-pencil-square"></i> &nbsp; Edit User</a>
                 </td>
                 <td>
@@ -106,6 +138,8 @@
    asp-route-sortOrder="@ViewData["CurrentSort"]"
    asp-route-pageNumber="@(Model.PageIndex - 1)"
    asp-route-searchString="@ViewData["CurrentFilter"]"
+   asp-route-emailFilter="@oppositeEmailFilter"
+   asp-route-roleFilter="@ViewData["RoleFilterParm"]"
    class="btn btn-light @prevDisabled">
     Previous
 </a>
@@ -116,6 +150,8 @@
        asp-route-sortOrder="@ViewData["CurrentSort"]"
        asp-route-pageNumber="@i"
        asp-route-searchString="@ViewData["CurrentFilter"]"
+       asp-route-emailFilter="@oppositeEmailFilter"
+       asp-route-roleFilter="@ViewData["RoleFilterParm"]"
        class="btn @(Model.PageIndex == i ? "btn-primary" : "btn-light")">
         @i
     </a>
@@ -125,6 +161,8 @@
    asp-route-sortOrder="@ViewData["CurrentSort"]"
    asp-route-pageNumber="@(Model.PageIndex + 1)"
    asp-route-searchString="@ViewData["CurrentFilter"]"
+   asp-route-emailFilter="@oppositeEmailFilter"
+   asp-route-roleFilter="@ViewData["RoleFilterParm"]"
    class="btn btn-light @nextDisabled">
     Next
 </a>

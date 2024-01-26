@@ -23,7 +23,7 @@ namespace Flavorique_MVC.Controllers
             _logger = logger;
         }
 
-        public async Task<IActionResult> Index(string sortOrder, string searchString, int pageNumber)
+        public async Task<IActionResult> Index(string sortOrder, string searchString, int pageNumber, string emailFilter, string roleFilter)
 		{
 			IEnumerable<UserInfo> users = new List<UserInfo>();
             int pageIndex = 1;
@@ -32,7 +32,7 @@ namespace Flavorique_MVC.Controllers
 
             using (var client = new HttpClient())
 			{
-				using (var response = await client.GetAsync($"https://localhost:7147/api/Account?sortOrder={sortOrder}&searchString={searchString}&pageNumber={pageNumber}"))
+				using (var response = await client.GetAsync($"https://localhost:7147/api/Account?sortOrder={sortOrder}&searchString={searchString}&pageNumber={pageNumber}&emailFilter={emailFilter}&roleFilter={roleFilter}"))
 				{
                     string apiResponse = await response.Content.ReadAsStringAsync();
 
@@ -49,6 +49,8 @@ namespace Flavorique_MVC.Controllers
             ViewData["EmailSortParm"] = sortOrder == "email" ? "emailDesc" : "email";
             ViewData["PhoneSortParm"] = sortOrder == "phone" ? "phoneDesc" : "phone";
             ViewData["EmailConfirmedSortParm"] = sortOrder == "eConfirmed" ? "eConfirmedDesc" : "eConfirmed";
+            ViewData["EmailFilterParm"] = emailFilter == "confirmed" ? "" : "confirmed";
+            ViewData["RoleFilterParm"] = roleFilter;
             ViewData["CurrentFilter"] = searchString;
             ViewData["CurrentSort"] = sortOrder;
 
