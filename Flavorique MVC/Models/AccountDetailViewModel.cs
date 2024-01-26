@@ -4,5 +4,6 @@
     {
         public UserInfo UserInfo { get; set; }
         public IEnumerable<ShortRecipe> Recipes { get; set; }
+        public IEnumerable<Comment> Comments { get; set; }
     }
 }

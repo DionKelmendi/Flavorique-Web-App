@@ -265,14 +265,28 @@ namespace Flavorique_MVC.Controllers
                     using (var response = await client.GetAsync($"https://localhost:7147/api/Recipe/user/{user.UserName}"))
                     {
                         string apiResponse = await response.Content.ReadAsStringAsync();
-                        recipes = JsonConvert.DeserializeObject<List<ShortRecipe>>(apiResponse);
+                        var result = JsonConvert.DeserializeObject<List<ApiResult<ShortRecipe>>>(apiResponse);
+
+                        recipes = result.Select(r => r.Result).ToList();
                     }
                 }
+
+                IEnumerable<Comment> comments = new List<Comment>();
+                using (var client = new HttpClient())
+                {
+                    using (var response = await client.GetAsync($"https://localhost:7147/api/Comment/GetCommentsByUser/{user.Id}?amount=3"))
+                    {
+                        string apiResponse = await response.Content.ReadAsStringAsync();
+                        comments = JsonConvert.DeserializeObject<List<Comment>>(apiResponse);
+                    }
+                }
+
 
                 var model = new AccountDetailViewModel
                 {
                     UserInfo = userInfo,
                     Recipes = recipes,
+                    Comments = comments
                 };
 
                 return View(model);

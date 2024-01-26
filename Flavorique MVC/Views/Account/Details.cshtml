@@ -1,37 +1,40 @@
 ﻿@model AccountDetailViewModel
 @{
-    ViewData["Title"] = "Edit";
+    ViewData["Title"] = "User Details";
 }
 
-<section class="d-flex flex-column">
-    <div>
 
-        <h4> User info </h4>
+<section class="dashboard mt-5 rounded">
+    <h4> User info </h4>
 
-        <p>Username <span>@Model.UserInfo.UserName</span></p>
-        <hr />
+    <div class='containerMain'>
 
-        <p>Email <span>@Model.UserInfo.Email</span></p>
-        <hr />
+        <div class='userInfo item'>
+            <p>Username <span>@Model.UserInfo.UserName</span></p>
+            <hr />
 
-        <p>
-            Phone Number 
-            <span>
-                @if (Model.UserInfo.PhoneNumber == null)
-                {
-                    @("None")
-                }
-                else
-                {
-                    @Model.UserInfo.PhoneNumber
-                }
-            </span>
-        </p>
-        <hr />
+            <p>Email <span>@Model.UserInfo.Email</span></p>
+            <hr />
+
+            <p>
+                Phone 
+                <span>
+                    @if (Model.UserInfo.PhoneNumber == null)
+                    {
+                        @("None")
+                    }
+                    else
+                    {
+                        @Model.UserInfo.PhoneNumber
+                    }
+                </span>
+            </p>
+            <hr />
+        </div>
     </div>
 
     <div class="d-flex justify-content-around">
-        <div class="d-flex flex-column">
+        <div class="d-flex flex-column w-50">
             <h4>Most Recent User Recipes</h4>
             
             @if (!Model.Recipes.Any())
@@ -43,7 +46,7 @@
                 <div class="d-flex flex-column w-50">
                 @foreach (var obj in Model.Recipes)
                 {
-                        <div class="border-bottom rounded d-flex align-items-center p-4 text-break" style="height:150px; width: 200%">
+                    <div class="border-bottom rounded d-flex align-items-center p-4 text-break" style="height:150px; width: 200%">
                         <img src="@obj.Image" class="h-100 rounded-circle" style="aspect-ratio: 1 / 1; object-fit: cover; object-position: center;" />
                         <div class="ps-5 m-0" style="text-align:left">
                             <p class="text-secondary m-0">@obj.CreatedDateTime.ToString("MMMM d, yyyy")</p>
@@ -58,21 +61,20 @@
         <div class="d-flex flex-column">
             <h4>Most Recent User Comments</h4>
 
-            @if (!Model.Recipes.Any())
+            @if (!Model.Comments.Any())
             {
                 <p>No comments found.</p>
             }
             else
             {
                 <div class="d-flex flex-column w-50">
-                    @foreach (var obj in Model.Recipes)
+                    @foreach (var obj in Model.Comments)
                     {
                         <div class="border-bottom rounded d-flex align-items-center p-4 text-break" style="height:150px; width: 200%">
-                            <img class="h-100" style="aspect-ratio: 1 / 1" />
-                            <div class="ps-5 m-0" style="text-align:left">
+                            <div class="m-0" style="text-align:left">
                                 <p class="text-secondary m-0">@obj.CreatedDateTime.ToString("MMMM d, yyyy")</p>
-                                <h3 class="fw-bolder m-0">@obj.Title</h3>
-                                <a asp-controller="Recipe" asp-action="Details" asp-route-id="@obj.Id" style="font-size: 18px; letter-spacing: 1px; margin: 0;">Continue Reading <i class="bi bi-arrow-right"></i></a>
+                                <p class="m-0">@obj.Body</p>
+                                <a asp-controller="Recipe" asp-action="Details" asp-route-id="@obj.RecipeId" style="font-size: 18px; letter-spacing: 1px; margin: 0;">Go to Recipe<i class="bi bi-arrow-right"></i></a>
                             </div>
                         </div>
                     }
