@@ -34,7 +34,7 @@
         </nav>
     </header>
 
-    <div class="d-flex flex-column flex-shrink-0 text-white bg-dark position-absolute overflow-hidden sidebar" style="width: 280px; height: calc(100% - 61px); padding: 1rem; transition: 0.2s all ease-in;">
+    <div class="d-flex flex-column flex-shrink-0 text-white bg-dark position-absolute overflow-hidden sidebar z-3" style="width: 280px; height: calc(100% - 61px); padding: 1rem; transition: 0.2s all ease-in;">
         <div class="d-flex">
         <a href="/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-white text-decoration-none">
             <span class="fs-4">Navigate</span>
@@ -45,23 +45,21 @@
         <hr>
         <ul class="nav nav-pills flex-column mb-auto">
             <li class="nav-item">
-                <a class="nav-link text-light @(IsCurrentPage("/") ? "bg-primary" : "")" asp-area="" asp-controller="Home" asp-action="Index">
-                    Home
-                </a>
+                <a class="nav-link text-light @(IsCurrentPage("/") ? "bg-primary" : "")" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
             </li>
-            <li>
+            <li class="nav-item">
                 <a class="nav-link text-light @(IsCurrentPage("/Account") ? "bg-primary" : "")" asp-area="" asp-controller="Account" asp-action="Index">Users</a>
             </li>
-            <li>
+            <li class="nav-item">
                 <a class="nav-link text-light @(IsCurrentPage("/Category") ? "bg-primary" : "")" asp-area="" asp-controller="Category" asp-action="Index">Categories</a>
             </li>
-            <li>
+            <li class="nav-item">
                 <a class="nav-link text-light @(IsCurrentPage("/Tag") ? "bg-primary" : "")" asp-area="" asp-controller="Tag" asp-action="Index">Tags</a>
             </li>
-            <li>
+            <li class="nav-item">
                 <a class="nav-link text-light @(IsCurrentPage("/Recipe") ? "bg-primary" : "")" asp-area="" asp-controller="Recipe" asp-action="Index">Recipes</a>
             </li>
-            <li>
+            <li class="nav-item">
                 <a class="nav-link text-light @(IsCurrentPage("/Comment") ? "bg-primary" : "")" asp-area="" asp-controller="Comment" asp-action="Index">Comments</a>
             </li>
         </ul>

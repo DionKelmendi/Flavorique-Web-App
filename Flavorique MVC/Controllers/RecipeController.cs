@@ -68,56 +68,63 @@ namespace Flavorique_MVC.Controllers
         //GET
         public async Task<IActionResult> Details(int? id)
         {
-            var userRole = await GetUserRole();
-
-            if (!userRole.Equals("Admin"))
+            try
             {
-                return Redirect("https://localhost:7147/Identity/Account/Login?from=r");
-            }
+                var userRole = await GetUserRole();
 
-            var recipe = new Recipe();
-
-            using (var client = new HttpClient())
-            {
-                using (var response = await client.GetAsync($"https://localhost:7147/api/Recipe/{id}"))
+                if (!userRole.Equals("Admin"))
                 {
-                    string apiResponse = await response.Content.ReadAsStringAsync();
-                    recipe  = JsonConvert.DeserializeObject<Recipe>(apiResponse);
+                    return Redirect("https://localhost:7147/Identity/Account/Login?from=r");
                 }
-            }
 
-            var comments = new List<Comment>();
-            using (var client = new HttpClient())
-            {
-                using (var response = await client.GetAsync($"https://localhost:7147/api/Comment/GetCommentsByRecipe/{id}"))
+                var recipe = new Recipe();
+
+                using (var client = new HttpClient())
                 {
-                    string apiResponse = await response.Content.ReadAsStringAsync();
-                    if (!apiResponse.Contains("There are no comments"))
+                    using (var response = await client.GetAsync($"https://localhost:7147/api/Recipe/{id}"))
                     {
-                        comments = JsonConvert.DeserializeObject<List<Comment>>(apiResponse);
+                        string apiResponse = await response.Content.ReadAsStringAsync();
+                        recipe = JsonConvert.DeserializeObject<Recipe>(apiResponse);
                     }
                 }
-            }
 
-            var tags = new List<RecipeTag>();
-            using (var client = new HttpClient())
-            {
-                using (var response = await client.GetAsync($"https://localhost:7147/api/Recipe/RecipeTag?recipeId={id}"))
+                var comments = new List<Comment>();
+                using (var client = new HttpClient())
                 {
-                    string apiResponse = await response.Content.ReadAsStringAsync();
-                    if (!apiResponse.Contains("There are no comments"))
+                    using (var response = await client.GetAsync($"https://localhost:7147/api/Comment/GetCommentsByRecipe/{id}"))
                     {
-                        tags = JsonConvert.DeserializeObject<List<RecipeTag>>(apiResponse);
+                        string apiResponse = await response.Content.ReadAsStringAsync();
+                        if (!apiResponse.Contains("There are no comments"))
+                        {
+                            comments = JsonConvert.DeserializeObject<List<Comment>>(apiResponse);
+                        }
                     }
                 }
-            }
 
-            var model = new DetailRecipeViewModel {
-                Recipe = recipe,
-                Tags = tags,
-                Comments = comments
-            };
-            return View(model);
+                var tags = new List<RecipeTag>();
+                using (var client = new HttpClient())
+                {
+                    using (var response = await client.GetAsync($"https://localhost:7147/api/Recipe/RecipeTag?recipeId={id}"))
+                    {
+                        string apiResponse = await response.Content.ReadAsStringAsync();
+                        if (!apiResponse.Contains("There are no comments"))
+                        {
+                            tags = JsonConvert.DeserializeObject<List<RecipeTag>>(apiResponse);
+                        }
+                    }
+                }
+
+                var model = new DetailRecipeViewModel
+                {
+                    Recipe = recipe,
+                    Tags = tags,
+                    Comments = comments
+                };
+                return View(model);
+            } catch (Exception ex) {
+                _logger.LogError(ex.Message);
+                return RedirectToAction("Index");
+            }
         }
 
         //GET

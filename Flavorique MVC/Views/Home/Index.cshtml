@@ -1,8 +1,146 @@
-﻿@{
+﻿@model HomeViewModel
+@{
     ViewData["Title"] = "Home Page";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome to Flavorique</h1>
-    
+<section class="d-flex mt-5 mx-0 justify-content-center" style="gap: 20px">
+    <div class="border rounded border-primary p-3 d-flex align-items-center justify-content-center" style="gap: 20px; width: 243px">
+        <div>
+            <p class="m-0"><b>No. of Users</b></p>
+            <p class="m-0">@Model.UserCount</p>
+        </div>
+        <i class="bi bi-people border rounded border-primary text-primary p-2 text-center" style="width: 50px; height: 50px; font-size: 22px"></i>
+    </div>
+
+    <div class="border rounded border-primary p-3 d-flex align-items-center justify-content-center" style="gap: 20px; width: 243px">
+        <div>
+            <p class="m-0"><b>No. of Categories</b></p>
+            <p class="m-0">@Model.CategoryCount</p>
+        </div>
+        <i class="bi bi-bookmark border rounded border-primary text-primary p-2 text-center" style="width: 50px; height: 50px; font-size: 22px"></i>
+    </div>
+
+    <div class="border rounded border-primary p-3 d-flex align-items-center justify-content-center" style="gap: 20px; width: 243px;">
+        <div>
+            <p class="m-0"><b>No. of Tags</b></p>
+            <p class="m-0">@Model.TagCount</p>
+        </div>
+        <i class="bi bi-card-list border rounded border-primary text-primary p-2 text-center" style="width: 50px; height: 50px; font-size: 22px"></i>
+    </div>
+
+    <div class="border rounded border-primary p-3 d-flex align-items-center justify-content-center" style="gap: 20px; width: 243px;">
+        <div>
+            <p class="m-0"><b>No. of Recipes</b></p>
+            <p class="m-0">@Model.RecipeCount</p>
+        </div>
+        <i class="bi bi-book border rounded border-primary text-primary p-2 text-center" style="width: 50px; height: 50px; font-size: 22px"></i>
+    </div>
+
+    <div class="border rounded border-primary p-3 d-flex align-items-center justify-content-center" style="gap: 20px; width: 250px;">
+        <div>
+            <p class="m-0"><b>Average rating of recipes</b></p>
+            <p class="m-0">@Model.AverageRating</p>
+        </div>
+        <i class="bi bi-star border rounded border-primary text-primary p-2 text-center" style="width: 50px; height: 50px; font-size: 22px"></i>
+    </div>
+</section>
+
+<div id="categoryData" data-categories='@Json.Serialize(Model.GraphData)'></div>
+<div id="tagData" data-tags='@Json.Serialize(Model.TagGraphItems)'></div>
+
+<section class="d-flex" style="gap: 20px">
+    <div class="d-flex flex-column justify-content-center align-items-center mt-5 border rounded" style="height: 500px; width: 66%">
+    <p class="text-primary mb-4" style="font-size: 24px"><b>Comment Ratings</b></p>
+        <div class="w-75">
+            <canvas id="ratingChart"></canvas>
+        </div>
 </div>
+    <div class="d-flex flex-column justify-content-center align-items-center mt-5 border rounded" style="height: 500px; width: 33%">
+    <p class="text-primary mb-4" style="font-size: 24px"><b>Tag Popularity</b></p>
+    <div class="w-75">
+        <canvas id="tagChart"></canvas>
+    </div>
+</div>
+</section>
+
+<section class="d-flex flex-column mt-5 border rounded p-5 w-100">
+    <h4 class="mb-5 text-primary">Most Recent Recipes</h4>
+
+    @foreach(var obj in Model.MostRecentRecipes)
+    {
+        <div class="d-flex flex-column w-50">
+            <div class="border-bottom d-flex align-items-center p-4 text-break" style="height:150px; width: 200%">
+                <img src="@obj.Image" class="h-100 rounded-circle" style="aspect-ratio: 1 / 1; object-fit: cover; object-position: center;" />
+                <div class="ps-5 m-0" style="text-align:left">
+                    <p class="text-secondary m-0">@obj.CreatedDateTime.ToString("MMMM d, yyyy")</p>
+                    <h3 class="fw-bolder m-0">@obj.Title</h3>
+                    <p class="m-0">@obj.Body</p>
+                    <a asp-controller="Recipe" asp-action="Details" asp-route-id="@obj.Id" style="font-size: 18px; letter-spacing: 1px; margin: 0;">Continue Reading <i class="bi bi-arrow-right"></i></a>
+                </div>
+            </div>
+        </div>
+    }
+    
+</section>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+
+    const categoryData = JSON.parse(document.getElementById('categoryData').getAttribute('data-categories'));
+    const tagData = JSON.parse(document.getElementById('tagData').getAttribute('data-tags'));
+    console.log(tagData);
+
+    const ctx1 = document.getElementById('ratingChart');
+
+    new Chart(ctx1, {
+        type: 'bar',
+        data: {
+            labels: ['One Star', 'Two Stars', 'Three Stars', 'Four Stars', 'Five Stars'],
+            datasets: [{
+                label: '# of Comments',
+                data: [categoryData.one, categoryData.two, categoryData.three, categoryData.four, categoryData.five],
+                borderColor: '#e95420',
+                backgroundColor: ["rgba(233, 84, 32, 0.7)"],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+
+    const ctx2 = document.getElementById('tagChart');
+
+    var myPieChart = new Chart(ctx2, {
+        type: 'pie',
+        data: {
+            labels: [tagData[0].tag.name, tagData[1].tag.name, tagData[2].tag.name, tagData[3].tag.name, tagData[4].tag.name, tagData[5].tag.name, tagData[6].tag.name, tagData[7].tag.name, tagData[8].tag.name, tagData[9].tag.name],
+            datasets: [{
+                label: '# of Recipes',
+                data: [tagData[0].count, tagData[1].count, tagData[2].count, tagData[3].count, tagData[4].count, tagData[5].count, tagData[6].count, tagData[7].count, tagData[8].count, tagData[9].count],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+
+        ctx2.onclick = function (e) {
+            console.log(e.target);
+        var slice = myPieChart.getElementsAtEventForMode(e, 'nearest', { intersect: true }, false);
+            console.log(slice[0]);
+        if (!slice.length) return;
+        let tagId = tagData[slice[0].index].tag.id;
+        window.location.replace("https://localhost:7122/Tag/Details/" + tagId);
+    }
+</script>

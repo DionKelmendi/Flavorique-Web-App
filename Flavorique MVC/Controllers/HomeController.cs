@@ -2,6 +2,7 @@
 using System.Net;
 using Flavorique_MVC.Models;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
@@ -12,23 +13,42 @@ namespace Flavorique_MVC.Controllers
     {
         private readonly ILogger<HomeController> _logger;
         private readonly IEmailSender _emailSender;
+        private readonly UserManager<ApplicationUser> _userManager;
 
-        public HomeController(ILogger<HomeController> logger, IEmailSender emailSender)
+        public HomeController(ILogger<HomeController> logger, IEmailSender emailSender, UserManager<ApplicationUser> userManager)
         {
             _logger = logger;
             _emailSender = emailSender;
+            _userManager = userManager;
         }
 
         public async Task<IActionResult> Index()
         {
             var userRole = await GetUserRole();
 
-            if (userRole.Equals("Admin")) {
-                return View();
-            }
-            else
+            if (!userRole.Equals("Admin"))
             {
                 return Redirect("https://localhost:7147/Identity/Account/Login?from=r");
+            }
+
+            try
+            {
+                var model = new HomeViewModel();
+                using (var client = new HttpClient())
+                {
+                    using (var response = await client.GetAsync($"https://localhost:7147/api/Home"))
+                    {
+                        string result = await response.Content.ReadAsStringAsync();
+                        model = JsonConvert.DeserializeObject<HomeViewModel>(result);
+                    }
+                }
+
+                return View(model);
+
+            } catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                return RedirectToAction("Index", "Recipe");
             }
 
         }
