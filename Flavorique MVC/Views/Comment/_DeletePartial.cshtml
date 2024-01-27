@@ -1,0 +1,36 @@
+﻿
+<div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title text-primary" id="deleteModalLongTitle">Are you sure?</h5>
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#deleteModal">
+                    X
+                </button>
+            </div>
+            <div class="modal-body">
+
+                <form method="post" id="modalForm">
+                    <div class="p-3">
+                        <div class="mb-3">
+                            <label> User </label>
+                            <input class="form-control" disabled />
+                            <span class="text-danger"></span>
+                        </div>
+                        <div class="mb-3">
+                            <label> Body </label>
+                            <input class="form-control" disabled />
+                        </div>
+                        <div class="modal-footer">
+                            <a href="" class="btn btn-primary confirmDelete" style="width:45%">Delete</a>
+                            <a class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#deleteModal" style="width:45%">Go back</a>
+                        </div>
+                    </div>
+                </form>
+
+
+            </div>
+
+        </div>
+    </div>
+</div>

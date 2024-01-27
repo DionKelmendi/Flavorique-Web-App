@@ -3,11 +3,11 @@
     ViewData["Title"] = "Details";
 }
 
-<h1 class="my-5">Recipes that contain the tag @Model.Tag.Name:</h1>
+<h1 class="my-5">Recipes that contain the tag <span class="text-primary">@Model.Tag.Name</span>:</h1>
 
 @foreach (var obj in Model.Recipes)
 {
-    <a asp-controller="Recipe" asp-action="Details" asp-route-id="@obj.Id" style="text-decoration: none; color: black">
+    <a asp-controller="Recipe" asp-action="Details" asp-route-id="@obj.Id" class="hoverable" style="text-decoration: none; color: black">
         <div class="border rounded p-3 mb-2 d-flex">
             <img src="@obj.Image" height="125" style="object-fit: cover; object-position: center center; aspect-ratio: 1 / 1"/>
             <div class="ms-4">    

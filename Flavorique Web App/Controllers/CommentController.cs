@@ -4,6 +4,7 @@ using Flavorique_Web_App.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Collections;
 using System.Diagnostics;
 
 namespace Flavorique_Web_App.Controllers;
@@ -26,16 +27,60 @@ public class CommentController : ControllerBase
 
 
     [HttpGet]
-    public async Task<IActionResult> GetComments()
+    public async Task<ActionResult<PaginatedList<Comment>>> GetComments(string? sortOrder, string? searchString, int? pageNumber, string userFilter)
     {
         if (_db.Set<Comment>().ToList().Count == 0)
         {
             return NotFound("There are no comments");
         }
 
-        var comments = await _db.Set<Comment>().ToListAsync();
+        IEnumerable<Comment> comments = await _db.Comments.ToListAsync();
 
-        return Ok(comments);
+        if (!String.IsNullOrEmpty(searchString))
+        {
+            comments = comments.Where(c => c.Body.ToLower().Contains(searchString) ||
+                                                  _userManager.Users.Any(u => u.Id == c.AuthorId && u.UserName.ToLower().Contains(searchString.ToLower())));
+        }
+        if (!String.IsNullOrEmpty(userFilter))
+        {
+            comments = comments.Where(c => _userManager.FindByNameAsync(userFilter).Result?.Id == c.AuthorId);
+        }
+        int count = comments.Count();
+
+        switch (sortOrder)
+        {
+            case "body":
+                comments = comments.OrderBy(c => c.Body);
+                break;
+            case "bodyDesc":
+                comments = comments.OrderByDescending(c => c.Body);
+                break;
+            case "rate":
+                comments = comments.OrderBy(c => c.Rating);
+                break;
+            case "rateDesc":
+                comments = comments.OrderByDescending(c => c.Rating);
+                break;
+            case "date":
+                comments = comments.OrderBy(c => c.CreatedDateTime);
+                break;
+            case "dateDesc":
+                comments = comments.OrderByDescending(c => c.CreatedDateTime);
+                break;
+            case "idDesc":
+                comments = comments.OrderByDescending(c => c.Id);
+                break;
+            default:
+                comments = comments.OrderBy(c => c.Id);
+                break;
+        }
+
+        int pageSize = 5;
+        PaginatedList<Comment> result = await PaginatedList<Comment>.CreateAsync(comments, pageNumber ?? 1, pageSize);
+       
+        _logger.LogInformation(result.ToString());
+
+        return Ok(new { data = result, pageIndex = result.PageIndex, totalPages = result.TotalPages, count = count });
     }
 
     [HttpGet("{id}")]

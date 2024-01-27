@@ -77,7 +77,6 @@
                 </td>
                 <td class="d-flex justify-content-evenly">
                     <a asp-action="Details" asp-route-id="@obj.Id" class="btn btn-info"><i class="bi bi-search"></i> &nbsp; Detail View</a>
-
                     <a asp-controller="Tag" asp-action="Edit" asp-route-id="@obj.Id" class="btn btn-warning"><i class="bi bi-pencil-square"></i> &nbsp; Edit Tag</a>
                     <button type="button" onclick="addModalInfo" class="btn btn-danger modalButton" data-bs-toggle="modal" data-bs-target="#deleteModal">
                         <i class="bi bi-trash"></i> &nbsp; Delete Tag

@@ -56,10 +56,13 @@
                 <a class="nav-link text-light @(IsCurrentPage("/Category") ? "bg-primary" : "")" asp-area="" asp-controller="Category" asp-action="Index">Categories</a>
             </li>
             <li>
+                <a class="nav-link text-light @(IsCurrentPage("/Tag") ? "bg-primary" : "")" asp-area="" asp-controller="Tag" asp-action="Index">Tags</a>
+            </li>
+            <li>
                 <a class="nav-link text-light @(IsCurrentPage("/Recipe") ? "bg-primary" : "")" asp-area="" asp-controller="Recipe" asp-action="Index">Recipes</a>
             </li>
             <li>
-                <a class="nav-link text-light @(IsCurrentPage("/Tag") ? "bg-primary" : "")" asp-area="" asp-controller="Tag" asp-action="Index">Tags</a>
+                <a class="nav-link text-light @(IsCurrentPage("/Comment") ? "bg-primary" : "")" asp-area="" asp-controller="Comment" asp-action="Index">Comments</a>
             </li>
         </ul>
     </div>
