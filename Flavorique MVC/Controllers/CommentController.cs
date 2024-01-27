@@ -17,6 +17,13 @@ namespace Flavorique_MVC.Controllers
 
         public async Task<IActionResult> Index(string sortOrder, string searchString, int pageNumber, string userFilter)
         {
+            var userRole = await GetUserRole();
+
+            if (!userRole.Equals("Admin"))
+            {
+                return Redirect("https://localhost:7147/Identity/Account/Login?from=r");
+            }
+
             IEnumerable<Comment> comments = new List<Comment>();
             int pageIndex = 1;
             int totalPages = 1;
@@ -91,6 +98,29 @@ namespace Flavorique_MVC.Controllers
                 ModelState.AddModelError(string.Empty, $"An error occurred: {ex.Message}");
                return RedirectToAction("Index", "Recipe");
             }
+        }
+
+        public async Task<string> GetUserRole()
+        {
+            var role = "User";
+
+            using (var handler = new HttpClientHandler())
+            {
+                var cookieContainer = new CookieContainer();
+                cookieContainer.Add(new Uri("https://localhost:7147"), new Cookie(".AspNetCore.Identity.Application", Request.Cookies[".AspNetCore.Identity.Application"]));
+
+                handler.CookieContainer = cookieContainer;
+
+                using (var client = new HttpClient(handler))
+                {
+                    {
+                        var response = await client.GetAsync("https://localhost:7147/api/Account/user/role");
+                        string apiResponse = await response.Content.ReadAsStringAsync();
+                        role = apiResponse;
+                    }
+                }
+            }
+            return role;
         }
     }
 }

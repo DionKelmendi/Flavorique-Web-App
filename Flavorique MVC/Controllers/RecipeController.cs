@@ -23,6 +23,13 @@ namespace Flavorique_MVC.Controllers
 
         public async Task<IActionResult> Index(string sortOrder, string searchString, int pageNumber)
         {
+            var userRole = await GetUserRole();
+
+            if (!userRole.Equals("Admin"))
+            {
+                return Redirect("https://localhost:7147/Identity/Account/Login?from=r");
+            }
+
             IEnumerable<ShortRecipe> recipes = new List<ShortRecipe>();
             int pageIndex = 1;
             int totalPages = 1;
@@ -61,6 +68,13 @@ namespace Flavorique_MVC.Controllers
         //GET
         public async Task<IActionResult> Details(int? id)
         {
+            var userRole = await GetUserRole();
+
+            if (!userRole.Equals("Admin"))
+            {
+                return Redirect("https://localhost:7147/Identity/Account/Login?from=r");
+            }
+
             var recipe = new Recipe();
 
             using (var client = new HttpClient())
@@ -109,6 +123,13 @@ namespace Flavorique_MVC.Controllers
         //GET
         public async Task<IActionResult> Create()
         {
+            var userRole = await GetUserRole();
+
+            if (!userRole.Equals("Admin"))
+            {
+                return Redirect("https://localhost:7147/Identity/Account/Login?from=r");
+            }
+
             if (userSignedIn())
             {
                 IEnumerable<CategoryViewModel> tags = new List<CategoryViewModel>();
@@ -171,6 +192,12 @@ namespace Flavorique_MVC.Controllers
         //GET
         public async Task<IActionResult> Edit(int? id)
         {
+            var userRole = await GetUserRole();
+
+            if (!userRole.Equals("Admin"))
+            {
+                return Redirect("https://localhost:7147/Identity/Account/Login?from=r");
+            }
 
             if (!userSignedIn())
             {
@@ -403,6 +430,13 @@ namespace Flavorique_MVC.Controllers
         // GET
         public async Task<IActionResult> Print(int? id)
         {
+            var userRole = await GetUserRole();
+
+            if (!userRole.Equals("Admin"))
+            {
+                return Redirect("https://localhost:7147/Identity/Account/Login?from=r");
+            }
+
             try
             {
                 var recipe = new PrintViewModel();
@@ -427,6 +461,29 @@ namespace Flavorique_MVC.Controllers
         {
             var signedIn = Request.Cookies[".AspNetCore.Identity.Application"];
             return signedIn != null;
+        }
+
+        public async Task<string> GetUserRole()
+        {
+            var role = "User";
+
+            using (var handler = new HttpClientHandler())
+            {
+                var cookieContainer = new CookieContainer();
+                cookieContainer.Add(new Uri("https://localhost:7147"), new Cookie(".AspNetCore.Identity.Application", Request.Cookies[".AspNetCore.Identity.Application"]));
+
+                handler.CookieContainer = cookieContainer;
+
+                using (var client = new HttpClient(handler))
+                {
+                    {
+                        var response = await client.GetAsync("https://localhost:7147/api/Account/user/role");
+                        string apiResponse = await response.Content.ReadAsStringAsync();
+                        role = apiResponse;
+                    }
+                }
+            }
+            return role;
         }
     }
 }

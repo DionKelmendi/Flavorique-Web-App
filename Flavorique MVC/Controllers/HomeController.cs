@@ -33,9 +33,18 @@ namespace Flavorique_MVC.Controllers
 
         }
 
-        public IActionResult Mail()
+        public async Task<IActionResult> Mail()
         {
-            return View();
+            var userRole = await GetUserRole();
+
+            if (userRole.Equals("Admin"))
+            {
+                return View();
+            }
+            else
+            {
+                return Redirect("https://localhost:7147/Identity/Account/Login?from=r");
+            }
         }
 
         public async Task<IActionResult> ProvaMailer()
